@@ -123,6 +123,15 @@ let
         "users"
       ];
     };
+    hardware = {
+      enable = [ ];
+    };
+    workspace = {
+      enable = [ ];
+    };
+    programs = {
+      enable = [ ];
+    };
     services = {
       enable = [
         "openssh"
