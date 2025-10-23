@@ -122,7 +122,7 @@ let
       enable = [
         "openssh"
         "xray"
-        "haproxy"
+        #"haproxy"
         "fail2ban"
         "auto-upgrade"
       ];
