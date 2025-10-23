@@ -65,6 +65,7 @@ in
     environment.etc."traefik/dynamic.yml".text = ''
       tcp:
         routers:
+          # VLESS роутер (github.com SNI)
           vless-router:
             rule: "HostSNI(`github.com`) || HostSNI(`www.github.com`)"
             entryPoints:
@@ -72,14 +73,6 @@ in
             service: xray-service
             tls:
               passthrough: true
-          
-          domain-router:
-            rule: "HostSNI(`umkcloud.ru`) || HostSNI(`www.umkcloud.ru`)"
-            entryPoints:
-              - websecure
-            service: redirect-service
-            tls:
-              certResolver: letsencrypt
           
           fallback-router:
             rule: "HostSNI(`*`)"
@@ -96,11 +89,6 @@ in
               servers:
                 - address: "127.0.0.1:8443"
           
-          redirect-service:
-            loadBalancer:
-              servers:
-                - address: "127.0.0.1:8080"
-          
           github-service:
             loadBalancer:
               servers:
@@ -108,25 +96,27 @@ in
       
       http:
         routers:
-          redirect-router:
+          domain-router:
             rule: "Host(`umkcloud.ru`) || Host(`www.umkcloud.ru`)"
             entryPoints:
               - websecure
-            service: redirect-http
+            service: redirect-service
+            middlewares:
+              - github-redirect
             tls:
               certResolver: letsencrypt
         
         services:
-          redirect-http:
+          redirect-service:
             loadBalancer:
               servers:
-                - url: "http://127.0.0.1:8080"
+                - url: "http://127.0.0.1:1"
         
         middlewares:
           github-redirect:
             redirectRegex:
-              regex: "^https://umkcloud\\.ru(.*)"
-              replacement: "https://github.com$1"
+              regex: "^https://.*"
+              replacement: "https://github.com"
               permanent: true
     '';
 
