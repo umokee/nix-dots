@@ -11,7 +11,7 @@ in
   config = lib.mkIf enable {
     security.sudo = {
       enable = true;
-      execWheelOnly = true;
+      execWheelOnly = !helpers.isServer;
       wheelNeedsPassword = !helpers.isServer;
       extraConfig = ''
         Defaults timestamp_timeout=5
