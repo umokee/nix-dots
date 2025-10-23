@@ -103,13 +103,5 @@ in
         ];
       };
     };
-
-    networking.firewall = {
-      enable = true;
-      allowedTCPPorts = [
-        443
-        80
-      ];
-    };
   };
 }

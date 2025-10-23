@@ -1,7 +1,6 @@
 {
   lib,
   helpers,
-  conf,
   ...
 }:
 let
@@ -21,13 +20,6 @@ in
 
     security.polkit.enable = true;
 
-    #users.groups = {
-    #  networkmanager = { };
-    #  wheel = { };
-    #  audio = { };
-    #  video = { };
-    #};
-
     security.pam.loginLimits = [
       {
         domain = "*";
@@ -42,6 +34,5 @@ in
         value = "-20";
       }
     ];
-
   };
 }

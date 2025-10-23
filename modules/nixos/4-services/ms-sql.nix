@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   lib,
   helpers,
@@ -34,7 +33,5 @@ in
     environment.systemPackages = with pkgs; [
       sqlcmd
     ];
-
-    networking.firewall.allowedTCPPorts = lib.mkIf config.networking.firewall.enable [ 1433 ];
   };
 }

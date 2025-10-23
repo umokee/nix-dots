@@ -10,7 +10,6 @@
     ./postgresql.nix
     ./ms-sql.nix
     ./fail2ban.nix
-    ./auto-upgrade.nix
     ./xray.nix
     ./traefik.nix
   ];

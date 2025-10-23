@@ -45,12 +45,10 @@ in
 
       nix = {
         settings = {
-          #optimise = {
-          #  automatic = true;
-          #  dates = [ "weekly" ];
-          #};
-          trusted-users = [ "root" conf.username ];
-          require-sigs = !helpers.isServer;
+          trusted-users = [
+            "root"
+            conf.username
+          ];
           auto-optimise-store = true;
           experimental-features = [
             "nix-command"
@@ -58,12 +56,30 @@ in
           ];
         };
 
-        #gc = {
-        #  automatic = true;
-        #  dates = [ "weekly" ];
-        #  options = "--delete-older-than 7d";
-        #};
+        gc = {
+          automatic = true;
+          dates = "weekly";
+          options = "--delete-older-than 7d";
+        };
+
+        optimise = {
+          automatic = true;
+          dates = [ "03:00" ];
+        };
       };
+
+      #system.autoUpgrade = {
+      #  enable = true;
+      #  flake = "/home/user/nix-dots#server";
+      #  flags = [
+      #    "--update-input"
+      #    "nixpkgs"
+      #    "--commit-lock-file"
+      #  ];
+      #  dates = "04:00";
+      #  randomizedDelaySec = "45min";
+      #  allowReboot = false;
+      #};
 
       documentation = {
         enable = false;
@@ -80,20 +96,13 @@ in
       #  "console=tty0"
       #  "console=ttyS0,115200n8"
       #];
-      
+
       services.xserver.enable = lib.mkForce false;
-      
+
       services.journald.extraConfig = ''
         SystemMaxUse=500M
         MaxRetentionSec=1week
       '';
-      
-      boot.kernel.sysctl = {
-        "net.ipv4.tcp_fastopen" = 3;
-        "net.ipv4.tcp_congestion_control" = "bbr";
-        "net.core.default_qdisc" = "fq";
-        "net.ipv4.ip_forward" = 1;
-      };
     })
   ];
 }

@@ -1,9 +1,6 @@
 {
-  config,
   lib,
-  conf,
   helpers,
-  pkgs,
   ...
 }:
 {

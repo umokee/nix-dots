@@ -4,33 +4,16 @@ let
     "hyprland"
     "niri"
     "dwl"
-    "sway"
-    "river"
-    "wayfire"
-    "labwc"
-    "gnome"
-    "plasma6"
-    "cagebreak"
+    "mangowc"
   ];
   x11WMs = [
-    "i3"
     "bspwm"
-    "awesome"
-    "xmonad"
     "dwm"
-    "openbox"
-    "plasma5"
-    "xfce"
-    "mate"
   ];
   wlrCompositors = [
     "sway"
-    "river"
     "dwl"
     "mangowc"
-    "cagebreak"
-    "labwc"
-    "wayfire"
   ];
 
   hasIn =
@@ -52,11 +35,6 @@ in
   isWM = hasIn "workspace" (waylandCompositors ++ x11WMs);
 
   isHyprland = hasIn "workspace" "hyprland";
-  isKDE = hasIn "workspace" [
-    "plasma6"
-    "plasma5"
-  ];
-  isGnome = hasIn "workspace" "gnome";
   isWlr = hasIn "workspace" wlrCompositors;
   isNiri = hasIn "workspace" "niri";
   isDwl = hasIn "workspace" "dwl";
@@ -64,15 +42,6 @@ in
 
   needsHyprlandPortal = hasIn "workspace" "hyprland";
   needsWlrPortal = hasIn "workspace" wlrCompositors;
-  needsKDEPortal = hasIn "workspace" [
-    "plasma6"
-    "plasma5"
-  ];
-  needsGnomePortal = hasIn "workspace" [
-    "gnome"
-    "niri"
-  ];
-  needsNiriPortal = hasIn "workspace" "niri";
 
   hasNvidia = hasIn "hardware" "nvidia";
   hasIntel = hasIn "hardware" "intel";

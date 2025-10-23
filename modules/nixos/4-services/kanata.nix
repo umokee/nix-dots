@@ -8,7 +8,7 @@ let
   enable = helpers.hasIn "services" "kanata";
 in
 {
-  config = lib.mkIf enable {    
+  config = lib.mkIf enable {
     services.kanata = {
       enable = true;
       package = pkgs.kanata;

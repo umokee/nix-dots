@@ -46,10 +46,5 @@ in
 
     users.users.${conf.username}.openssh.authorizedKeys.keys = authorizedKeys;
     users.users.root.openssh.authorizedKeys.keys = authorizedKeys;
-
-    networking.firewall = {
-      enable = true;
-      allowedTCPPorts = [ 22 ];
-    };
   };
 }

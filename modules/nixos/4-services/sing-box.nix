@@ -106,11 +106,6 @@ in
       };
     };
 
-    networking.firewall = {
-      enable = true;
-      allowedTCPPorts = [ 443 80 ];
-    };
-
     systemd.services.sing-box.serviceConfig = {
       DynamicUser = lib.mkForce false;
       User = "sing-box";

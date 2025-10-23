@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   helpers,
   pkgs,
@@ -24,7 +23,7 @@
       ];
       programs.xwayland.enable = true;
     })
-    
+
     (lib.mkIf helpers.isMango {
       programs.mango.enable = true;
     })

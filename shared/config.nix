@@ -62,9 +62,7 @@ let
     };
     services = {
       enable = [
-        #"postgresql"
         "openssh"
-        #"sing-box"
         "gammastep"
         "virtual-machine"
         "print"
@@ -104,19 +102,25 @@ let
     };
   };
 
-  serverVars = lib.recursiveUpdate commonVars {
-    hardware = {
+  serverVars = {
+    base = {
       enable = [
-        "power"
+        "boot"
+        "system"
+        "security"
+        "locale"
+        "network"
+        "users"
       ];
+    };
+    hardware = {
+      enable = [ ];
     };
     workspace = {
       enable = [ ];
     };
     programs = {
-      enable = [
-        "nix-lang"
-      ];
+      enable = [ ];
     };
     services = {
       enable = [
@@ -124,7 +128,6 @@ let
         "xray"
         "traefik"
         "fail2ban"
-        "auto-upgrade"
       ];
     };
   };

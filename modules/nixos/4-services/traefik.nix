@@ -39,7 +39,7 @@ in
         };
 
         log = {
-          level = "DEBUG";
+          level = "INFO";
         };
 
         accessLog = { };
@@ -128,11 +128,6 @@ in
     systemd.tmpfiles.rules = [
       "d /var/lib/traefik 0750 traefik traefik -"
       "f /var/lib/traefik/acme.json 0600 traefik traefik -"
-    ];
-
-    networking.firewall.allowedTCPPorts = [
-      80
-      443
     ];
 
     users.users.traefik = {

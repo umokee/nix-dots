@@ -64,22 +64,5 @@ in
       win-virtio
       win-spice
     ];
-
-    #systemd.services.libvirt-network-default = {
-    #  description = "Autostart libvirt default network";
-    #  after = [ "libvirtd.service" ];
-    #  requires = [ "libvirtd.service" ];
-    #  wantedBy = [ "multi-user.target" ];
-    #  serviceConfig = {
-    #    Type = "oneshot";
-    #    RemainAfterExit = true;
-    #  };
-    #  script = ''
-    #    ${pkgs.libvirt}/bin/virsh net-list --all | grep -q default || \
-    #    ${pkgs.libvirt}/bin/virsh net-define ${pkgs.libvirt}/share/libvirt/networks/default.xml
-    #    ${pkgs.libvirt}/bin/virsh net-autostart default
-    #    ${pkgs.libvirt}/bin/virsh net-start default || true
-    #  '';
-    #};
   };
 }
