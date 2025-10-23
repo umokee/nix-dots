@@ -120,11 +120,11 @@ let
     };
     services = {
       enable = [
-        "openssh"        # SSH доступ
-        "sing-box"       # Прокси сервер
-        "haproxy"        # Балансировщик для steal-oneself
-        "fail2ban"       # Защита от брутфорса
-        "auto-upgrade"   # Автообновление
+        "openssh"
+        "x-ray"
+        "haproxy"
+        "fail2ban"
+        "auto-upgrade"
       ];
     };
   };

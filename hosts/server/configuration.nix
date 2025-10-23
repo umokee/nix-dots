@@ -13,10 +13,8 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII/gto5eMkM9Ghp5VScGT58ebz1VHCMhCpj8Hse4OjKI"
   ];
 
-  environment.systemPackages = with pkgs; [
-    vim
-    git
-    htop
+  users.users."${conf.username}".openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII/gto5eMkM9Ghp5VScGT58ebz1VHCMhCpj8Hse4OjKI"
   ];
 
   networking.useDHCP = lib.mkDefault true;

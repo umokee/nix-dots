@@ -35,10 +35,10 @@ in
 
     boot.loader.grub = {
       enable = true;
-      device = "nodev";
+      device = if helpers.isServer then "/dev/sda" else "nodev";
       useOSProber = true;
-      efiSupport = true;
-      efiInstallAsRemovable = true;
+      efiSupport = !helpers.isServer;
+      efiInstallAsRemovable = !helpers.isServer;
     };
     boot.loader.timeout = 3;
 
