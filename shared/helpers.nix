@@ -23,10 +23,7 @@ let
       checkList = features: lib.any (f: lib.elem f categoryList) features;
       checkSingle = f: lib.elem f categoryList;
     in
-    if lib.isList categoryList then
-      (if lib.isList feature then checkList feature else checkSingle feature)
-    else
-      false;
+    lib.isList categoryList && (if lib.isList feature then checkList feature else checkSingle feature);
 in
 {
   isLaptop = conf.machineType == "laptop";
