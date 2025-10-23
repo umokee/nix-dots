@@ -1,0 +1,36 @@
+{
+  config,
+  pkgs,
+  lib,
+  vars,
+  ...
+}:
+{
+  home.packages = with pkgs; [
+    bat
+    lsd
+    btop
+    wl-clipboard
+    inxi
+    tree
+    exfatprogs
+    libva-utils
+    ffmpeg
+    ffmpegthumbnailer
+    gftp
+
+    arj
+    lha
+    lrzip
+    lzop
+    p7zip
+    pbzip2
+    pigz
+    pixz
+    unrar
+    unzip
+    zip
+    brotli
+    cpio
+  ];
+}

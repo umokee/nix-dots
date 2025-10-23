@@ -1,0 +1,350 @@
+2025-10-17 00:54:00: syncrclone (20230310.0.BETA)
+2025-10-17 00:54:00: config path: '/home/user/.syncrclone/nixos.py'
+2025-10-17 00:54:00: temp dir: '/tmp/tmpfl3uiour'
+2025-10-17 00:54:00: A: '/home/user/nixos'
+2025-10-17 00:54:00: B: 'cloud:sync/nixos'
+2025-10-17 00:54:00: rclone version:
+2025-10-17 00:54:00: rclone: rclone v1.71.0
+2025-10-17 00:54:00: rclone: - os/version: nixos 25.11 (64 bit)
+2025-10-17 00:54:00: rclone: - os/kernel: 6.12.48 (x86_64)
+2025-10-17 00:54:00: rclone: - os/type: linux
+2025-10-17 00:54:00: rclone: - os/arch: amd64
+2025-10-17 00:54:00: rclone: - go/version: go1.25.0
+2025-10-17 00:54:00: rclone: - go/linking: dynamic
+2025-10-17 00:54:00: rclone: - go/tags: cmount
+2025-10-17 00:54:00: 
+2025-10-17 00:54:00: Refreshing file lists concurrently
+2025-10-17 00:54:01: No previous list on A. Reset state
+2025-10-17 00:54:01: Refreshed file list on A '/home/user/nixos'
+2025-10-17 00:54:01: 191 files, 17.50 mb
+2025-10-17 00:54:08: Refreshed file list on B 'cloud:sync/nixos'
+2025-10-17 00:54:08: 104 files, 16.86 mb
+2025-10-17 00:54:09: 
+2025-10-17 00:54:09: Setting lock on A
+2025-10-17 00:54:09: rclone: INFO  : LOCK_nixos-sync: Copied (new)
+2025-10-17 00:54:09: rclone: INFO  :          17 B / 17 B, 100%, 0 B/s, ETA -
+2025-10-17 00:54:09: 
+2025-10-17 00:54:09: Setting lock on B
+2025-10-17 00:54:14: rclone: INFO  : LOCK_nixos-sync: Copied (new)
+2025-10-17 00:54:14: rclone: INFO  :          17 B / 17 B, 100%, 5 B/s, ETA 0s
+2025-10-17 00:54:14: 
+2025-10-17 00:54:14: 
+2025-10-17 00:54:14: Actions queued on A:
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/cfact-snail.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/.gitignore'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/alwayscenter.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/protocols/wlr-output-power-management-unstable-v1.xml'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/slstatus.nix'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/pertag.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/nextlayout.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/movestack.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/color_manager/color_manager.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/barcolors.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/relative-mouse-resize.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/hide-behind-fullscreen.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/disable-keybindings-on-fullscreen-toggle-0.7.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/keyboardshortcutsinhibit.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/genericgaps.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/README.md'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/LICENSE.dwm'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/zoomswap.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/relative-mouse-resize.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/dwl.c'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/snail.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/attachfocused.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/genericgaps.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/LICENSE'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/pointer-gestures-unstable-v1.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/attachbottom.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/pointer-gestures-unstable-v1.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/ipc.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/.gitea/issue_template/enhancement-idea.yml'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/better-resize-0.7.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/dwl.1'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/regexrules.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/nextlayout.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/client-opacity/client-opacity.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/util.c'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/regexrules.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/passthrough/README.md'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/bar.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/primaryselection.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/Makefile'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/config.mk'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/2-programs/applications/foot.nix'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/util.h'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/en-keycodes.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/attachfocused.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/alwayscenter.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/3-services/kanshi.nix'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/config.def.h'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/.mailmap'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/warpcursor.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/config.def.h.orig'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/fullscreenadaptivesync/README.md'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/cfact-snail.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/better-resize-0.7.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/focusdir.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/en-keycodes.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/dwl.c.orig'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/protocols/wlr-layer-shell-unstable-v1.xml'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/LICENSE.tinywl'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/warpcursor.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/tearing/tearing.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/toggle_constraints.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/focusdir.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/keyboardshortcutsinhibit.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/ipc.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/attachbottom.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/zoomswap.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/disable-keybindings-on-fullscreen-toggle-0.7.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/dwl.desktop'
+2025-10-17 00:54:14: New on A: 'modules/nixos/2-workspace/dwl.nix'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl.nix'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/launchtag.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/fullscreenadaptivesync/fullscreenadaptivesync-v0.7.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/drwl.h'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/.gitea/issue_template/bug_report.yml'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/client-opacity/README.md'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/pertag.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/client.h'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/CHANGELOG.md'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/bar.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/tearing/README.md'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/movestack.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/snail-gaps.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/primaryselection.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/p/launchtag.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/waybar.nix'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/default.nix'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/passthrough/passthrough.patch'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/dwl/LICENSE.sway'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/color_manager/README.md'
+2025-10-17 00:54:14: New on A: 'modules/home-manager/1-workspace/desktop/dwl/patches/p/hide-behind-fullscreen.patch'
+2025-10-17 00:54:14: 
+2025-10-17 00:54:14: Actions queued on B:
+2025-10-17 00:54:14: Delete (with backup) on B: 'modules/nixos/1-hardware/display.nix'
+2025-10-17 00:54:14: Delete (with backup) on B: 'modules/home-manager/4-appearance/colors/niri.nix'
+2025-10-17 00:54:14: Delete (with backup) on B: 'modules/home-manager/1-workspace/desktop/niri.nix'
+2025-10-17 00:54:14: Delete (with backup) on B: 'modules/nixos/3-programs/flatpak.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/home-manager/4-appearance/colors/default.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/nixos/2-workspace/display-manager.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/nixos/4-services/hope.nix'
+2025-10-17 00:54:14: Backup on B: 'shared/config.nix'
+2025-10-17 00:54:14: Backup on B: 'hosts/nixos-laptop/configuration.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/home-manager/2-programs/scripts/collect.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/home-manager/2-programs/applications/default.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/home-manager/1-workspace/desktop/tofi.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/home-manager/2-programs/applications/rclone.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/home-manager/1-workspace/desktop/xdg.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/nixos/1-hardware/print.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/nixos/4-services/virtualization.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/home-manager/1-workspace/desktop/default.nix'
+2025-10-17 00:54:14: Backup on B: 'flake.lock'
+2025-10-17 00:54:14: Backup on B: 'modules/home-manager/4-appearance/gtk.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/home-manager/1-workspace/desktop/hyprland.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/nixos/3-programs/gaming.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/nixos/2-workspace/window-managers.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/home-manager/3-services/default.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/nixos/0-base/environment.nix'
+2025-10-17 00:54:14: Backup on B: 'flake.nix'
+2025-10-17 00:54:14: Backup on B: 'shared/helpers.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/nixos/2-workspace/default.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/home-manager/0-base/environment.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/home-manager/2-programs/development/vscode.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/nixos/1-hardware/peripherals.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/home-manager/2-programs/packages.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/nixos/1-hardware/amd.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/home-manager/1-workspace/desktop/screenshots.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/nixos/3-programs/default.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/nixos/1-hardware/default.nix'
+2025-10-17 00:54:14: Backup on B: 'modules/home-manager/4-appearance/fonts.nix'
+2025-10-17 00:54:14: 
+2025-10-17 00:54:14: Performing Actions on A
+2025-10-17 00:54:14: rclone: INFO  : There was nothing to transfer
+2025-10-17 00:54:14: rclone: INFO  :           0 B / 0 B, -, 0 B/s, ETA -
+2025-10-17 00:54:14: 
+2025-10-17 00:54:14: Performing Actions on B
+2025-10-17 00:54:23: rclone: INFO  : modules/nixos/3-programs/flatpak.nix: Moved (server-side)
+2025-10-17 00:54:23: rclone: INFO  : modules/nixos/1-hardware/display.nix: Moved (server-side)
+2025-10-17 00:54:23: rclone: INFO  : modules/home-manager/1-workspace/desktop/niri.nix: Moved (server-side)
+2025-10-17 00:54:23: rclone: INFO  : modules/home-manager/4-appearance/colors/niri.nix: Moved (server-side)
+2025-10-17 00:54:23: rclone: INFO  :    13.343 KiB / 13.343 KiB, 100%, 0 B/s, ETA -
+2025-10-17 00:54:53: rclone: INFO  : shared/helpers.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : flake.lock: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : shared/config.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/nixos/4-services/hope.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : flake.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/nixos/3-programs/default.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/nixos/3-programs/gaming.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/nixos/4-services/virtualization.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : hosts/nixos-laptop/configuration.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/nixos/2-workspace/default.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/nixos/2-workspace/display-manager.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/nixos/0-base/environment.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/nixos/2-workspace/window-managers.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/nixos/1-hardware/amd.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/nixos/1-hardware/peripherals.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/nixos/1-hardware/default.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/nixos/1-hardware/print.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/home-manager/0-base/environment.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/home-manager/4-appearance/gtk.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/home-manager/4-appearance/fonts.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/home-manager/3-services/default.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/home-manager/2-programs/packages.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/home-manager/4-appearance/colors/default.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/home-manager/1-workspace/desktop/default.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/home-manager/1-workspace/desktop/hyprland.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/home-manager/2-programs/scripts/collect.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/home-manager/1-workspace/desktop/screenshots.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/home-manager/1-workspace/desktop/tofi.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/home-manager/2-programs/development/vscode.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/home-manager/2-programs/applications/default.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/home-manager/2-programs/applications/rclone.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  : modules/home-manager/1-workspace/desktop/xdg.nix: Copied (server-side copy)
+2025-10-17 00:54:53: rclone: INFO  :    65.705 KiB / 65.705 KiB, 100%, 0 B/s, ETA -
+2025-10-17 00:54:53: Backups for B stored in 'cloud:sync/nixos/.syncrclone/backups/2025-10-17T005400_nixos-sync_B'
+2025-10-17 00:54:53: 
+2025-10-17 00:54:53: A >>> B 123 files, 740.82 kb
+2025-10-17 00:54:58: rclone: INFO  : shared/helpers.nix: Copied (replaced existing)
+2025-10-17 00:54:58: rclone: INFO  : shared/config.nix: Copied (replaced existing)
+2025-10-17 00:54:58: rclone: INFO  : flake.nix: Copied (replaced existing)
+2025-10-17 00:54:58: rclone: INFO  : flake.lock: Copied (replaced existing)
+2025-10-17 00:55:01: rclone: INFO  : modules/nixos/3-programs/default.nix: Copied (replaced existing)
+2025-10-17 00:55:02: rclone: INFO  : modules/nixos/0-base/environment.nix: Copied (replaced existing)
+2025-10-17 00:55:02: rclone: INFO  : modules/nixos/3-programs/gaming.nix: Copied (replaced existing)
+2025-10-17 00:55:02: rclone: INFO  : modules/nixos/4-services/hope.nix: Copied (replaced existing)
+2025-10-17 00:55:03: rclone: INFO  : modules/nixos/4-services/virtualization.nix: Copied (replaced existing)
+2025-10-17 00:55:05: rclone: INFO  : modules/nixos/2-workspace/dwl.nix: Copied (new)
+2025-10-17 00:55:05: rclone: INFO  : modules/nixos/2-workspace/default.nix: Copied (replaced existing)
+2025-10-17 00:55:05: rclone: INFO  : modules/nixos/2-workspace/display-manager.nix: Copied (replaced existing)
+2025-10-17 00:55:06: rclone: INFO  : modules/nixos/2-workspace/window-managers.nix: Copied (replaced existing)
+2025-10-17 00:55:07: rclone: INFO  : modules/nixos/1-hardware/peripherals.nix: Copied (replaced existing)
+2025-10-17 00:55:07: rclone: INFO  : modules/nixos/1-hardware/amd.nix: Copied (replaced existing)
+2025-10-17 00:55:09: rclone: INFO  : modules/nixos/1-hardware/default.nix: Copied (replaced existing)
+2025-10-17 00:55:09: rclone: INFO  : modules/nixos/1-hardware/print.nix: Copied (replaced existing)
+2025-10-17 00:55:10: rclone: INFO  : modules/home-manager/0-base/environment.nix: Copied (replaced existing)
+2025-10-17 00:55:11: rclone: INFO  : modules/home-manager/2-programs/packages.nix: Copied (replaced existing)
+2025-10-17 00:55:12: rclone: INFO  : modules/home-manager/3-services/default.nix: Copied (replaced existing)
+2025-10-17 00:55:13: rclone: INFO  : modules/home-manager/3-services/kanshi.nix: Copied (new)
+2025-10-17 00:55:14: rclone: INFO  : modules/home-manager/1-workspace/desktop/default.nix: Copied (replaced existing)
+2025-10-17 00:55:16: rclone: INFO  : modules/home-manager/1-workspace/desktop/waybar.nix: Copied (new)
+2025-10-17 00:55:16: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl.nix: Copied (new)
+2025-10-17 00:55:17: rclone: INFO  : modules/home-manager/1-workspace/desktop/screenshots.nix: Copied (replaced existing)
+2025-10-17 00:55:19: rclone: INFO  : modules/home-manager/1-workspace/desktop/hyprland.nix: Copied (replaced existing)
+2025-10-17 00:55:19: rclone: INFO  : modules/home-manager/1-workspace/desktop/xdg.nix: Copied (replaced existing)
+2025-10-17 00:55:20: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/default.nix: Copied (new)
+2025-10-17 00:55:21: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/slstatus.nix: Copied (new)
+2025-10-17 00:55:22: rclone: INFO  : modules/home-manager/1-workspace/desktop/tofi.nix: Copied (replaced existing)
+2025-10-17 00:55:26: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/client-opacity/README.md: Copied (new)
+2025-10-17 00:55:28: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/client-opacity/client-opacity.patch: Copied (new)
+2025-10-17 00:55:29: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/color_manager/color_manager.patch: Copied (new)
+2025-10-17 00:55:29: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/color_manager/README.md: Copied (new)
+2025-10-17 00:55:30: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/fullscreenadaptivesync/README.md: Copied (new)
+2025-10-17 00:55:32: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/fullscreenadaptivesync/fullscreenadaptivesync-v0.7.patch: Copied (new)
+2025-10-17 00:55:32: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/.mailmap: Copied (new)
+2025-10-17 00:55:32: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/.gitignore: Copied (new)
+2025-10-17 00:55:34: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/CHANGELOG.md: Copied (new)
+2025-10-17 00:55:35: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/LICENSE.dwm: Copied (new)
+2025-10-17 00:55:35: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/LICENSE.tinywl: Copied (new)
+2025-10-17 00:55:36: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/LICENSE.sway: Copied (new)
+2025-10-17 00:55:36: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/LICENSE: Copied (new)
+2025-10-17 00:55:38: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/README.md: Copied (new)
+2025-10-17 00:55:39: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/Makefile: Copied (new)
+2025-10-17 00:55:39: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/config.def.h.orig: Copied (new)
+2025-10-17 00:55:40: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/client.h: Copied (new)
+2025-10-17 00:55:41: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/config.def.h: Copied (new)
+2025-10-17 00:55:42: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/config.mk: Copied (new)
+2025-10-17 00:55:42: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/dwl.1: Copied (new)
+2025-10-17 00:55:43: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/drwl.h: Copied (new)
+2025-10-17 00:55:45: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/dwl.c.orig: Copied (new)
+2025-10-17 00:55:46: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/dwl.desktop: Copied (new)
+2025-10-17 00:55:46: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/dwl.c: Copied (new)
+2025-10-17 00:55:46: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/util.c: Copied (new)
+2025-10-17 00:55:48: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/alwayscenter.patch: Copied (new)
+2025-10-17 00:55:48: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/util.h: Copied (new)
+2025-10-17 00:55:49: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/attachbottom.patch: Copied (new)
+2025-10-17 00:55:50: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/attachfocused.patch: Copied (new)
+2025-10-17 00:55:52: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/bar.patch: Copied (new)
+2025-10-17 00:55:52: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/barcolors.patch: Copied (new)
+2025-10-17 00:55:52: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/better-resize-0.7.patch: Copied (new)
+2025-10-17 00:55:53: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/cfact-snail.patch: Copied (new)
+2025-10-17 00:55:54: rclone: INFO  :   470.967 KiB / 740.816 KiB, 64%, 13.366 KiB/s, ETA 20s (xfr#63/123)
+2025-10-17 00:55:54: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/focusdir.patch: Copied (new)
+2025-10-17 00:55:55: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/disable-keybindings-on-fullscreen-toggle-0.7.patch: Copied (new)
+2025-10-17 00:55:55: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/en-keycodes.patch: Copied (new)
+2025-10-17 00:55:56: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/genericgaps.patch: Copied (new)
+2025-10-17 00:55:58: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/hide-behind-fullscreen.patch: Copied (new)
+2025-10-17 00:55:58: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/keyboardshortcutsinhibit.patch: Copied (new)
+2025-10-17 00:55:59: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/ipc.patch: Copied (new)
+2025-10-17 00:56:00: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/launchtag.patch: Copied (new)
+2025-10-17 00:56:01: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/movestack.patch: Copied (new)
+2025-10-17 00:56:03: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/nextlayout.patch: Copied (new)
+2025-10-17 00:56:03: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/pertag.patch: Copied (new)
+2025-10-17 00:56:04: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/primaryselection.patch: Copied (new)
+2025-10-17 00:56:05: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/pointer-gestures-unstable-v1.patch: Copied (new)
+2025-10-17 00:56:05: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/relative-mouse-resize.patch: Copied (new)
+2025-10-17 00:56:07: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/regexrules.patch: Copied (new)
+2025-10-17 00:56:07: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/warpcursor.patch: Copied (new)
+2025-10-17 00:56:08: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/p/zoomswap.patch: Copied (new)
+2025-10-17 00:56:08: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/passthrough/README.md: Copied (new)
+2025-10-17 00:56:09: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/passthrough/passthrough.patch: Copied (new)
+2025-10-17 00:56:10: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/tearing/README.md: Copied (new)
+2025-10-17 00:56:11: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/tearing/tearing.patch: Copied (new)
+2025-10-17 00:56:12: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/protocols/wlr-output-power-management-unstable-v1.xml: Copied (new)
+2025-10-17 00:56:12: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/protocols/wlr-layer-shell-unstable-v1.xml: Copied (new)
+2025-10-17 00:56:14: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/alwayscenter.patch: Copied (new)
+2025-10-17 00:56:15: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/attachbottom.patch: Copied (new)
+2025-10-17 00:56:17: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/attachfocused.patch: Copied (new)
+2025-10-17 00:56:18: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/.gitea/issue_template/bug_report.yml: Copied (new)
+2025-10-17 00:56:19: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/bar.patch: Copied (new)
+2025-10-17 00:56:21: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/better-resize-0.7.patch: Copied (new)
+2025-10-17 00:56:21: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/cfact-snail.patch: Copied (new)
+2025-10-17 00:56:23: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/disable-keybindings-on-fullscreen-toggle-0.7.patch: Copied (new)
+2025-10-17 00:56:23: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl/.gitea/issue_template/enhancement-idea.yml: Copied (new)
+2025-10-17 00:56:23: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/en-keycodes.patch: Copied (new)
+2025-10-17 00:56:26: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/focusdir.patch: Copied (new)
+2025-10-17 00:56:26: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/hide-behind-fullscreen.patch: Copied (new)
+2025-10-17 00:56:27: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/genericgaps.patch: Copied (new)
+2025-10-17 00:56:27: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/ipc.patch: Copied (new)
+2025-10-17 00:56:28: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/keyboardshortcutsinhibit.patch: Copied (new)
+2025-10-17 00:56:29: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/launchtag.patch: Copied (new)
+2025-10-17 00:56:30: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/movestack.patch: Copied (new)
+2025-10-17 00:56:32: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/pertag.patch: Copied (new)
+2025-10-17 00:56:33: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/pointer-gestures-unstable-v1.patch: Copied (new)
+2025-10-17 00:56:33: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/primaryselection.patch: Copied (new)
+2025-10-17 00:56:33: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/nextlayout.patch: Copied (new)
+2025-10-17 00:56:35: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/regexrules.patch: Copied (new)
+2025-10-17 00:56:35: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/snail-gaps.patch: Copied (new)
+2025-10-17 00:56:36: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/relative-mouse-resize.patch: Copied (new)
+2025-10-17 00:56:37: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/snail.patch: Copied (new)
+2025-10-17 00:56:38: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/toggle_constraints.patch: Copied (new)
+2025-10-17 00:56:39: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/warpcursor.patch: Copied (new)
+2025-10-17 00:56:39: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/patches/p/zoomswap.patch: Copied (new)
+2025-10-17 00:56:40: rclone: INFO  : modules/home-manager/4-appearance/fonts.nix: Copied (replaced existing)
+2025-10-17 00:56:42: rclone: INFO  : modules/home-manager/4-appearance/gtk.nix: Copied (replaced existing)
+2025-10-17 00:56:43: rclone: INFO  : modules/home-manager/2-programs/applications/foot.nix: Copied (new)
+2025-10-17 00:56:43: rclone: INFO  : modules/home-manager/2-programs/scripts/collect.nix: Copied (replaced existing)
+2025-10-17 00:56:43: rclone: INFO  : modules/home-manager/2-programs/applications/default.nix: Copied (replaced existing)
+2025-10-17 00:56:45: rclone: INFO  : modules/home-manager/2-programs/applications/rclone.nix: Copied (replaced existing)
+2025-10-17 00:56:46: rclone: INFO  : modules/home-manager/2-programs/development/vscode.nix: Copied (replaced existing)
+2025-10-17 00:56:46: rclone: INFO  : hosts/nixos-laptop/configuration.nix: Copied (replaced existing)
+2025-10-17 00:56:47: rclone: INFO  : modules/home-manager/4-appearance/colors/default.nix: Copied (replaced existing)
+2025-10-17 00:56:47: rclone: INFO  :   740.816 KiB / 740.816 KiB, 100%, 4.204 KiB/s, ETA 0s
+2025-10-17 00:56:47: 
+2025-10-17 00:56:47: A <<< B 0 files, 0.00 b
+2025-10-17 00:56:47: 
+2025-10-17 00:56:47: Apply changes to file lists instead of refreshing
+2025-10-17 00:56:47: Uploading filelists
+2025-10-17 00:56:52: 
+2025-10-17 00:56:52: Breaking locks on A. May return errors if A is not locked
+2025-10-17 00:56:52: rclone: INFO  : LOCK_nixos-sync: Deleted
+2025-10-17 00:56:52: 
+2025-10-17 00:56:52: Breaking locks on B. May return errors if B is not locked
+2025-10-17 00:56:54: rclone: INFO  : LOCK_nixos-sync: Deleted
+2025-10-17 00:56:54: A >>> B 123 files, 740.82 kb | A <<< B 0 files, 0.00 b
+2025-10-17 00:56:54: A: New 91 | Deleted 0 | Backed Up 0 | Moved 0
+2025-10-17 00:56:54: B: New 0 | Deleted 4 | Backed Up 32 | Moved 0
+2025-10-17 00:56:54: Time: 02m54.34s (rclone 02m54.95s, shell 00s)
+2025-10-17 00:56:54: Logs will be saved on workdirs to nixos-sync_2025-10-17T005400.log
+2025-10-17 00:56:54: ---- END OF LOG ----

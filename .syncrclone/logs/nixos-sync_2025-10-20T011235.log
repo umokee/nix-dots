@@ -1,0 +1,116 @@
+2025-10-20 01:12:35: syncrclone (20230310.0.BETA)
+2025-10-20 01:12:35: config path: '/home/user/.syncrclone/nixos.py'
+2025-10-20 01:12:35: temp dir: '/tmp/tmpulztclis'
+2025-10-20 01:12:35: A: '/home/user/nixos'
+2025-10-20 01:12:35: B: 'cloud:sync/nixos'
+2025-10-20 01:12:35: rclone version:
+2025-10-20 01:12:35: rclone: rclone v1.71.0
+2025-10-20 01:12:35: rclone: - os/version: nixos 25.11 (64 bit)
+2025-10-20 01:12:35: rclone: - os/kernel: 6.12.48 (x86_64)
+2025-10-20 01:12:35: rclone: - os/type: linux
+2025-10-20 01:12:35: rclone: - os/arch: amd64
+2025-10-20 01:12:35: rclone: - go/version: go1.25.0
+2025-10-20 01:12:35: rclone: - go/linking: dynamic
+2025-10-20 01:12:35: rclone: - go/tags: cmount
+2025-10-20 01:12:35: 
+2025-10-20 01:12:35: Refreshing file lists concurrently
+2025-10-20 01:12:36: Refreshed file list on A '/home/user/nixos'
+2025-10-20 01:12:36: 191 files, 17.51 mb
+2025-10-20 01:12:44: Refreshed file list on B 'cloud:sync/nixos'
+2025-10-20 01:12:44: 191 files, 17.50 mb
+2025-10-20 01:12:45: 
+2025-10-20 01:12:45: Setting lock on A
+2025-10-20 01:12:45: rclone: INFO  : LOCK_nixos-sync: Copied (new)
+2025-10-20 01:12:45: rclone: INFO  :          17 B / 17 B, 100%, 0 B/s, ETA -
+2025-10-20 01:12:45: 
+2025-10-20 01:12:45: Setting lock on B
+2025-10-20 01:12:49: rclone: INFO  : LOCK_nixos-sync: Copied (new)
+2025-10-20 01:12:49: rclone: INFO  :          17 B / 17 B, 100%, 8 B/s, ETA 0s
+2025-10-20 01:12:49: 
+2025-10-20 01:12:49: 
+2025-10-20 01:12:49: Actions queued on A:
+2025-10-20 01:12:49: New on A: 'modules/home-manager/1-workspace/desktop/mangowc.nix'
+2025-10-20 01:12:49: 
+2025-10-20 01:12:49: Actions queued on B:
+2025-10-20 01:12:49: Delete (with backup) on B: 'modules/nixos/2-workspace/dwl.nix'
+2025-10-20 01:12:49: Backup on B: 'modules/home-manager/1-workspace/desktop/waybar.nix'
+2025-10-20 01:12:49: Backup on B: 'shared/config.nix'
+2025-10-20 01:12:49: Backup on B: 'modules/nixos/4-services/virtualization.nix'
+2025-10-20 01:12:49: Backup on B: 'modules/nixos/0-base/users.nix'
+2025-10-20 01:12:49: Backup on B: 'modules/nixos/2-workspace/default.nix'
+2025-10-20 01:12:49: Backup on B: 'modules/home-manager/1-workspace/desktop/dwl/dwl.nix'
+2025-10-20 01:12:49: Backup on B: 'flake.nix'
+2025-10-20 01:12:49: Backup on B: 'modules/nixos/2-workspace/window-managers.nix'
+2025-10-20 01:12:49: Backup on B: 'modules/home-manager/2-programs/packages.nix'
+2025-10-20 01:12:49: Backup on B: 'modules/nixos/4-services/postgresql.nix'
+2025-10-20 01:12:49: Backup on B: 'modules/nixos/4-services/sing-box.nix'
+2025-10-20 01:12:49: Backup on B: 'modules/home-manager/1-workspace/desktop/hyprland.nix'
+2025-10-20 01:12:49: Backup on B: 'shared/helpers.nix'
+2025-10-20 01:12:49: Backup on B: 'flake.lock'
+2025-10-20 01:12:49: Backup on B: 'modules/nixos/4-services/docker.nix'
+2025-10-20 01:12:49: Backup on B: 'modules/home-manager/1-workspace/desktop/tofi.nix'
+2025-10-20 01:12:49: 
+2025-10-20 01:12:49: Performing Actions on A
+2025-10-20 01:12:49: rclone: INFO  : There was nothing to transfer
+2025-10-20 01:12:49: rclone: INFO  :           0 B / 0 B, -, 0 B/s, ETA -
+2025-10-20 01:12:49: 
+2025-10-20 01:12:49: Performing Actions on B
+2025-10-20 01:12:58: rclone: INFO  : modules/nixos/2-workspace/dwl.nix: Moved (server-side)
+2025-10-20 01:12:58: rclone: INFO  :         296 B / 296 B, 100%, 0 B/s, ETA -
+2025-10-20 01:13:22: rclone: INFO  : flake.lock: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  : shared/config.nix: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  : flake.nix: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  : shared/helpers.nix: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  : modules/nixos/4-services/docker.nix: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  : modules/nixos/4-services/sing-box.nix: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  : modules/nixos/4-services/postgresql.nix: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  : modules/nixos/4-services/virtualization.nix: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  : modules/home-manager/2-programs/packages.nix: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  : modules/home-manager/1-workspace/desktop/hyprland.nix: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  : modules/home-manager/1-workspace/desktop/tofi.nix: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  : modules/nixos/2-workspace/default.nix: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  : modules/home-manager/1-workspace/desktop/waybar.nix: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  : modules/nixos/2-workspace/window-managers.nix: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  : modules/nixos/0-base/users.nix: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl.nix: Copied (server-side copy)
+2025-10-20 01:13:22: rclone: INFO  :    51.423 KiB / 51.423 KiB, 100%, 0 B/s, ETA -
+2025-10-20 01:13:22: Backups for B stored in 'cloud:sync/nixos/.syncrclone/backups/2025-10-20T011235_nixos-sync_B'
+2025-10-20 01:13:22: 
+2025-10-20 01:13:22: A >>> B 17 files, 64.28 kb
+2025-10-20 01:13:26: rclone: INFO  : flake.lock: Copied (replaced existing)
+2025-10-20 01:13:26: rclone: INFO  : shared/helpers.nix: Copied (replaced existing)
+2025-10-20 01:13:27: rclone: INFO  : flake.nix: Copied (replaced existing)
+2025-10-20 01:13:27: rclone: INFO  : shared/config.nix: Copied (replaced existing)
+2025-10-20 01:13:29: rclone: INFO  : modules/home-manager/2-programs/packages.nix: Copied (replaced existing)
+2025-10-20 01:13:29: rclone: INFO  : modules/home-manager/1-workspace/desktop/tofi.nix: Copied (replaced existing)
+2025-10-20 01:13:29: rclone: INFO  : modules/home-manager/1-workspace/desktop/waybar.nix: Copied (replaced existing)
+2025-10-20 01:13:29: rclone: INFO  : modules/home-manager/1-workspace/desktop/mangowc.nix: Copied (new)
+2025-10-20 01:13:31: rclone: INFO  : modules/home-manager/1-workspace/desktop/dwl/dwl.nix: Copied (replaced existing)
+2025-10-20 01:13:32: rclone: INFO  : modules/nixos/2-workspace/default.nix: Copied (replaced existing)
+2025-10-20 01:13:32: rclone: INFO  : modules/nixos/0-base/users.nix: Copied (replaced existing)
+2025-10-20 01:13:32: rclone: INFO  : modules/nixos/2-workspace/window-managers.nix: Copied (replaced existing)
+2025-10-20 01:13:34: rclone: INFO  : modules/nixos/4-services/docker.nix: Copied (replaced existing)
+2025-10-20 01:13:35: rclone: INFO  : modules/nixos/4-services/postgresql.nix: Copied (replaced existing)
+2025-10-20 01:13:35: rclone: INFO  : modules/nixos/4-services/sing-box.nix: Copied (replaced existing)
+2025-10-20 01:13:36: rclone: INFO  : modules/nixos/4-services/virtualization.nix: Copied (replaced existing)
+2025-10-20 01:13:36: rclone: INFO  :    55.783 KiB / 55.783 KiB, 100%, 4.290 KiB/s, ETA 0s
+2025-10-20 01:13:40: rclone: INFO  : modules/home-manager/1-workspace/desktop/hyprland.nix: Updated modification time in destination
+2025-10-20 01:13:40: rclone: INFO  : There was nothing to transfer
+2025-10-20 01:13:40: rclone: INFO  :           0 B / 0 B, -, 0 B/s, ETA -
+2025-10-20 01:13:40: 
+2025-10-20 01:13:40: A <<< B 0 files, 0.00 b
+2025-10-20 01:13:40: 
+2025-10-20 01:13:40: Apply changes to file lists instead of refreshing
+2025-10-20 01:13:40: Uploading filelists
+2025-10-20 01:13:45: 
+2025-10-20 01:13:45: Breaking locks on A. May return errors if A is not locked
+2025-10-20 01:13:45: rclone: INFO  : LOCK_nixos-sync: Deleted
+2025-10-20 01:13:45: 
+2025-10-20 01:13:45: Breaking locks on B. May return errors if B is not locked
+2025-10-20 01:13:47: rclone: INFO  : LOCK_nixos-sync: Deleted
+2025-10-20 01:13:47: A >>> B 17 files, 64.28 kb | A <<< B 0 files, 0.00 b
+2025-10-20 01:13:47: A: New 1 | Deleted 0 | Backed Up 0 | Moved 0
+2025-10-20 01:13:47: B: New 0 | Deleted 1 | Backed Up 16 | Moved 0
+2025-10-20 01:13:47: Time: 01m12.20s (rclone 01m12.82s, shell 00s)
+2025-10-20 01:13:47: Logs will be saved on workdirs to nixos-sync_2025-10-20T011235.log
+2025-10-20 01:13:47: ---- END OF LOG ----

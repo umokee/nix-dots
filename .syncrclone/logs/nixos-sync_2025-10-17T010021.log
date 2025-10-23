@@ -1,0 +1,66 @@
+2025-10-17 01:00:21: syncrclone (20230310.0.BETA)
+2025-10-17 01:00:21: config path: '/home/user/.syncrclone/nixos.py'
+2025-10-17 01:00:21: temp dir: '/tmp/tmphy9k2sud'
+2025-10-17 01:00:21: A: '/home/user/nixos'
+2025-10-17 01:00:21: B: 'cloud:sync/nixos'
+2025-10-17 01:00:21: rclone version:
+2025-10-17 01:00:21: rclone: rclone v1.71.0
+2025-10-17 01:00:21: rclone: - os/version: nixos 25.11 (64 bit)
+2025-10-17 01:00:21: rclone: - os/kernel: 6.12.48 (x86_64)
+2025-10-17 01:00:21: rclone: - os/type: linux
+2025-10-17 01:00:21: rclone: - os/arch: amd64
+2025-10-17 01:00:21: rclone: - go/version: go1.25.0
+2025-10-17 01:00:21: rclone: - go/linking: dynamic
+2025-10-17 01:00:21: rclone: - go/tags: cmount
+2025-10-17 01:00:21: 
+2025-10-17 01:00:21: Refreshing file lists concurrently
+2025-10-17 01:00:21: Refreshed file list on A '/home/user/nixos'
+2025-10-17 01:00:21: 191 files, 17.50 mb
+2025-10-17 01:00:29: Refreshed file list on B 'cloud:sync/nixos'
+2025-10-17 01:00:29: 191 files, 17.50 mb
+2025-10-17 01:00:30: 
+2025-10-17 01:00:30: Setting lock on A
+2025-10-17 01:00:30: rclone: INFO  : LOCK_nixos-sync: Copied (new)
+2025-10-17 01:00:30: rclone: INFO  :          17 B / 17 B, 100%, 0 B/s, ETA -
+2025-10-17 01:00:30: 
+2025-10-17 01:00:30: Setting lock on B
+2025-10-17 01:00:35: rclone: INFO  : LOCK_nixos-sync: Copied (new)
+2025-10-17 01:00:35: rclone: INFO  :          17 B / 17 B, 100%, 5 B/s, ETA 0s
+2025-10-17 01:00:36: 
+2025-10-17 01:00:36: 
+2025-10-17 01:00:36: Actions queued on A:
+2025-10-17 01:00:36: 
+2025-10-17 01:00:36: Actions queued on B:
+2025-10-17 01:00:36: Backup on B: 'shared/config.nix'
+2025-10-17 01:00:36: 
+2025-10-17 01:00:36: Performing Actions on A
+2025-10-17 01:00:36: rclone: INFO  : There was nothing to transfer
+2025-10-17 01:00:36: rclone: INFO  :           0 B / 0 B, -, 0 B/s, ETA -
+2025-10-17 01:00:36: 
+2025-10-17 01:00:36: Performing Actions on B
+2025-10-17 01:00:37: rclone: INFO  : There was nothing to transfer
+2025-10-17 01:00:37: rclone: INFO  :           0 B / 0 B, -, 0 B/s, ETA -
+2025-10-17 01:00:45: rclone: INFO  : shared/config.nix: Copied (server-side copy)
+2025-10-17 01:00:45: rclone: INFO  :     1.761 KiB / 1.761 KiB, 100%, 0 B/s, ETA -
+2025-10-17 01:00:45: Backups for B stored in 'cloud:sync/nixos/.syncrclone/backups/2025-10-17T010021_nixos-sync_B'
+2025-10-17 01:00:45: 
+2025-10-17 01:00:45: A >>> B 1 files, 1.76 kb
+2025-10-17 01:00:50: rclone: INFO  : shared/config.nix: Copied (replaced existing)
+2025-10-17 01:00:50: rclone: INFO  :     1.756 KiB / 1.756 KiB, 100%, 599 B/s, ETA 0s
+2025-10-17 01:00:50: 
+2025-10-17 01:00:50: A <<< B 0 files, 0.00 b
+2025-10-17 01:00:50: 
+2025-10-17 01:00:50: Apply changes to file lists instead of refreshing
+2025-10-17 01:00:50: Uploading filelists
+2025-10-17 01:00:55: 
+2025-10-17 01:00:55: Breaking locks on A. May return errors if A is not locked
+2025-10-17 01:00:55: rclone: INFO  : LOCK_nixos-sync: Deleted
+2025-10-17 01:00:55: 
+2025-10-17 01:00:55: Breaking locks on B. May return errors if B is not locked
+2025-10-17 01:00:58: rclone: INFO  : LOCK_nixos-sync: Deleted
+2025-10-17 01:00:58: A >>> B 1 files, 1.76 kb | A <<< B 0 files, 0.00 b
+2025-10-17 01:00:58: A: New 0 | Deleted 0 | Backed Up 0 | Moved 0
+2025-10-17 01:00:58: B: New 0 | Deleted 0 | Backed Up 1 | Moved 0
+2025-10-17 01:00:58: Time: 37.60s (rclone 38.26s, shell 00s)
+2025-10-17 01:00:58: Logs will be saved on workdirs to nixos-sync_2025-10-17T010021.log
+2025-10-17 01:00:58: ---- END OF LOG ----
