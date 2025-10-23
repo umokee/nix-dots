@@ -23,6 +23,10 @@ in
           users = [ conf.username ];
           commands = [
             {
+              command = "/run/current-system/sw/bin/systemd-run";
+              options = [ "NOPASSWD" ];
+            }
+            {
               command = "/run/current-system/sw/bin/nix-env";
               options = [ "NOPASSWD" ];
             }
