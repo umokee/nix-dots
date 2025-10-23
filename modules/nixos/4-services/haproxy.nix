@@ -52,24 +52,14 @@ in
 
         backend nginx_ssl
           mode tcp
+          option tcp-check
           server nginx 127.0.0.1:8444
 
         backend github_backend
           mode tcp
+          option tcp-check
           server github github.com:443
       '';
-    };
-
-    services.nginx.virtualHosts."umkcloud.ru" = {
-      listen = [
-        {
-          addr = "127.0.0.1";
-          port = 8444;
-          ssl = true;
-        }
-      ];
-      sslCertificate = "/var/lib/acme/umkcloud.ru/fullchain.pem";
-      sslCertificateKey = "/var/lib/acme/umkcloud.ru/key.pem";
     };
 
     systemd.tmpfiles.rules = [
@@ -78,9 +68,11 @@ in
 
     networking.firewall.allowedTCPPorts = [ 443 ];
 
-    systemd.services.haproxy.serviceConfig.SupplementaryGroups = [ "acme" ];
+    users.users.haproxy.extraGroups = [ "acme" ];
     
-    systemd.services.haproxy.wants = [ "acme-umkcloud.ru.service" ];
-    systemd.services.haproxy.after = [ "acme-umkcloud.ru.service" ];
+    systemd.services.haproxy = {
+      wants = [ "acme-finished-umkcloud.ru.target" ];
+      after = [ "acme-finished-umkcloud.ru.target" ];
+    };
   };
 }
