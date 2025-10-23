@@ -110,6 +110,32 @@ in
           "editor.formatOnSave" = true;
           "editor.tabSize" = 4;
         };
+
+        "nix.enableLanguageServer" = true;
+        "nix.serverPath" = "${pkgs.nixd}/bin/nixd";
+        "nix.formatterPath" = "${pkgs.nixfmt-rfc-style}/bin/nixfmt";
+        
+        "[nix]" = {
+          "editor.defaultFormatter" = "jnoortheen.nix-ide";
+          "editor.formatOnSave" = true;
+          "editor.tabSize" = 2;
+        };
+        
+        "nix.serverSettings" = {
+          "nixd" = {
+            "formatting" = {
+              "command" = [ "${pkgs.nixfmt-rfc-style}/bin/nixfmt" ];
+            };
+            "options" = {
+              "nixos" = {
+                "expr" = "(builtins.getFlake \"/home/${config.home.username}/nixos\").nixosConfigurations.desktop.options";
+              };
+              "home-manager" = {
+                "expr" = "(builtins.getFlake \"/home/${config.home.username}/nixos\").homeConfigurations.desktop.options";
+              };
+            };
+          };
+        };
       };
       keybindings = [
         {

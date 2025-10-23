@@ -13,7 +13,7 @@ in
     security.sudo = {
       enable = true;
       execWheelOnly = true;
-      wheelNeedsPassword = true;
+      wheelNeedsPassword = !helpers.isServer;
       extraConfig = ''
         Defaults timestamp_timeout=5
         Defaults lecture="never"

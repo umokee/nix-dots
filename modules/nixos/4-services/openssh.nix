@@ -8,19 +8,12 @@
 let
   enable = helpers.hasIn "services" "openssh";
 
-  cfg = {
-    authorizedKeys = {
-      user = [  ];
-    };
-  };
+  authorizedKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII/gto5eMkM9Ghp5VScGT58ebz1VHCMhCpj8Hse4OjKI user@nixos-desktop"
+  ];
 in
 {
   config = lib.mkIf enable {
-    networking.firewall = {
-      enable = true;
-      allowedTCPPorts = [ 22 ];
-    };
-
     services.openssh = {
       enable = true;
       ports = [ 22 ];
@@ -54,20 +47,12 @@ in
       '';
     };
 
-    programs.ssh = {
-      enable = true;
-      matchBlocks = {
-        "github.com" = {
-          hostname = "github.com";
-          user = "git";
-          identityFile = ".ssh/github_ed25519";
-          identitiesOnly = true;
-        };
-      };
-    };
+    users.users.${conf.username}.openssh.authorizedKeys.keys = authorizedKeys;
+    users.users.root.openssh.authorizedKeys.keys = authorizedKeys;
 
-    users.users = lib.mapAttrs (user: keys: {
-      openssh.authorizedKeys.keys = keys;
-    }) cfg.authorizedKeys;
+    networking.firewall = {
+      enable = true;
+      allowedTCPPorts = [ 22 ];
+    };
   };
 }
