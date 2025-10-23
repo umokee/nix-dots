@@ -20,11 +20,10 @@ let
     category: feature:
     let
       categoryList = conf.${category}.enable or [ ];
+      checkList = features: lib.any (f: lib.elem f categoryList) features;
+      checkSingle = f: lib.elem f categoryList;
     in
-    if lib.isList feature then
-      lib.any (f: lib.elem f categoryList) feature
-    else
-      lib.elem feature categoryList;
+    lib.isList categoryList && (if lib.isList feature then checkList feature else checkSingle feature);
 in
 {
   isLaptop = conf.machineType == "laptop";

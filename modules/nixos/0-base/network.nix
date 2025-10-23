@@ -21,10 +21,10 @@ in
           80
           443
         ]
-        ++ lib.optionals helpers.hasIn "services" "postgresql" [
+        ++ lib.optionals (helpers.hasIn "services" "postgresql") [
           5432
         ]
-        ++ lib.optionals helpers.hasIn "services" "ms-sql" [
+        ++ lib.optionals (helpers.hasIn "services" "ms-sql") [
           1433
         ];
 
