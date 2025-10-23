@@ -70,7 +70,7 @@ in
               realitySettings = {
                 show = false;
                 dest = "github.com:443";
-                xver = 0;
+                xver = 2;
                 serverNames = [
                   "github.com"
                   "www.github.com"

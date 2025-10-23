@@ -1,7 +1,5 @@
 {
-  config,
   lib,
-  pkgs,
   helpers,
   ...
 }:
@@ -24,19 +22,11 @@ in
 
         defaults
           log     global
-          mode    http
-          option  httplog
-          option  dontlognull
+          mode    tcp
+          option  tcplog
           timeout connect 5000ms
           timeout client  50000ms
           timeout server  50000ms
-          errorfile 400 /etc/haproxy/errors/400.http
-          errorfile 403 /etc/haproxy/errors/403.http
-          errorfile 408 /etc/haproxy/errors/408.http
-          errorfile 500 /etc/haproxy/errors/500.http
-          errorfile 502 /etc/haproxy/errors/502.http
-          errorfile 503 /etc/haproxy/errors/503.http
-          errorfile 504 /etc/haproxy/errors/504.http
 
         frontend https_front
           bind *:443
@@ -46,34 +36,24 @@ in
           tcp-request inspect-delay 5s
           tcp-request content accept if { req.ssl_hello_type 1 }
           
-          # Определяем VLESS трафик и отправляем на sing-box
+          acl is_vless req.ssl_sni -i 185.223.169.86
           acl is_vless req.ssl_sni -i umkcloud.ru
           
-          use_backend vless_backend if is_vless
-          default_backend web_backend
+          use_backend xray_backend if is_vless
+          default_backend github_backend
 
-        frontend http_front
-          bind *:80
-          mode http
-          
-          # Редирект на HTTPS для обычного трафика
-          redirect scheme https code 301 if !{ ssl_fc }
-
-        backend vless_backend
+        backend xray_backend
           mode tcp
-          option tcp-check
-          server singbox 127.0.0.1:8443 check
+          server xray 127.0.0.1:8443 send-proxy-v2
 
-        backend web_backend
+        backend github_backend
           mode tcp
-          option tcp-check
-          # Отправляем на реальный сайт (steal-oneself)
-          server realweb www.github.com:443 check ssl verify none
+          server github github.com:443 check
       '';
     };
 
     systemd.tmpfiles.rules = [
-      "d /etc/haproxy/errors 0755 haproxy haproxy -"
+      "d /run/haproxy 0755 haproxy haproxy -"
     ];
 
     systemd.services.haproxy.serviceConfig = {
