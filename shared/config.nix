@@ -121,7 +121,7 @@ let
     services = {
       enable = [
         "openssh"
-        "x-ray"
+        "xray"
         "haproxy"
         "fail2ban"
         "auto-upgrade"

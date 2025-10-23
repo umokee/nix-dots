@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   pkgs,
   conf,
@@ -16,7 +15,7 @@ in
       dockerCompat = true;
       defaultNetwork.settings.dns_enabled = true;
     };
-    
+
     users.users.${conf.username}.extraGroups = [ "podman" ];
 
     environment.systemPackages = with pkgs; [

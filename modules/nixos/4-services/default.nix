@@ -12,6 +12,6 @@
     ./haproxy.nix
     ./fail2ban.nix
     ./auto-upgrade.nix
-    ./x-ray.nix
+    ./xray.nix
   ];
 }
