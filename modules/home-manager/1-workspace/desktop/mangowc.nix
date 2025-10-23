@@ -1,6 +1,13 @@
-{ lib, helpers, pkgs, ... }:
+{
+  lib,
+  helpers,
+  pkgs,
+  ...
+}:
 let
   enable = helpers.hasIn "workspace" "mangowc";
+
+  mainBtn = "SUPER";
 in
 {
   config = lib.mkIf enable {
@@ -13,6 +20,9 @@ in
     wayland.windowManager.mango = {
       enable = true;
       settings = ''
+        # More option see https://github.com/DreamMaoMao/mango/wiki/
+
+        # Window effect
         blur=0
         blur_layer=0
         blur_optimized=1
@@ -37,6 +47,8 @@ in
         focused_opacity=1.0
         unfocused_opacity=1.0
 
+        # Animation Configuration(support type:zoom,slide)
+        # tag_animation_direction: 0-horizontal,1-vertical
         animations=0
         layer_animations=0
         animation_type_open=slide
@@ -57,6 +69,7 @@ in
         animation_curve_tag=0.46,1.0,0.29,1
         animation_curve_close=0.08,0.92,0,1
 
+        # Scroller Layout Setting
         scroller_structs=20
         scroller_default_proportion=0.8
         scroller_focus_center=0
@@ -65,17 +78,20 @@ in
         scroller_default_proportion_single=1.0
         scroller_proportion_preset=0.5,0.8,1.0
 
+        # Master-Stack Layout Setting
         new_is_master=1
         default_mfact=0.55
         default_nmaster=1
         smartgaps=0
 
+        # Overview Setting
         hotarea_size=10
         enable_hotarea=1
         ov_tab_mode=0
         overviewgappi=5
         overviewgappo=30
 
+        # Misc
         no_border_when_single=0
         axis_bind_apply_timeout=100
         focus_on_activate=1
@@ -89,11 +105,15 @@ in
         cursor_size=24
         drag_tile_to_tile=1
 
+        # keyboard
         repeat_rate=50
         repeat_delay=300
-        numlockon=1
+        numlockon=0
         xkb_rules_layout=us,ru
+        xkb_options=grp:ctrl_shift_toggle
 
+        # Trackpad
+        # need relogin to make it apply
         disable_trackpad=0
         tap_to_click=1
         tap_and_drag=1
@@ -108,13 +128,14 @@ in
         # need relogin to make it apply
         mouse_natural_scrolling=0
 
+        # Appearance
         gappih=2
         gappiv=2
         gappoh=2
         gappov=2
         scratchpad_width_ratio=0.8
         scratchpad_height_ratio=0.9
-        borderpx=4
+        borderpx=1
         rootcolor=0x201b14ff
         bordercolor=0x444444ff
         focuscolor=0xc9b890ff
@@ -140,24 +161,21 @@ in
         # key name refer to `xev` or `wev` command output,
         # mod keys name: super,ctrl,alt,shift,none
 
-        # reload config
-        bind=SUPER,r,reload_config
+        bind=${mainBtn},r,reload_config
+        bind=${mainBtn},m,quit
 
-        # menu and terminal
-        bind=Alt,space,spawn,${pkgs.tofi}/bin/tofi-drun --drun-launch=true
-        bind=Alt,Return,spawn,${pkgs.foot}/bin/foot
-        bind=Alt,w,spawn,zen
+        bind=${mainBtn},space,spawn,${pkgs.tofi}/bin/tofi-drun --drun-launch=true
+        bind=${mainBtn},Return,spawn,foot
+        bind=${mainBtn},w,spawn,zen
+        bind=${mainBtn},e,spawn,nemo
+        bind=${mainBtn}+SHIFT,S,spawn,screenshot-tool clip
+        bind=${mainBtn},q,killclient,
 
-        # exit
-        bind=SUPER,m,quit
-        bind=ALT,q,killclient,
-
-        # switch window focus
-        bind=SUPER,Tab,focusstack,next
-        bind=ALT,Left,focusdir,left
-        bind=ALT,Right,focusdir,right
-        bind=ALT,Up,focusdir,up
-        bind=ALT,Down,focusdir,down
+        bind=${mainBtn},Tab,focusstack,next
+        bind=${mainBtn},h,focusdir,left
+        bind=${mainBtn},l,focusdir,right
+        bind=${mainBtn},k,focusdir,up
+        bind=${mainBtn},j,focusdir,down
 
         # swap window
         bind=SUPER+SHIFT,Up,exchange_client,up
@@ -249,6 +267,7 @@ in
         # Axis Bindings
         axisbind=SUPER,UP,viewtoleft_have_client
         axisbind=SUPER,DOWN,viewtoright_have_client
+
 
         # layer rule
         layerrule=animation_type_open:zoom,layer_name:rofi

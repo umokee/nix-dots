@@ -7,5 +7,6 @@
     ./hyprland.nix
     ./tofi.nix
     ./xdg.nix
+    ./mangowc.nix
   ];
 }

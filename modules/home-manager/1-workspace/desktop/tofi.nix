@@ -22,7 +22,7 @@ in
       border-width = 0;
       outline-width = 0;
 
-      horizontal = true;    
+      horizontal = true;
       result-spacing = 25;
       num-results = 8;
 
@@ -53,7 +53,7 @@ in
       terminal = conf.default.terminal;
     };
   };
-  
+
   home.activation.clearTofiCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     rm -f ${config.home.homeDirectory}/.cache/tofi-drun
   '';

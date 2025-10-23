@@ -1,4 +1,9 @@
-{ config, helpers, lib, ... }:
+{
+  config,
+  helpers,
+  lib,
+  ...
+}:
 {
   programs.waybar = lib.mkIf (!helpers.isDwl) {
     enable = true;
@@ -18,29 +23,44 @@
         height = 30;
         spacing = 4;
 
-        modules-left = [
-          "hyprland/workspaces"
-          "custom/sep"
-          "hyprland/window"
-          "custom/sep"
-        ];
+        modules-left =
+          [ ]
+          ++ lib.optionals helpers.isHyprland [
+            "hyprland/workspaces"
+            "custom/sep"
+            "hyprland/window"
+            "custom/sep"
+          ]
+          ++ lib.optionals helpers.isMango [
+            "ext/workspaces"
+            "custom/sep"
+            "dwl/window#layout"
+            "custom/sep"
+            "dwl/window#title"
+          ];
 
         modules-center = [ ];
 
-        modules-right = [
-          "custom/sep"
-          "network"
-          "custom/sep"
-          "cpu"
-          "custom/sep"
-          "memory"
-          "custom/sep"
-          "disk"
-          "custom/sep"
-          "clock"
-          "custom/sep"
-          "tray"
-        ];
+        modules-right =
+          [ ]
+          ++ lib.optionals helpers.isLaptop [
+            "custom/sep"
+            "battery"
+          ]
+          ++ [
+            "custom/sep"
+            "network"
+            "custom/sep"
+            "cpu"
+            "custom/sep"
+            "memory"
+            "custom/sep"
+            "disk"
+            "custom/sep"
+            "clock"
+            "custom/sep"
+            "tray"
+          ];
 
         "hyprland/workspaces" = {
           disable-scroll = true;
@@ -55,6 +75,25 @@
         "hyprland/window" = {
           max-length = 40;
           separate-outputs = false;
+        };
+
+        "ext/workspaces" = {
+          format = "{icon}";
+          ignore-hidden = false;
+          on-click = "activate";
+          sort-by-id = true;
+        };
+
+        "dwl/tags" = {
+          num-tags = 9;
+        };
+
+        "dwl/window#layout" = {
+          format = "[{layout}]";
+        };
+
+        "dwl/window#title" = {
+          format = "{title}";
         };
 
         tray = {
@@ -87,15 +126,15 @@
             critical = 15;
           };
           format = "Bat: {capacity}% {icon} {time}";
-          format-plugged = "{capacity}% ";
+          format-plugged = "{capacity}% ";
           format-alt = "Bat {capacity}%";
           format-time = "{H}:{M}";
           format-icons = [
-            ""
-            ""
-            ""
-            ""
-            ""
+            ""
+            ""
+            ""
+            ""
+            ""
           ];
         };
 
