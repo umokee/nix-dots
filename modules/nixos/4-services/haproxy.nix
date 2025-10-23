@@ -24,9 +24,9 @@ in
           log     global
           mode    tcp
           option  tcplog
-          timeout connect 5000ms
-          timeout client  50000ms
-          timeout server  50000ms
+          timeout connect 30s
+          timeout client  1h
+          timeout server  1h
 
         frontend https_front
           bind *:443
@@ -36,8 +36,8 @@ in
           tcp-request inspect-delay 5s
           tcp-request content accept if { req.ssl_hello_type 1 }
           
-          acl is_vless req.ssl_sni -i 185.223.169.86
-          acl is_vless req.ssl_sni -i umkcloud.ru
+          # Только github.com идёт на Xray
+          # ВСЁ ОСТАЛЬНОЕ (включая umkcloud.ru) идёт на GitHub
           acl is_vless req.ssl_sni -i github.com
           acl is_vless req.ssl_sni -i www.github.com
           
@@ -51,8 +51,7 @@ in
 
         backend github_backend
           mode tcp
-          option ssl-hello-chk
-          server github github.com:443 check
+          server github github.com:443
       '';
     };
 
@@ -61,13 +60,5 @@ in
     ];
 
     networking.firewall.allowedTCPPorts = [ 443 ];
-
-    systemd.services.haproxy.serviceConfig = {
-      NoNewPrivileges = true;
-      PrivateTmp = true;
-      ProtectSystem = "strict";
-      ProtectHome = true;
-      ReadWritePaths = [ "/run/haproxy" ];
-    };
   };
 }
