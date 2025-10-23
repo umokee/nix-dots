@@ -24,8 +24,6 @@
       (termius.overrideAttrs (oldAttrs: {
         buildInputs = (oldAttrs.buildInputs or []) ++ [ sqlite ];
       }))
-      nmap
-      inputs.waterfox.packages.x86_64-linux.default
     ]
     ++ lib.optionals (helpers.hasIn "hardware" "sound") [
       pavucontrol
