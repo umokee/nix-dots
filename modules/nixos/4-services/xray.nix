@@ -75,7 +75,7 @@ in
                   "github.com"
                   "www.github.com"
                 ];
-                privateKey = "6DMV09BexNFlw1zf1My259gOc_Z1IsyYwNVCi1RWqFg";
+                privateKey = "8AnEBYmY9jLejsRp8bYmLoiTmNGYTAepn_1nA0NFqWo";
                 shortIds = [
                   "1d0702eb71b9b044"
                 ];
