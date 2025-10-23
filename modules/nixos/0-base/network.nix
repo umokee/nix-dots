@@ -41,7 +41,7 @@ in
       };
     };
 
-    boot.kernel.sysctl = {
+    boot.kernel.sysctl = lib.mkIf helpers.isServer {
       # Enable BBR
       "net.ipv4.tcp_fastopen" = 3;
       "net.ipv4.tcp_congestion_control" = "bbr";
