@@ -1,7 +1,7 @@
 ================== BEGIN FILE ==================
 File: /home/user/nixos/flake.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -116,7 +116,7 @@ File: /home/user/nixos/flake.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/shared/helpers.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { lib, conf }:
@@ -125,33 +125,16 @@ let
     "hyprland"
     "niri"
     "dwl"
-    "sway"
-    "river"
-    "wayfire"
-    "labwc"
-    "gnome"
-    "plasma6"
-    "cagebreak"
+    "mangowc"
   ];
   x11WMs = [
-    "i3"
     "bspwm"
-    "awesome"
-    "xmonad"
     "dwm"
-    "openbox"
-    "plasma5"
-    "xfce"
-    "mate"
   ];
   wlrCompositors = [
     "sway"
-    "river"
     "dwl"
     "mangowc"
-    "cagebreak"
-    "labwc"
-    "wayfire"
   ];
 
   hasIn =
@@ -173,11 +156,6 @@ in
   isWM = hasIn "workspace" (waylandCompositors ++ x11WMs);
 
   isHyprland = hasIn "workspace" "hyprland";
-  isKDE = hasIn "workspace" [
-    "plasma6"
-    "plasma5"
-  ];
-  isGnome = hasIn "workspace" "gnome";
   isWlr = hasIn "workspace" wlrCompositors;
   isNiri = hasIn "workspace" "niri";
   isDwl = hasIn "workspace" "dwl";
@@ -185,15 +163,6 @@ in
 
   needsHyprlandPortal = hasIn "workspace" "hyprland";
   needsWlrPortal = hasIn "workspace" wlrCompositors;
-  needsKDEPortal = hasIn "workspace" [
-    "plasma6"
-    "plasma5"
-  ];
-  needsGnomePortal = hasIn "workspace" [
-    "gnome"
-    "niri"
-  ];
-  needsNiriPortal = hasIn "workspace" "niri";
 
   hasNvidia = hasIn "hardware" "nvidia";
   hasIntel = hasIn "hardware" "intel";
@@ -210,7 +179,7 @@ File: /home/user/nixos/shared/helpers.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/shared/config.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { lib, hostname }:
@@ -277,9 +246,7 @@ let
     };
     services = {
       enable = [
-        #"postgresql"
         "openssh"
-        #"sing-box"
         "gammastep"
         "virtual-machine"
         "print"
@@ -319,28 +286,32 @@ let
     };
   };
 
-  serverVars = lib.recursiveUpdate commonVars {
-    hardware = {
+  serverVars = {
+    base = {
       enable = [
-        "power"
+        "boot"
+        "system"
+        "security"
+        "locale"
+        "network"
+        "users"
       ];
+    };
+    hardware = {
+      enable = [ ];
     };
     workspace = {
       enable = [ ];
     };
     programs = {
-      enable = [
-        "nix-lang"
-      ];
+      enable = [ ];
     };
     services = {
       enable = [
         "openssh"
         "xray"
-        "haproxy"
-        "acme"
+        "traefik"
         "fail2ban"
-        "auto-upgrade"
       ];
     };
   };
@@ -362,7 +333,7 @@ File: /home/user/nixos/shared/config.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/shared/wallpapers.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -378,7 +349,7 @@ File: /home/user/nixos/shared/wallpapers.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/tofi.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -451,7 +422,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/tofi.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/dunst.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -548,7 +519,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/dunst.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/screenshots.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -640,7 +611,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/screenshots.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/hyprland.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -927,7 +898,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/hyprland.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/xdg.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -1003,7 +974,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/xdg.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -1026,7 +997,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/mangowc.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { config, lib, helpers, ... }:
@@ -1322,7 +1293,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/mangowc.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/waybar.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { config, pkgs, helpers, lib, ... }:
@@ -1562,7 +1533,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/waybar.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/wallpapers.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -1630,7 +1601,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/wallpapers.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -1648,7 +1619,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/terminal/tmux.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { pkgs, ... }:
@@ -1731,7 +1702,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/terminal/tmux.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/terminal/starship.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { pkgs, ... }:
@@ -1790,7 +1761,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/terminal/starship.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/terminal/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -1809,7 +1780,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/terminal/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/terminal/bash.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { ... }:
@@ -1838,7 +1809,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/terminal/bash.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/0-base/environment.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -1872,7 +1843,7 @@ File: /home/user/nixos/modules/home-manager/0-base/environment.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/0-base/packages.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -1920,7 +1891,7 @@ File: /home/user/nixos/modules/home-manager/0-base/packages.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/0-base/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -1938,7 +1909,7 @@ File: /home/user/nixos/modules/home-manager/0-base/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/3-services/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -1957,7 +1928,7 @@ File: /home/user/nixos/modules/home-manager/3-services/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/3-services/gammastep.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -1995,7 +1966,7 @@ File: /home/user/nixos/modules/home-manager/3-services/gammastep.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/3-services/brightness.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -2035,7 +2006,7 @@ File: /home/user/nixos/modules/home-manager/3-services/brightness.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/3-services/kanshi.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -2099,7 +2070,7 @@ File: /home/user/nixos/modules/home-manager/3-services/kanshi.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -2120,7 +2091,7 @@ File: /home/user/nixos/modules/home-manager/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/scripts/collect.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -2209,7 +2180,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/scripts/collect.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/scripts/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -2226,7 +2197,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/scripts/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/packages.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -2286,7 +2257,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/packages.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/applications/rclone.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { config, pkgs, ... }:
@@ -2508,7 +2479,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/applications/rclone.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/applications/firefox.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -2567,7 +2538,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/applications/firefox.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/applications/foot.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -2678,7 +2649,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/applications/foot.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/applications/alacritty.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -2761,7 +2732,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/applications/alacritty.ni
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/applications/obs.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -2824,7 +2795,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/applications/obs.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/applications/zen-browser.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -2888,7 +2859,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/applications/zen-browser.
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/applications/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -2910,7 +2881,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/applications/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/development/intellij-ide.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { config, pkgs, ... }:
@@ -2930,7 +2901,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/development/intellij-ide.
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/development/git.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { config, pkgs, ... }:
@@ -2971,7 +2942,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/development/git.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/development/vscode.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { config, pkgs, ... }:
@@ -3180,7 +3151,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/development/vscode.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/development/languages.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -3234,7 +3205,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/development/languages.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/development/nvim/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 
@@ -3246,7 +3217,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/development/nvim/default.
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/development/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -3266,7 +3237,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/development/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -3286,7 +3257,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/icons.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -3316,7 +3287,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/icons.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/qt.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -3361,7 +3332,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/qt.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/gtk.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -3442,7 +3413,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/gtk.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/fuzzel.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -3483,7 +3454,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/fuzzel.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/gtk.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -3569,7 +3540,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/gtk.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/firefox.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -3637,7 +3608,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/firefox.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/dunst.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -3687,7 +3658,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/dunst.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/hyprland.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -3723,7 +3694,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/hyprland.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/alacritty.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -3811,7 +3782,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/alacritty.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/folders.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -3920,7 +3891,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/folders.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -3943,7 +3914,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/cursor.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -3986,7 +3957,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/cursor.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/fonts.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -4017,7 +3988,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/fonts.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -4037,72 +4008,9 @@ File: /home/user/nixos/modules/home-manager/4-appearance/default.nix
 
 
 ================== BEGIN FILE ==================
-File: /home/user/nixos/modules/nixos/4-services/nginx.nix
-Extension: .nix
-Date: 2025-10-23 19:21:38
-================================================
-
-{
-  lib,
-  helpers,
-  ...
-}:
-let
-  enable = helpers.hasIn "services" "acme";
-in
-{
-  config = lib.mkIf enable {
-    security.acme = {
-      acceptTerms = true;
-      defaults = {
-        email = "hituaev@gmail.com";
-      };
-    };
-
-    services.nginx = {
-      enable = true;
-      recommendedTlsSettings = true;
-      recommendedOptimisation = true;
-      recommendedGzipSettings = true;
-      recommendedProxySettings = true;
-
-      virtualHosts."umkcloud.ru" = {
-        enableACME = true;
-        
-        listen = [
-          {
-            addr = "0.0.0.0";
-            port = 80;
-            ssl = false;
-          }
-          {
-            addr = "127.0.0.1";
-            port = 8444;
-            ssl = true;
-          }
-        ];
-        
-        locations."/" = {
-          return = "301 https://github.com$request_uri";
-        };
-      };
-    };
-
-    networking.firewall.allowedTCPPorts = [ 80 ];
-
-    users.users.haproxy.extraGroups = [ "acme" ];
-  };
-}
-
-=================== END FILE ===================
-File: /home/user/nixos/modules/nixos/4-services/nginx.nix
-================================================
-
-
-================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/kanata.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -4115,7 +4023,7 @@ let
   enable = helpers.hasIn "services" "kanata";
 in
 {
-  config = lib.mkIf enable {    
+  config = lib.mkIf enable {
     services.kanata = {
       enable = true;
       package = pkgs.kanata;
@@ -4155,7 +4063,7 @@ File: /home/user/nixos/modules/nixos/4-services/kanata.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/xray.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -4230,7 +4138,7 @@ in
               realitySettings = {
                 show = false;
                 dest = "github.com:443";
-                xver = 2;
+                xver = 0;
                 serverNames = [
                   "github.com"
                   "www.github.com"
@@ -4263,14 +4171,6 @@ in
         ];
       };
     };
-
-    networking.firewall = {
-      enable = true;
-      allowedTCPPorts = [
-        443
-        80
-      ];
-    };
   };
 }
 
@@ -4282,7 +4182,7 @@ File: /home/user/nixos/modules/nixos/4-services/xray.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/file-management.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { lib, helpers, ... }:
@@ -4304,7 +4204,7 @@ File: /home/user/nixos/modules/nixos/4-services/file-management.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/fail2ban.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -4319,8 +4219,15 @@ in
   config = lib.mkIf enable {
     services.fail2ban = {
       enable = true;
-      maxretry = 5;
-      bantime = "1024h";
+      maxretry = 3;
+
+      bantime = "365d";
+      bantime-increment = {
+        enable = true;
+        multipliers = "1 2 4 8 16 32 64";
+      };
+
+      findtime = "24h";
       
       jails = {
         sshd.settings = {
@@ -4340,99 +4247,9 @@ File: /home/user/nixos/modules/nixos/4-services/fail2ban.nix
 
 
 ================== BEGIN FILE ==================
-File: /home/user/nixos/modules/nixos/4-services/haproxy.nix
-Extension: .nix
-Date: 2025-10-23 19:21:38
-================================================
-
-{
-  lib,
-  helpers,
-  ...
-}:
-let
-  enable = helpers.hasIn "services" "haproxy";
-in
-{
-  config = lib.mkIf enable {
-    services.haproxy = {
-      enable = true;
-      
-      config = ''
-        global
-          daemon
-          maxconn 4096
-          log /dev/log local0 info
-          stats socket /run/haproxy/admin.sock mode 660 level admin
-          stats timeout 30s
-          tune.ssl.default-dh-param 2048
-
-        defaults
-          log     global
-          mode    tcp
-          option  tcplog
-          timeout connect 30s
-          timeout client  1h
-          timeout server  1h
-
-        frontend https_front
-          bind *:443
-          mode tcp
-          option tcplog
-          
-          tcp-request inspect-delay 5s
-          tcp-request content accept if { req.ssl_hello_type 1 }
-          
-          acl is_vless req.ssl_sni -i github.com
-          acl is_vless req.ssl_sni -i www.github.com
-          acl is_domain req.ssl_sni -i umkcloud.ru
-          acl is_domain req.ssl_sni -i www.umkcloud.ru
-          
-          use_backend xray_backend if is_vless
-          use_backend nginx_ssl if is_domain
-          default_backend github_backend
-
-        backend xray_backend
-          mode tcp
-          option tcp-check
-          server xray 127.0.0.1:8443 send-proxy-v2
-
-        backend nginx_ssl
-          mode tcp
-          option tcp-check
-          server nginx 127.0.0.1:8444
-
-        backend github_backend
-          mode tcp
-          option tcp-check
-          server github github.com:443
-      '';
-    };
-
-    systemd.tmpfiles.rules = [
-      "d /run/haproxy 0755 haproxy haproxy -"
-    ];
-
-    networking.firewall.allowedTCPPorts = [ 443 ];
-
-    users.users.haproxy.extraGroups = [ "acme" ];
-    
-    systemd.services.haproxy = {
-      wants = [ "acme-finished-umkcloud.ru.target" ];
-      after = [ "acme-finished-umkcloud.ru.target" ];
-    };
-  };
-}
-
-=================== END FILE ===================
-File: /home/user/nixos/modules/nixos/4-services/haproxy.nix
-================================================
-
-
-================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/virtualization.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -4501,23 +4318,6 @@ in
       win-virtio
       win-spice
     ];
-
-    #systemd.services.libvirt-network-default = {
-    #  description = "Autostart libvirt default network";
-    #  after = [ "libvirtd.service" ];
-    #  requires = [ "libvirtd.service" ];
-    #  wantedBy = [ "multi-user.target" ];
-    #  serviceConfig = {
-    #    Type = "oneshot";
-    #    RemainAfterExit = true;
-    #  };
-    #  script = ''
-    #    ${pkgs.libvirt}/bin/virsh net-list --all | grep -q default || \
-    #    ${pkgs.libvirt}/bin/virsh net-define ${pkgs.libvirt}/share/libvirt/networks/default.xml
-    #    ${pkgs.libvirt}/bin/virsh net-autostart default
-    #    ${pkgs.libvirt}/bin/virsh net-start default || true
-    #  '';
-    #};
   };
 }
 
@@ -4529,7 +4329,7 @@ File: /home/user/nixos/modules/nixos/4-services/virtualization.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/postgresql.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -4595,11 +4395,10 @@ File: /home/user/nixos/modules/nixos/4-services/postgresql.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/ms-sql.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
-  config,
   pkgs,
   lib,
   helpers,
@@ -4634,8 +4433,6 @@ in
     environment.systemPackages = with pkgs; [
       sqlcmd
     ];
-
-    networking.firewall.allowedTCPPorts = lib.mkIf config.networking.firewall.enable [ 1433 ];
   };
 }
 
@@ -4647,7 +4444,7 @@ File: /home/user/nixos/modules/nixos/4-services/ms-sql.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/fstrim.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { lib, helpers, ... }:
@@ -4666,51 +4463,9 @@ File: /home/user/nixos/modules/nixos/4-services/fstrim.nix
 
 
 ================== BEGIN FILE ==================
-File: /home/user/nixos/modules/nixos/4-services/auto-upgrade.nix
-Extension: .nix
-Date: 2025-10-23 19:21:38
-================================================
-
-{
-  lib,
-  helpers,
-  ...
-}:
-let
-  enable = helpers.hasIn "services" "auto-upgrade";
-in
-{
-  config = lib.mkIf enable {
-    system.autoUpgrade = {
-      enable = true;
-      flake = "/root/nixos#server";
-      flags = [
-        "--update-input"
-        "nixpkgs"
-        "--commit-lock-file"
-      ];
-      dates = "04:00";
-      randomizedDelaySec = "45min";
-      allowReboot = false;
-    };
-
-    nix.gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 4d";
-    };
-  };
-}
-
-=================== END FILE ===================
-File: /home/user/nixos/modules/nixos/4-services/auto-upgrade.nix
-================================================
-
-
-================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/sing-box.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -4821,11 +4576,6 @@ in
       };
     };
 
-    networking.firewall = {
-      enable = true;
-      allowedTCPPorts = [ 443 80 ];
-    };
-
     systemd.services.sing-box.serviceConfig = {
       DynamicUser = lib.mkForce false;
       User = "sing-box";
@@ -4855,7 +4605,7 @@ File: /home/user/nixos/modules/nixos/4-services/sing-box.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/openssh.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -4906,11 +4656,6 @@ in
 
     users.users.${conf.username}.openssh.authorizedKeys.keys = authorizedKeys;
     users.users.root.openssh.authorizedKeys.keys = authorizedKeys;
-
-    networking.firewall = {
-      enable = true;
-      allowedTCPPorts = [ 22 ];
-    };
   };
 }
 
@@ -4920,9 +4665,160 @@ File: /home/user/nixos/modules/nixos/4-services/openssh.nix
 
 
 ================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/4-services/traefik.nix
+Extension: .nix
+Date: 2025-10-23 23:46:28
+================================================
+
+{
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "services" "traefik";
+in
+{
+  config = lib.mkIf enable {
+    services.traefik = {
+      enable = true;
+
+      staticConfigOptions = {
+        entryPoints = {
+          web = {
+            address = ":80";
+          };
+
+          websecure = {
+            address = ":443";
+          };
+        };
+
+        certificatesResolvers = {
+          letsencrypt = {
+            acme = {
+              email = "hituaev@gmail.com";
+              storage = "/var/lib/traefik/acme.json";
+              httpChallenge = {
+                entryPoint = "web";
+              };
+            };
+          };
+        };
+
+        api = {
+          dashboard = true;
+        };
+
+        log = {
+          level = "INFO";
+        };
+
+        accessLog = { };
+      };
+
+      dynamicConfigOptions = {
+        http = {
+          routers = {
+            domain-https = {
+              rule = "Host(`umkcloud.ru`) || Host(`www.umkcloud.ru`)";
+              entryPoints = [ "websecure" ];
+              service = "github-redirect";
+              middlewares = [ "redirect-github" ];
+              tls = {
+                certResolver = "letsencrypt";
+              };
+              priority = 100;
+            };
+          };
+
+          services = {
+            github-redirect = {
+              loadBalancer = {
+                servers = [
+                  { url = "http://127.0.0.1:1"; }
+                ];
+              };
+            };
+          };
+
+          middlewares = {
+            redirect-github = {
+              redirectRegex = {
+                regex = ".*";
+                replacement = "https://github.com";
+                permanent = true;
+              };
+            };
+          };
+        };
+
+        tcp = {
+          routers = {
+            vless-tcp = {
+              rule = "HostSNI(`github.com`) || HostSNI(`www.github.com`)";
+              entryPoints = [ "websecure" ];
+              service = "xray-service";
+              tls = {
+                passthrough = true;
+              };
+              priority = 50;
+            };
+
+            fallback-tcp = {
+              rule = "HostSNI(`*`)";
+              entryPoints = [ "websecure" ];
+              service = "github-service";
+              tls = {
+                passthrough = true;
+              };
+              priority = 1;
+            };
+          };
+
+          services = {
+            xray-service = {
+              loadBalancer = {
+                servers = [
+                  { address = "127.0.0.1:8443"; }
+                ];
+              };
+            };
+
+            github-service = {
+              loadBalancer = {
+                servers = [
+                  { address = "github.com:443"; }
+                ];
+              };
+            };
+          };
+        };
+      };
+    };
+
+    systemd.tmpfiles.rules = [
+      "d /var/lib/traefik 0750 traefik traefik -"
+      "f /var/lib/traefik/acme.json 0600 traefik traefik -"
+    ];
+
+    users.users.traefik = {
+      isSystemUser = true;
+      group = "traefik";
+    };
+    users.groups.traefik = { };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/4-services/traefik.nix
+================================================
+
+
+================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -4936,11 +4832,9 @@ Date: 2025-10-23 19:21:38
     ./podman.nix
     ./postgresql.nix
     ./ms-sql.nix
-    ./haproxy.nix
     ./fail2ban.nix
-    ./auto-upgrade.nix
     ./xray.nix
-    ./nginx.nix
+    ./traefik.nix
   ];
 }
 
@@ -4952,7 +4846,7 @@ File: /home/user/nixos/modules/nixos/4-services/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/podman.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -4990,11 +4884,10 @@ File: /home/user/nixos/modules/nixos/4-services/podman.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/3-programs/gaming.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
-  config,
   lib,
   pkgs,
   helpers,
@@ -5077,12 +4970,11 @@ File: /home/user/nixos/modules/nixos/3-programs/gaming.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/3-programs/appimage.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
   lib,
-  pkgs,
   helpers,
   ...
 }:
@@ -5104,51 +4996,15 @@ File: /home/user/nixos/modules/nixos/3-programs/appimage.nix
 
 
 ================== BEGIN FILE ==================
-File: /home/user/nixos/modules/nixos/3-programs/obs.nix
-Extension: .nix
-Date: 2025-10-23 19:21:38
-================================================
-
-{
-  config,
-  lib,
-  pkgs,
-  helpers,
-  ...
-}:
-let
-  enable = helpers.hasIn "programs" "obs";
-in
-{
-  config = lib.mkIf enable {
-    programs.obs-studio = {
-      enable = true;
-      enableVirtualCamera = true;
-      package = pkgs.obs-studio.override { cudaSupport = true; };
-      plugins = with pkgs.obs-studio-plugins; [
-        obs-vkcapture
-        obs-move-transition
-      ];
-    };
-  };
-}
-
-=================== END FILE ===================
-File: /home/user/nixos/modules/nixos/3-programs/obs.nix
-================================================
-
-
-================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/3-programs/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
   imports = [
     ./gaming.nix
     ./appimage.nix
-    ./obs.nix
   ];
 }
 
@@ -5160,11 +5016,10 @@ File: /home/user/nixos/modules/nixos/3-programs/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/2-workspace/window-managers.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
-  config,
   lib,
   helpers,
   pkgs,
@@ -5189,7 +5044,7 @@ Date: 2025-10-23 19:21:38
       ];
       programs.xwayland.enable = true;
     })
-    
+
     (lib.mkIf helpers.isMango {
       programs.mango.enable = true;
     })
@@ -5204,14 +5059,12 @@ File: /home/user/nixos/modules/nixos/2-workspace/window-managers.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/2-workspace/display-manager.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
-  config,
   lib,
   helpers,
-  pkgs,
   ...
 }:
 let
@@ -5242,7 +5095,7 @@ File: /home/user/nixos/modules/nixos/2-workspace/display-manager.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/2-workspace/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -5260,15 +5113,12 @@ File: /home/user/nixos/modules/nixos/2-workspace/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/environment.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
-  config,
   lib,
-  conf,
   helpers,
-  pkgs,
   ...
 }:
 {
@@ -5319,11 +5169,10 @@ File: /home/user/nixos/modules/nixos/0-base/environment.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/locale.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
-  config,
   lib,
   helpers,
   ...
@@ -5331,26 +5180,27 @@ Date: 2025-10-23 19:21:38
 let
   enable = helpers.hasIn "base" "locale";
 
-  cfg = {
-    timezone = "Asia/Vladivostok";
-    locale = "en_US.UTF-8";
-  };
+  timezone = "Asia/Vladivostok";
+  locale = "en_US.UTF-8";
 in
 {
   config = lib.mkIf enable {
-    time.timeZone = cfg.timezone;
-    i18n.defaultLocale = cfg.locale;
-    i18n.supportedLocales = [ "ru_RU.UTF-8/UTF-8" "en_US.UTF-8/UTF-8" ];
+    time.timeZone = timezone;
+    i18n.defaultLocale = locale;
+    i18n.supportedLocales = [
+      "ru_RU.UTF-8/UTF-8"
+      "en_US.UTF-8/UTF-8"
+    ];
     i18n.extraLocaleSettings = {
-      LC_ADDRESS = cfg.locale;
-      LC_IDENTIFICATION = cfg.locale;
-      LC_MEASUREMENT = cfg.locale;
-      LC_MONETARY = cfg.locale;
-      LC_NAME = cfg.locale;
-      LC_NUMERIC = cfg.locale;
-      LC_PAPER = cfg.locale;
-      LC_TELEPHONE = cfg.locale;
-      LC_TIME = cfg.locale;
+      LC_ADDRESS = locale;
+      LC_IDENTIFICATION = locale;
+      LC_MEASUREMENT = locale;
+      LC_MONETARY = locale;
+      LC_NAME = locale;
+      LC_NUMERIC = locale;
+      LC_PAPER = locale;
+      LC_TELEPHONE = locale;
+      LC_TIME = locale;
     };
   };
 }
@@ -5363,11 +5213,10 @@ File: /home/user/nixos/modules/nixos/0-base/locale.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/users.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
-  config,
   lib,
   pkgs,
   conf,
@@ -5376,52 +5225,32 @@ Date: 2025-10-23 19:21:38
 }:
 let
   enable = helpers.hasIn "base" "users";
-
-  cfg = {
-    extraUsers = [ ];
-  };
 in
 {
   config = lib.mkIf enable {
-    users.users = lib.mkMerge [
-      {
-        ${conf.username} = {
-          isNormalUser = true;
-          description = "Main user";
-          extraGroups = [
-            "wheel"
-            "networkmanager"
-            "input"
-          ]
-          ++ lib.optionals (helpers.hasIn "hardware" "sound") [
-            "sound"
-          ]
-          ++
-            lib.optionals
-              (helpers.hasIn "hardware" [
-                "nvidia"
-                "amd"
-              ])
-              [
-                "video"
-                "render"
-              ];
-          shell = pkgs.bash;
-        };
-      }
-
-      (builtins.listToAttrs (
-        map (user: {
-          name = user.name;
-          value = {
-            isNormalUser = true;
-            description = user.description or "";
-            extraGroups = user.groups or [ ];
-            shell = user.shell or pkgs.bash;
-          };
-        }) cfg.extraUsers
-      ))
-    ];
+    users.users.${conf.username} = {
+      isNormalUser = true;
+      description = "Main user";
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+        "input"
+      ]
+      ++ lib.optionals (helpers.hasIn "hardware" "sound") [
+        "sound"
+      ]
+      ++
+        lib.optionals
+          (helpers.hasIn "hardware" [
+            "nvidia"
+            "amd"
+          ])
+          [
+            "video"
+            "render"
+          ];
+      shell = pkgs.bash;
+    };
   };
 }
 
@@ -5433,7 +5262,7 @@ File: /home/user/nixos/modules/nixos/0-base/users.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/boot.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -5524,7 +5353,7 @@ File: /home/user/nixos/modules/nixos/0-base/boot.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/system.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -5574,12 +5403,10 @@ in
 
       nix = {
         settings = {
-          #optimise = {
-          #  automatic = true;
-          #  dates = [ "weekly" ];
-          #};
-          trusted-users = [ "root" conf.username ];
-          require-sigs = !helpers.isServer;
+          trusted-users = [
+            "root"
+            conf.username
+          ];
           auto-optimise-store = true;
           experimental-features = [
             "nix-command"
@@ -5587,12 +5414,30 @@ in
           ];
         };
 
-        #gc = {
-        #  automatic = true;
-        #  dates = [ "weekly" ];
-        #  options = "--delete-older-than 7d";
-        #};
+        gc = {
+          automatic = true;
+          dates = "weekly";
+          options = "--delete-older-than 7d";
+        };
+
+        optimise = {
+          automatic = true;
+          dates = [ "03:00" ];
+        };
       };
+
+      #system.autoUpgrade = {
+      #  enable = true;
+      #  flake = "/home/user/nix-dots#server";
+      #  flags = [
+      #    "--update-input"
+      #    "nixpkgs"
+      #    "--commit-lock-file"
+      #  ];
+      #  dates = "04:00";
+      #  randomizedDelaySec = "45min";
+      #  allowReboot = false;
+      #};
 
       documentation = {
         enable = false;
@@ -5609,20 +5454,13 @@ in
       #  "console=tty0"
       #  "console=ttyS0,115200n8"
       #];
-      
+
       services.xserver.enable = lib.mkForce false;
-      
+
       services.journald.extraConfig = ''
         SystemMaxUse=500M
         MaxRetentionSec=1week
       '';
-      
-      boot.kernel.sysctl = {
-        "net.ipv4.tcp_fastopen" = 3;
-        "net.ipv4.tcp_congestion_control" = "bbr";
-        "net.core.default_qdisc" = "fq";
-        "net.ipv4.ip_forward" = 1;
-      };
     })
   ];
 }
@@ -5635,40 +5473,47 @@ File: /home/user/nixos/modules/nixos/0-base/system.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/packages.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
-{ config, pkgs, ... }:
 {
-  environment.systemPackages = with pkgs; [
-    coreutils
-    util-linux
-    shadow
-    curl
-    wget
-    nano
-    vim
-    git
+  pkgs,
+  lib,
+  helpers,
+  ...
+}:
+{
+  environment.systemPackages =
+    with pkgs;
+    [
+      coreutils
+      util-linux
+      shadow
+      curl
+      wget
+      nano
+      vim
+      git
 
-    pciutils
-    usbutils
-    upower
-    lsof
+      pciutils
+      lsof
+      gawk
 
-    gawk
-    libnotify
-
-    gnutar
-    gzip
-    unzip
-    xz
-    zstd
-    lz4
-    bzip2
-    libarchive
-
-    home-manager
-  ];
+      gnutar
+      gzip
+      unzip
+      xz
+      zstd
+      lz4
+      bzip2
+      libarchive
+    ]
+    ++ lib.optionals (!helpers.isServer) [
+      libnotify
+      usbutils
+      upower
+      home-manager
+    ];
 }
 
 =================== END FILE ===================
@@ -5679,11 +5524,10 @@ File: /home/user/nixos/modules/nixos/0-base/packages.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/fonts.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
-  config,
   pkgs,
   lib,
   helpers,
@@ -5728,7 +5572,7 @@ File: /home/user/nixos/modules/nixos/0-base/fonts.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -5753,11 +5597,10 @@ File: /home/user/nixos/modules/nixos/0-base/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/network.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
-  config,
   lib,
   conf,
   helpers,
@@ -5773,9 +5616,78 @@ in
       networkmanager.enable = true;
 
       firewall = {
-        enable = lib.mkDefault false;
+        enable = helpers.isServer;
+
+        allowedTCPPorts = [
+          22
+          80
+          443
+        ]
+        ++ lib.optionals helpers.hasIn "services" "postgresql" [
+          5432
+        ]
+        ++ lib.optionals helpers.hasIn "services" "ms-sql" [
+          1433
+        ];
+
+        allowedUDPPorts = [ ];
+
         allowPing = true;
+
+        interfaces = {
+          "lo" = {
+            allowedTCPPorts = [ ];
+            allowedUDPPorts = [ ];
+          };
+        };
       };
+    };
+
+    boot.kernel.sysctl = {
+      # Enable BBR
+      "net.ipv4.tcp_fastopen" = 3;
+      "net.ipv4.tcp_congestion_control" = "bbr";
+      "net.core.default_qdisc" = "fq";
+      "net.ipv4.ip_forward" = 1;
+
+      # Защита от IP spoofing
+      #"net.ipv4.conf.all.rp_filter" = 1;
+      #"net.ipv4.conf.default.rp_filter" = 1;
+
+      # Игнорировать ICMP redirects
+      #"net.ipv4.conf.all.accept_redirects" = 0;
+      #"net.ipv4.conf.default.accept_redirects" = 0;
+      #"net.ipv4.conf.all.secure_redirects" = 0;
+      #"net.ipv4.conf.default.secure_redirects" = 0;
+      #"net.ipv6.conf.all.accept_redirects" = 0;
+      #"net.ipv6.conf.default.accept_redirects" = 0;
+
+      # Не отправлять ICMP redirects
+      #"net.ipv4.conf.all.send_redirects" = 0;
+      #"net.ipv4.conf.default.send_redirects" = 0;
+
+      # Игнорировать source routed packets
+      #"net.ipv4.conf.all.accept_source_route" = 0;
+      #"net.ipv4.conf.default.accept_source_route" = 0;
+      #"net.ipv6.conf.all.accept_source_route" = 0;
+      #"net.ipv6.conf.default.accept_source_route" = 0;
+
+      # Защита от SYN flood
+      #"net.ipv4.tcp_syncookies" = 1;
+      #"net.ipv4.tcp_syn_retries" = 2;
+      #"net.ipv4.tcp_synack_retries" = 2;
+      #"net.ipv4.tcp_max_syn_backlog" = 4096;
+
+      # Защита от TIME-WAIT assassination
+      #"net.ipv4.tcp_rfc1337" = 1;
+
+      # Логирование подозрительных пакетов
+      #"net.ipv4.conf.all.log_martians" = 1;
+      #"net.ipv4.conf.default.log_martians" = 1;
+
+      # Отключаем IPv6 (если не используется)
+      # "net.ipv6.conf.all.disable_ipv6" = 1;
+      # "net.ipv6.conf.default.disable_ipv6" = 1;
     };
   };
 }
@@ -5788,13 +5700,12 @@ File: /home/user/nixos/modules/nixos/0-base/network.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/security.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
   lib,
   helpers,
-  conf,
   ...
 }:
 let
@@ -5814,13 +5725,6 @@ in
 
     security.polkit.enable = true;
 
-    #users.groups = {
-    #  networkmanager = { };
-    #  wheel = { };
-    #  audio = { };
-    #  video = { };
-    #};
-
     security.pam.loginLimits = [
       {
         domain = "*";
@@ -5835,7 +5739,6 @@ in
         value = "-20";
       }
     ];
-
   };
 }
 
@@ -5847,7 +5750,7 @@ File: /home/user/nixos/modules/nixos/0-base/security.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -5868,11 +5771,10 @@ File: /home/user/nixos/modules/nixos/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/sound.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
-  config,
   lib,
   helpers,
   ...
@@ -5888,7 +5790,7 @@ in
       enable = true;
       jack.enable = true;
       pulse.enable = true;
-      
+
       alsa = {
         enable = true;
         support32Bit = true;
@@ -5924,11 +5826,10 @@ File: /home/user/nixos/modules/nixos/1-hardware/sound.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/bluetooth.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
-  config,
   lib,
   pkgs,
   helpers,
@@ -5968,11 +5869,10 @@ File: /home/user/nixos/modules/nixos/1-hardware/bluetooth.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/peripherals.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
-  config,
   lib,
   helpers,
   ...
@@ -6014,11 +5914,10 @@ File: /home/user/nixos/modules/nixos/1-hardware/peripherals.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/power.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
-  config,
   lib,
   pkgs,
   helpers,
@@ -6152,11 +6051,10 @@ File: /home/user/nixos/modules/nixos/1-hardware/power.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/amd.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
-  config,
   lib,
   pkgs,
   helpers,
@@ -6218,11 +6116,10 @@ File: /home/user/nixos/modules/nixos/1-hardware/amd.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/intel.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
-  config,
   pkgs,
   lib,
   helpers,
@@ -6270,12 +6167,11 @@ File: /home/user/nixos/modules/nixos/1-hardware/intel.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/nvidia.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
   config,
-  pkgs,
   lib,
   helpers,
   ...
@@ -6308,7 +6204,7 @@ File: /home/user/nixos/modules/nixos/1-hardware/nvidia.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/default.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -6332,14 +6228,13 @@ File: /home/user/nixos/modules/nixos/1-hardware/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/print.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
   config,
   lib,
   pkgs,
-  conf,
   helpers,
   ...
 }:
@@ -6414,7 +6309,7 @@ File: /home/user/nixos/modules/nixos/1-hardware/print.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/server/disko.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -6465,7 +6360,7 @@ File: /home/user/nixos/hosts/server/disko.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/server/home.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { config, conf, ... }:
@@ -6487,7 +6382,7 @@ File: /home/user/nixos/hosts/server/home.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/server/hardware-configuration.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 # Do not modify this file!  It was generated by ‘nixos-generate-config’
@@ -6523,7 +6418,7 @@ File: /home/user/nixos/hosts/server/hardware-configuration.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/server/configuration.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { lib, ... }:
@@ -6549,7 +6444,7 @@ File: /home/user/nixos/hosts/server/configuration.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/desktop/disko.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -6634,7 +6529,7 @@ File: /home/user/nixos/hosts/desktop/disko.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/desktop/home.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { config, conf, ... }:
@@ -6656,7 +6551,7 @@ File: /home/user/nixos/hosts/desktop/home.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/desktop/hardware-configuration.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 # Do not modify this file!  It was generated by ‘nixos-generate-config’
@@ -6694,7 +6589,7 @@ File: /home/user/nixos/hosts/desktop/hardware-configuration.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/desktop/configuration.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { config, pkgs, ... }:
@@ -6722,7 +6617,7 @@ File: /home/user/nixos/hosts/desktop/configuration.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/laptop/disko.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 {
@@ -6774,7 +6669,7 @@ File: /home/user/nixos/hosts/laptop/disko.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/laptop/home.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { config, conf, ... }:
@@ -6796,7 +6691,7 @@ File: /home/user/nixos/hosts/laptop/home.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/laptop/configuration.nix
 Extension: .nix
-Date: 2025-10-23 19:21:38
+Date: 2025-10-23 23:46:28
 ================================================
 
 { config, pkgs, ... }:
