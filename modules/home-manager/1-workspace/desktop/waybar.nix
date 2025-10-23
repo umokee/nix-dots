@@ -1,4 +1,4 @@
-{ config, pkgs, helpers, lib, ... }:
+{ config, helpers, lib, ... }:
 {
   programs.waybar = lib.mkIf (!helpers.isDwl) {
     enable = true;

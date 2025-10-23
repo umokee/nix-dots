@@ -1,19 +1,9 @@
-{ config, lib, helpers, ... }:
+{ lib, helpers, pkgs, ... }:
 let
   enable = helpers.hasIn "workspace" "mangowc";
 in
 {
   config = lib.mkIf enable {
-    systemd.user.targets.mango-session = {
-      Unit = {
-        Description = "Mango compositor session";
-        Documentation = "man:systemd.special(7)";
-        BindsTo = [ "graphical-session.target" ];
-        Wants = [ "graphical-session-pre.target" ];
-        After = [ "graphical-session-pre.target" ];
-      };
-    };
-
     programs.bash.profileExtra = lib.mkIf helpers.isWM ''
       if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
         exec mango
@@ -23,7 +13,6 @@ in
     wayland.windowManager.mango = {
       enable = true;
       settings = ''
-        # Window effect
         blur=0
         blur_layer=0
         blur_optimized=1
@@ -48,10 +37,8 @@ in
         focused_opacity=1.0
         unfocused_opacity=1.0
 
-        # Animation Configuration(support type:zoom,slide)
-        # tag_animation_direction: 0-horizontal,1-vertical
-        animations=1
-        layer_animations=1
+        animations=0
+        layer_animations=0
         animation_type_open=slide
         animation_type_close=slide
         animation_fade_in=1
@@ -70,7 +57,6 @@ in
         animation_curve_tag=0.46,1.0,0.29,1
         animation_curve_close=0.08,0.92,0,1
 
-        # Scroller Layout Setting
         scroller_structs=20
         scroller_default_proportion=0.8
         scroller_focus_center=0
@@ -79,20 +65,17 @@ in
         scroller_default_proportion_single=1.0
         scroller_proportion_preset=0.5,0.8,1.0
 
-        # Master-Stack Layout Setting
         new_is_master=1
         default_mfact=0.55
         default_nmaster=1
         smartgaps=0
 
-        # Overview Setting
         hotarea_size=10
         enable_hotarea=1
         ov_tab_mode=0
         overviewgappi=5
         overviewgappo=30
 
-        # Misc
         no_border_when_single=0
         axis_bind_apply_timeout=100
         focus_on_activate=1
@@ -106,14 +89,11 @@ in
         cursor_size=24
         drag_tile_to_tile=1
 
-        # keyboard
-        repeat_rate=25
-        repeat_delay=600
+        repeat_rate=50
+        repeat_delay=300
         numlockon=1
-        xkb_rules_layout=us
+        xkb_rules_layout=us,ru
 
-        # Trackpad
-        # need relogin to make it apply
         disable_trackpad=0
         tap_to_click=1
         tap_and_drag=1
@@ -128,7 +108,6 @@ in
         # need relogin to make it apply
         mouse_natural_scrolling=0
 
-        # Appearance
         gappih=2
         gappiv=2
         gappoh=2
@@ -167,6 +146,7 @@ in
         # menu and terminal
         bind=Alt,space,spawn,${pkgs.tofi}/bin/tofi-drun --drun-launch=true
         bind=Alt,Return,spawn,${pkgs.foot}/bin/foot
+        bind=Alt,w,spawn,zen
 
         # exit
         bind=SUPER,m,quit
@@ -277,7 +257,6 @@ in
       autostart_sh = ''
         ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
         systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
-        systemctl --user start graphical-session.target &
       '';
     };
   };

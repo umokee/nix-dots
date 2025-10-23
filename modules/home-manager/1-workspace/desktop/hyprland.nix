@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   helpers,
   pkgs,
@@ -166,7 +165,7 @@ in
         bind = [
           "Super, A, exec, ${pkgs.tofi}/bin/tofi-drun --drun-launch=true"
           "Super, Return, exec, foot"
-          "Super, W, exec, firefox-esr"
+          "Super, W, exec, zen"
           "Super, E, exec, nemo"
           "Super+Shift, S, exec, screenshot-tool clip"
           "Super+Shift, R, exec, record-control toggle"
