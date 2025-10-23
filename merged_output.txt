@@ -1,7 +1,7 @@
 ================== BEGIN FILE ==================
 File: /home/user/nixos/flake.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -116,7 +116,7 @@ File: /home/user/nixos/flake.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/shared/helpers.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { lib, conf }:
@@ -210,7 +210,7 @@ File: /home/user/nixos/shared/helpers.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/shared/config.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { lib, hostname }:
@@ -361,7 +361,7 @@ File: /home/user/nixos/shared/config.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/shared/wallpapers.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -377,7 +377,7 @@ File: /home/user/nixos/shared/wallpapers.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/tofi.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -450,7 +450,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/tofi.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/dunst.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -547,7 +547,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/dunst.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/screenshots.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -639,7 +639,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/screenshots.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/hyprland.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -926,7 +926,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/hyprland.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/xdg.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -1002,7 +1002,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/xdg.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -1025,7 +1025,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/mangowc.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { config, lib, helpers, ... }:
@@ -1321,7 +1321,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/mangowc.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/waybar.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { config, pkgs, helpers, lib, ... }:
@@ -1561,7 +1561,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/waybar.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/desktop/wallpapers.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -1629,7 +1629,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/desktop/wallpapers.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -1647,7 +1647,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/terminal/tmux.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { pkgs, ... }:
@@ -1730,7 +1730,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/terminal/tmux.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/terminal/starship.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { pkgs, ... }:
@@ -1789,7 +1789,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/terminal/starship.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/terminal/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -1808,7 +1808,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/terminal/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/1-workspace/terminal/bash.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { ... }:
@@ -1837,7 +1837,7 @@ File: /home/user/nixos/modules/home-manager/1-workspace/terminal/bash.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/0-base/environment.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -1871,7 +1871,7 @@ File: /home/user/nixos/modules/home-manager/0-base/environment.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/0-base/packages.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -1919,7 +1919,7 @@ File: /home/user/nixos/modules/home-manager/0-base/packages.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/0-base/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -1937,7 +1937,7 @@ File: /home/user/nixos/modules/home-manager/0-base/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/3-services/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -1956,7 +1956,7 @@ File: /home/user/nixos/modules/home-manager/3-services/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/3-services/gammastep.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -1994,7 +1994,7 @@ File: /home/user/nixos/modules/home-manager/3-services/gammastep.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/3-services/brightness.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -2034,7 +2034,7 @@ File: /home/user/nixos/modules/home-manager/3-services/brightness.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/3-services/kanshi.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -2098,7 +2098,7 @@ File: /home/user/nixos/modules/home-manager/3-services/kanshi.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -2119,7 +2119,7 @@ File: /home/user/nixos/modules/home-manager/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/scripts/collect.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -2208,7 +2208,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/scripts/collect.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/scripts/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -2225,7 +2225,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/scripts/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/packages.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -2285,7 +2285,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/packages.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/applications/rclone.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { config, pkgs, ... }:
@@ -2507,7 +2507,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/applications/rclone.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/applications/firefox.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -2566,7 +2566,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/applications/firefox.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/applications/foot.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -2677,7 +2677,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/applications/foot.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/applications/alacritty.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -2760,7 +2760,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/applications/alacritty.ni
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/applications/obs.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -2823,7 +2823,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/applications/obs.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/applications/zen-browser.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -2887,7 +2887,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/applications/zen-browser.
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/applications/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -2909,7 +2909,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/applications/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/development/intellij-ide.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { config, pkgs, ... }:
@@ -2929,7 +2929,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/development/intellij-ide.
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/development/git.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { config, pkgs, ... }:
@@ -2970,7 +2970,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/development/git.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/development/vscode.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { config, pkgs, ... }:
@@ -3179,7 +3179,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/development/vscode.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/development/languages.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -3233,7 +3233,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/development/languages.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/development/nvim/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 
@@ -3245,7 +3245,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/development/nvim/default.
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/development/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -3265,7 +3265,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/development/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/2-programs/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -3285,7 +3285,7 @@ File: /home/user/nixos/modules/home-manager/2-programs/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/icons.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -3315,7 +3315,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/icons.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/qt.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -3360,7 +3360,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/qt.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/gtk.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -3441,7 +3441,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/gtk.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/fuzzel.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -3482,7 +3482,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/fuzzel.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/gtk.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -3568,7 +3568,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/gtk.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/firefox.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -3636,7 +3636,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/firefox.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/dunst.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -3686,7 +3686,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/dunst.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/hyprland.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -3722,7 +3722,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/hyprland.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/alacritty.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -3810,7 +3810,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/alacritty.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/folders.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -3919,7 +3919,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/folders.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/colors/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -3942,7 +3942,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/colors/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/cursor.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -3985,7 +3985,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/cursor.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/fonts.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -4016,7 +4016,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/fonts.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/home-manager/4-appearance/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -4038,7 +4038,7 @@ File: /home/user/nixos/modules/home-manager/4-appearance/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/kanata.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -4092,7 +4092,7 @@ File: /home/user/nixos/modules/nixos/4-services/kanata.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/xray.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -4219,7 +4219,7 @@ File: /home/user/nixos/modules/nixos/4-services/xray.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/file-management.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { lib, helpers, ... }:
@@ -4241,7 +4241,7 @@ File: /home/user/nixos/modules/nixos/4-services/file-management.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/fail2ban.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -4281,7 +4281,7 @@ File: /home/user/nixos/modules/nixos/4-services/fail2ban.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/haproxy.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -4360,7 +4360,7 @@ File: /home/user/nixos/modules/nixos/4-services/haproxy.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/virtualization.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -4457,7 +4457,7 @@ File: /home/user/nixos/modules/nixos/4-services/virtualization.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/postgresql.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -4525,7 +4525,7 @@ File: /home/user/nixos/modules/nixos/4-services/postgresql.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/ms-sql.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -4577,7 +4577,7 @@ File: /home/user/nixos/modules/nixos/4-services/ms-sql.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/fstrim.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { config, lib, helpers, ... }:
@@ -4598,7 +4598,7 @@ File: /home/user/nixos/modules/nixos/4-services/fstrim.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/auto-upgrade.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -4642,7 +4642,7 @@ File: /home/user/nixos/modules/nixos/4-services/auto-upgrade.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/sing-box.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -4789,7 +4789,7 @@ File: /home/user/nixos/modules/nixos/4-services/sing-box.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/openssh.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -4856,7 +4856,7 @@ File: /home/user/nixos/modules/nixos/4-services/openssh.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -4885,7 +4885,7 @@ File: /home/user/nixos/modules/nixos/4-services/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/4-services/podman.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -4923,7 +4923,7 @@ File: /home/user/nixos/modules/nixos/4-services/podman.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/3-programs/gaming.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5010,7 +5010,7 @@ File: /home/user/nixos/modules/nixos/3-programs/gaming.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/3-programs/appimage.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5039,7 +5039,7 @@ File: /home/user/nixos/modules/nixos/3-programs/appimage.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/3-programs/obs.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5074,7 +5074,7 @@ File: /home/user/nixos/modules/nixos/3-programs/obs.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/3-programs/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5093,7 +5093,7 @@ File: /home/user/nixos/modules/nixos/3-programs/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/2-workspace/window-managers.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5137,7 +5137,7 @@ File: /home/user/nixos/modules/nixos/2-workspace/window-managers.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/2-workspace/display-manager.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5175,7 +5175,7 @@ File: /home/user/nixos/modules/nixos/2-workspace/display-manager.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/2-workspace/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5193,7 +5193,7 @@ File: /home/user/nixos/modules/nixos/2-workspace/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/environment.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5252,7 +5252,7 @@ File: /home/user/nixos/modules/nixos/0-base/environment.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/locale.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5296,7 +5296,7 @@ File: /home/user/nixos/modules/nixos/0-base/locale.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/users.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5366,7 +5366,7 @@ File: /home/user/nixos/modules/nixos/0-base/users.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/boot.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5457,7 +5457,7 @@ File: /home/user/nixos/modules/nixos/0-base/boot.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/system.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5568,7 +5568,7 @@ File: /home/user/nixos/modules/nixos/0-base/system.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/packages.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { config, pkgs, ... }:
@@ -5612,7 +5612,7 @@ File: /home/user/nixos/modules/nixos/0-base/packages.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/fonts.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5661,7 +5661,7 @@ File: /home/user/nixos/modules/nixos/0-base/fonts.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5686,7 +5686,7 @@ File: /home/user/nixos/modules/nixos/0-base/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/network.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5721,7 +5721,7 @@ File: /home/user/nixos/modules/nixos/0-base/network.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/0-base/security.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5780,7 +5780,7 @@ File: /home/user/nixos/modules/nixos/0-base/security.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5801,7 +5801,7 @@ File: /home/user/nixos/modules/nixos/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/sound.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5857,7 +5857,7 @@ File: /home/user/nixos/modules/nixos/1-hardware/sound.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/bluetooth.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5901,7 +5901,7 @@ File: /home/user/nixos/modules/nixos/1-hardware/bluetooth.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/peripherals.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -5947,7 +5947,7 @@ File: /home/user/nixos/modules/nixos/1-hardware/peripherals.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/power.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -6085,7 +6085,7 @@ File: /home/user/nixos/modules/nixos/1-hardware/power.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/amd.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -6151,7 +6151,7 @@ File: /home/user/nixos/modules/nixos/1-hardware/amd.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/intel.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -6203,7 +6203,7 @@ File: /home/user/nixos/modules/nixos/1-hardware/intel.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/nvidia.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -6241,7 +6241,7 @@ File: /home/user/nixos/modules/nixos/1-hardware/nvidia.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/default.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -6265,7 +6265,7 @@ File: /home/user/nixos/modules/nixos/1-hardware/default.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/modules/nixos/1-hardware/print.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -6347,7 +6347,7 @@ File: /home/user/nixos/modules/nixos/1-hardware/print.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/server/disko.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -6398,7 +6398,7 @@ File: /home/user/nixos/hosts/server/disko.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/server/home.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { config, conf, ... }:
@@ -6420,7 +6420,7 @@ File: /home/user/nixos/hosts/server/home.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/server/hardware-configuration.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 # Do not modify this file!  It was generated by ‘nixos-generate-config’
@@ -6456,7 +6456,7 @@ File: /home/user/nixos/hosts/server/hardware-configuration.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/server/configuration.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { lib, ... }:
@@ -6482,7 +6482,7 @@ File: /home/user/nixos/hosts/server/configuration.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/desktop/disko.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -6567,7 +6567,7 @@ File: /home/user/nixos/hosts/desktop/disko.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/desktop/home.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { config, conf, ... }:
@@ -6589,7 +6589,7 @@ File: /home/user/nixos/hosts/desktop/home.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/desktop/hardware-configuration.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 # Do not modify this file!  It was generated by ‘nixos-generate-config’
@@ -6627,7 +6627,7 @@ File: /home/user/nixos/hosts/desktop/hardware-configuration.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/desktop/configuration.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { config, pkgs, ... }:
@@ -6655,7 +6655,7 @@ File: /home/user/nixos/hosts/desktop/configuration.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/laptop/disko.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 {
@@ -6707,7 +6707,7 @@ File: /home/user/nixos/hosts/laptop/disko.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/laptop/home.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { config, conf, ... }:
@@ -6729,7 +6729,7 @@ File: /home/user/nixos/hosts/laptop/home.nix
 ================== BEGIN FILE ==================
 File: /home/user/nixos/hosts/laptop/configuration.nix
 Extension: .nix
-Date: 2025-10-23 17:44:35
+Date: 2025-10-23 17:46:35
 ================================================
 
 { config, pkgs, ... }:

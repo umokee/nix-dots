@@ -24,9 +24,10 @@ in
           log     global
           mode    tcp
           option  tcplog
-          timeout connect 5000ms
-          timeout client  50000ms
-          timeout server  50000ms
+          timeout connect 10s
+          timeout client  300s
+          timeout server  300s
+          timeout tunnel  3600s
 
         frontend https_front
           bind *:443
@@ -44,6 +45,7 @@ in
 
         backend xray_backend
           mode tcp
+          timeout server 3600s
           server xray 127.0.0.1:8443 send-proxy-v2
 
         backend github_backend
