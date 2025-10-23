@@ -47,8 +47,8 @@ in
         inbounds = [
           {
             tag = "vless-in";
-            listen = "0.0.0.0";
-            port = 443;
+            listen = "127.0.0.1";
+            port = 8443;
             protocol = "vless";
 
             settings = {
@@ -70,7 +70,7 @@ in
               realitySettings = {
                 show = false;
                 dest = "github.com:443";
-                xver = 0;
+                xver = 2;
                 serverNames = [
                   "github.com"
                   "www.github.com"

@@ -24,10 +24,9 @@ in
           log     global
           mode    tcp
           option  tcplog
-          timeout connect 10s
-          timeout client  300s
-          timeout server  300s
-          timeout tunnel  3600s
+          timeout connect 5000ms
+          timeout client  50000ms
+          timeout server  50000ms
 
         frontend https_front
           bind *:443
@@ -39,17 +38,20 @@ in
           
           acl is_vless req.ssl_sni -i 185.223.169.86
           acl is_vless req.ssl_sni -i umkcloud.ru
+          acl is_vless req.ssl_sni -i github.com
+          acl is_vless req.ssl_sni -i www.github.com
           
           use_backend xray_backend if is_vless
           default_backend github_backend
 
         backend xray_backend
           mode tcp
-          timeout server 3600s
+          option tcp-check
           server xray 127.0.0.1:8443 send-proxy-v2
 
         backend github_backend
           mode tcp
+          option ssl-hello-chk
           server github github.com:443 check
       '';
     };
@@ -57,6 +59,8 @@ in
     systemd.tmpfiles.rules = [
       "d /run/haproxy 0755 haproxy haproxy -"
     ];
+
+    networking.firewall.allowedTCPPorts = [ 443 ];
 
     systemd.services.haproxy.serviceConfig = {
       NoNewPrivileges = true;
