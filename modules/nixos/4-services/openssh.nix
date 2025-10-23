@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   conf,
   helpers,
@@ -28,9 +27,7 @@ in
         AllowAgentForwarding = lib.mkIf helpers.isServer false;
 
         PubkeyAuthentication = true;
-        AuthenticationMethods = if helpers.isServer 
-          then "publickey" 
-          else "publickey,password";
+        AuthenticationMethods = if helpers.isServer then "publickey" else "publickey,password";
 
         ClientAliveInterval = 300;
         ClientAliveCountMax = 2;

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, modulesPath, ... }:
+{ lib, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -8,14 +8,6 @@
     enable = true;
     implementation = "broker";
   };
-
-  users.users.root.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII/gto5eMkM9Ghp5VScGT58ebz1VHCMhCpj8Hse4OjKI"
-  ];
-
-  users.users."${conf.username}".openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII/gto5eMkM9Ghp5VScGT58ebz1VHCMhCpj8Hse4OjKI"
-  ];
 
   networking.useDHCP = lib.mkDefault true;
   system.stateVersion = "25.05";

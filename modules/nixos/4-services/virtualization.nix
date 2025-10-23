@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   pkgs,
   conf,
@@ -47,7 +46,10 @@ in
     };
 
     users.users = lib.genAttrs [ conf.username ] (user: {
-      extraGroups = [ "libvirtd" "kvm" ];
+      extraGroups = [
+        "libvirtd"
+        "kvm"
+      ];
     });
 
     environment.sessionVariables = {

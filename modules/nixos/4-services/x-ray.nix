@@ -1,7 +1,5 @@
 {
-  config,
   lib,
-  pkgs,
   helpers,
   ...
 }:
@@ -12,7 +10,7 @@ in
   config = lib.mkIf enable {
     services.xray = {
       enable = true;
-      
+
       settings = {
         log = {
           loglevel = "warning";
@@ -52,7 +50,7 @@ in
             listen = "127.0.0.1";
             port = 8443;
             protocol = "vless";
-            
+
             settings = {
               clients = [
                 {
@@ -85,7 +83,11 @@ in
             };
             sniffing = {
               enabled = true;
-              destOverride = [ "http" "tls" "quic" ];
+              destOverride = [
+                "http"
+                "tls"
+                "quic"
+              ];
             };
           }
         ];
@@ -104,7 +106,10 @@ in
 
     networking.firewall = {
       enable = true;
-      allowedTCPPorts = [ 443 80 ];
+      allowedTCPPorts = [
+        443
+        80
+      ];
     };
   };
 }
