@@ -9,10 +9,9 @@
     ./podman.nix
     ./postgresql.nix
     ./ms-sql.nix
-    ./haproxy.nix
     ./fail2ban.nix
     ./auto-upgrade.nix
     ./xray.nix
-    ./nginx.nix
+    ./traefik.nix
   ];
 }
