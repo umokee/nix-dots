@@ -17,7 +17,9 @@ let
       visual = "code";
       browser = "firefox-esr";
     };
+  };
 
+  desktopVars = lib.recursiveUpdate commonVars {
     base = {
       enable = [
         "boot"
@@ -29,9 +31,6 @@ let
         "fonts"
       ];
     };
-  };
-
-  desktopVars = lib.recursiveUpdate commonVars {
     hardware = {
       enable = [
         "sound"
@@ -71,6 +70,17 @@ let
   };
 
   laptopVars = lib.recursiveUpdate commonVars {
+    base = {
+      enable = [
+        "boot"
+        "system"
+        "security"
+        "locale"
+        "network"
+        "users"
+        "fonts"
+      ];
+    };
     hardware = {
       enable = [
         "keyboard-mouse"
@@ -103,14 +113,15 @@ let
   };
 
   serverVars = lib.recursiveUpdate commonVars {
-    hardware = {
-      enable = [ ];
-    };
-    workspace = {
-      enable = [ ];
-    };
-    programs = {
-      enable = [ ];
+    base = {
+      enable = [
+        "boot"
+        "system"
+        "security"
+        "locale"
+        "network"
+        "users"
+      ];
     };
     services = {
       enable = [
