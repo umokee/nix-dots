@@ -24,6 +24,7 @@
       (termius.overrideAttrs (oldAttrs: {
         buildInputs = (oldAttrs.buildInputs or []) ++ [ sqlite ];
       }))
+      nmap
     ]
     ++ lib.optionals (helpers.hasIn "hardware" "sound") [
       pavucontrol
