@@ -15,14 +15,6 @@ in
         entryPoints = {
           web = {
             address = ":80";
-            http = {
-              redirections = {
-                entryPoint = {
-                  to = "websecure";
-                  scheme = "https";
-                };
-              };
-            };
           };
           
           websecure = {
@@ -48,7 +40,7 @@ in
         };
         
         log = {
-          level = "INFO";
+          level = "DEBUG";
         };
         
         accessLog = {};
@@ -63,61 +55,87 @@ in
     };
 
     environment.etc."traefik/dynamic.yml".text = ''
-      tcp:
-        routers:
-          # VLESS роутер (github.com SNI)
-          vless-router:
-            rule: "HostSNI(`github.com`) || HostSNI(`www.github.com`)"
-            entryPoints:
-              - websecure
-            service: xray-service
-            tls:
-              passthrough: true
-          
-          fallback-router:
-            rule: "HostSNI(`*`)"
-            entryPoints:
-              - websecure
-            service: github-service
-            priority: 1
-            tls:
-              passthrough: true
-        
-        services:
-          xray-service:
-            loadBalancer:
-              servers:
-                - address: "127.0.0.1:8443"
-          
-          github-service:
-            loadBalancer:
-              servers:
-                - address: "github.com:443"
-      
+      # HTTP роутеры (обрабатываются ПЕРВЫМИ для SSL termination)
       http:
         routers:
-          domain-router:
+          # Роутер для домена с SSL
+          domain-https:
             rule: "Host(`umkcloud.ru`) || Host(`www.umkcloud.ru`)"
             entryPoints:
               - websecure
-            service: redirect-service
+            service: github-redirect
             middlewares:
-              - github-redirect
+              - redirect-github
             tls:
               certResolver: letsencrypt
+            priority: 100  # Высокий приоритет!
+          
+          # Редирект HTTP -> HTTPS
+          domain-http:
+            rule: "Host(`umkcloud.ru`) || Host(`www.umkcloud.ru`)"
+            entryPoints:
+              - web
+            service: github-redirect
+            middlewares:
+              - redirect-https
+            priority: 100
         
         services:
-          redirect-service:
+          # Dummy service для редиректа
+          github-redirect:
             loadBalancer:
               servers:
                 - url: "http://127.0.0.1:1"
         
         middlewares:
-          github-redirect:
+          # Редирект на HTTPS
+          redirect-https:
+            redirectScheme:
+              scheme: https
+              permanent: true
+          
+          # Редирект на GitHub
+          redirect-github:
             redirectRegex:
-              regex: "^https://.*"
+              regex: "^https?://.*"
               replacement: "https://github.com"
               permanent: true
+      
+      # TCP роутеры (обрабатываются ПОСЛЕ HTTP)
+      tcp:
+        routers:
+          # VLESS роутер (github.com SNI)
+          vless-tcp:
+            rule: "HostSNI(`github.com`, `www.github.com`)"
+            entryPoints:
+              - websecure
+            service: xray-service
+            tls:
+              passthrough: true
+            priority: 50
+          
+          # Fallback роутер (все остальные SNI)
+          fallback-tcp:
+            rule: "HostSNI(`*`)"
+            entryPoints:
+              - websecure
+            service: github-service
+            tls:
+              passthrough: true
+            priority: 1  # Самый низкий приоритет
+        
+        services:
+          # Xray сервис
+          xray-service:
+            loadBalancer:
+              servers:
+                - address: "127.0.0.1:8443"
+          
+          # GitHub fallback сервис
+          github-service:
+            loadBalancer:
+              servers:
+                - address: "github.com:443"
     '';
 
     systemd.tmpfiles.rules = [
