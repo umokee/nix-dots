@@ -17,8 +17,6 @@ in
         enable = true;
         multipliers = "1 2 4 8 16 32 64";
       };
-
-      findtime = "24h";
       
       jails = {
         sshd.settings = {
