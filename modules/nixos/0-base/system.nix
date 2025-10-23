@@ -1,5 +1,5 @@
 {
-  config,
+  conf,
   lib,
   helpers,
   pkgs,
@@ -49,6 +49,8 @@ in
           #  automatic = true;
           #  dates = [ "weekly" ];
           #};
+          trusted-users = [ "root" conf.username ];
+          require-sigs = !helpers.isServer;
           auto-optimise-store = true;
           experimental-features = [
             "nix-command"
