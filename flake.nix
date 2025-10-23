@@ -6,6 +6,7 @@
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     nix-colors.url = "github:misterio77/nix-colors";
     mango.url = "github:DreamMaoMao/mango";
+    waterfox.url = "github:sammypanda/nixos-waterfox";
 
     home-manager = {
       url = "github:nix-community/home-manager";
