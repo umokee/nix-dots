@@ -123,6 +123,7 @@ let
         "openssh"
         "xray"
         "haproxy"
+        "acme"
         "fail2ban"
         "auto-upgrade"
       ];

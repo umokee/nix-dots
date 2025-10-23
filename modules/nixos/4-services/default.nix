@@ -13,5 +13,6 @@
     ./fail2ban.nix
     ./auto-upgrade.nix
     ./xray.nix
+    ./nginx.nix
   ];
 }
