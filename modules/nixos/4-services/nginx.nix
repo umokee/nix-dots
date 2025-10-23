@@ -24,20 +24,33 @@ in
 
       virtualHosts."umkcloud.ru" = {
         enableACME = true;
-        
+
         listen = [
           {
             addr = "0.0.0.0";
             port = 80;
             ssl = false;
           }
+        ];
+
+        locations."/" = {
+          return = "301 https://github.com$request_uri";
+        };
+      };
+
+      virtualHosts."umkcloud-ssl.ru" = {
+        serverName = "umkcloud.ru";
+
+        listen = [
           {
             addr = "127.0.0.1";
             port = 8444;
             ssl = true;
           }
         ];
-        
+
+        useACMEHost = "umkcloud.ru";
+
         locations."/" = {
           return = "301 https://github.com$request_uri";
         };
