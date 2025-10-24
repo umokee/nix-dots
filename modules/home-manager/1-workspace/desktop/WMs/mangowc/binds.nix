@@ -10,7 +10,7 @@ let
 in
 {
   config = lib.mkIf enable {
-    home.file.".config/mango/binds.conf" = ''
+    home.file.".config/mango/binds.conf".text = ''
       bind=${mainBtn}+SHIFT,R,reload_config
       bind=${mainBtn},r,reset_layout
       bind=${mainBtn},m,quit
@@ -31,8 +31,8 @@ in
       bind=${mainBtn},g,toggleglobal,
       bind=${mainBtn}+SHIFT,Tab,toggleoverview,
       bind=${mainBtn},f,togglemaxmizescreen, # togglefakefullscreen
-      bind=${mainBtn},v,toggleing,
-      bind=${mainBtn},i,minimized,
+      bind=${mainBtn},v,togglefloating,
+      bind=${mainBtn},i,minimized,R
       bind=${mainBtn}+SHIFT,I,restore_minimized
       bind=${mainBtn},q,killclient,
 

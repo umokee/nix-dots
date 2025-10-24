@@ -19,9 +19,7 @@ in
 
       glxinfo
       heroic
-      (bottles.override {
-        removeWarningPopup = true;
-      })
+      flatpak
       joystickwake
       mangohud
       #mesa

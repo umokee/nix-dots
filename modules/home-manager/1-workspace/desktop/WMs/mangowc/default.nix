@@ -7,9 +7,14 @@
 }:
 let
   enable = helpers.hasIn "workspace" "mangowc";
-  color = config.colorScheme.color;
+  colors = config.colorScheme.palette;
 in
 {
+  imports = [
+    ./binds.nix
+    ./rules.nix
+  ];
+
   config = lib.mkIf enable {
     programs.bash.profileExtra = lib.mkIf helpers.isWM ''
       if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
@@ -70,7 +75,7 @@ in
         warpcursor=1
         focus_cross_monitor=0
         focus_cross_tag=0
-        enable_ing_snap=0
+        enable_floating_snap=0
         snap_distance=30
         cursor_size=24
         drag_tile_to_tile=1
@@ -109,14 +114,14 @@ in
         scratchpad_width_ratio=0.8
         scratchpad_height_ratio=0.9
 
-        rootcolor=0x${color.base00}ff
-        bordercolor=0x${color.base03}ff
-        focuscolor=0x${color.base0E}ff
-        maxmizescreencolor=0x${color.base0B}ff
-        urgentcolor=0x${color.base08}ff
-        scratchpadcolor=0x${color.base0D}ff
-        globalcolor=0x${color.base0E}ff
-        overlaycolor=0x${color.base0C}ff
+        rootcolor=0x${colors.base00}ff
+        bordercolor=0x${colors.base03}ff
+        focuscolor=0x${colors.base0D}ff
+        maxmizescreencolor=0x${colors.base0B}ff
+        urgentcolor=0x${colors.base08}ff
+        scratchpadcolor=0x${colors.base0E}ff
+        globalcolor=0x${colors.base0E}ff
+        overlaycolor=0x${colors.base0C}ff
 
         source=~/.config/mango/binds.conf
         source=~/.config/mango/rules.conf

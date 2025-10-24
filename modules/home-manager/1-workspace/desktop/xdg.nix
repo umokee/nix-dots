@@ -34,7 +34,7 @@
           "org.freedesktop.impl.portal.FileChooser" = "gtk";
           "org.freedesktop.impl.portal.Inhibit" = "gtk";
         };
-        dwl = {
+        mangowc = {
           default = [
             "wlr"
             "gtk"
