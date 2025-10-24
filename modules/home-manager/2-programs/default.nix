@@ -3,6 +3,5 @@
     ./packages.nix
     ./applications
     ./development
-    ./scripts
   ];
 }

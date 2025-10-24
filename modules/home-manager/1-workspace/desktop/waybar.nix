@@ -30,9 +30,8 @@
           ++ lib.optionals helpers.isMango [
             "ext/workspaces"
             "custom/sep"
-            "dwl/window#layout"
+            "dwl/window"
             "custom/sep"
-            "dwl/window#title"
           ];
 
         modules-center = [ ];
@@ -84,12 +83,8 @@
           num-tags = 9;
         };
 
-        "dwl/window#layout" = {
-          format = "[{layout}]";
-        };
-
-        "dwl/window#title" = {
-          format = "{title}";
+        "dwl/window" = {
+          format = "[{layout}]{title}";
         };
 
         tray = {
@@ -180,6 +175,7 @@
             color: @cyn;
             background: transparent;
             border-bottom: 3px solid @bg;
+            border-radius: 0;
         }
 
         #workspaces button.active {
