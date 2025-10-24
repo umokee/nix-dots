@@ -1,4 +1,4 @@
-{ config, conf, ... }:
+{ conf, ... }:
 {
   home = {
     username = conf.username;

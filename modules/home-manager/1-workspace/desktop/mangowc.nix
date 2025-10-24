@@ -6,7 +6,6 @@
 }:
 let
   enable = helpers.hasIn "workspace" "mangowc";
-
   mainBtn = "SUPER";
 in
 {
@@ -47,8 +46,7 @@ in
         focused_opacity=1.0
         unfocused_opacity=1.0
 
-        # Animation Configuration(support type:zoom,slide)
-        # tag_animation_direction: 0-horizontal,1-vertical
+        # Animation Configuration
         animations=0
         layer_animations=0
         animation_type_open=slide
@@ -110,11 +108,10 @@ in
         repeat_delay=300
         numlockon=0
         xkb_rules_layout=us,ru
-        xkb_options=grp:ctrl_shift_toggle
+        #xkb_options=grp:ctrl_shift_toggle
 
         # Trackpad
-        # need relogin to make it apply
-        disable_trackpad=0
+        disable_trackpad=${if helpers.isLaptop then 1 else 0}
         tap_to_click=1
         tap_and_drag=1
         drag_lock=1
@@ -124,18 +121,17 @@ in
         middle_button_emulation=0
         swipe_min_threshold=1
 
-        # mouse
-        # need relogin to make it apply
+        # Mouse
         mouse_natural_scrolling=0
 
         # Appearance
+        borderpx=1
         gappih=2
         gappiv=2
         gappoh=2
         gappov=2
         scratchpad_width_ratio=0.8
         scratchpad_height_ratio=0.9
-        borderpx=1
         rootcolor=0x201b14ff
         bordercolor=0x444444ff
         focuscolor=0xc9b890ff
@@ -145,7 +141,7 @@ in
         globalcolor=0xb153a7ff
         overlaycolor=0x14a57cff
 
-        # layout support:
+        # Layout support:
         # tile,scroller,grid,deck,monocle,center_tile,vertical_tile,vertical_scroller
         tagrule=id:1,layout_name:tile
         tagrule=id:2,layout_name:tile
@@ -177,11 +173,12 @@ in
         bind=${mainBtn},k,focusdir,up
         bind=${mainBtn},j,focusdir,down
 
-        # swap window
-        bind=SUPER+SHIFT,Up,exchange_client,up
-        bind=SUPER+SHIFT,Down,exchange_client,down
-        bind=SUPER+SHIFT,Left,exchange_client,left
-        bind=SUPER+SHIFT,Right,exchange_client,right
+        bind=${mainBtn}+SHIFT,k,exchange_client,up
+        bind=${mainBtn}+SHIFT,j,exchange_client,down
+        bind=${mainBtn}+SHIFT,h,exchange_client,left
+        bind=${mainBtn}+SHIFT,l,exchange_client,right
+
+        bind=CTRL+SHIFT,None,keyboard_layout_switch,next
 
         # switch window status
         bind=SUPER,g,toggleglobal,
@@ -267,11 +264,6 @@ in
         # Axis Bindings
         axisbind=SUPER,UP,viewtoleft_have_client
         axisbind=SUPER,DOWN,viewtoright_have_client
-
-
-        # layer rule
-        layerrule=animation_type_open:zoom,layer_name:rofi
-        layerrule=animation_type_close:zoom,layer_name:rofi
       '';
       autostart_sh = ''
         ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &

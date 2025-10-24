@@ -14,10 +14,6 @@
 
     settings = {
       mainBar = {
-        output = [
-          "eDP-1"
-          "HDMI-A-5"
-        ];
         layer = "top";
         position = "top";
         height = 30;

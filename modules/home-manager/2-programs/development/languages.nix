@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   lib,
   helpers,
@@ -26,11 +25,9 @@ in
       yarn
       pnpm
     ]
-    ++ lib.optionals (helpers.hasIn "programs" "dotnet") (
-      [
-        dotnet-sdk_9
-      ]
-    )
+    ++ lib.optionals (helpers.hasIn "programs" "dotnet") [
+      dotnet-sdk_9
+    ]
     ++ lib.optionals (helpers.hasIn "programs" "nix-lang") [
       nixd
       nixfmt

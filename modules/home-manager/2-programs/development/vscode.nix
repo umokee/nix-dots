@@ -114,13 +114,13 @@ in
         "nix.enableLanguageServer" = true;
         "nix.serverPath" = "${pkgs.nixd}/bin/nixd";
         "nix.formatterPath" = "${pkgs.nixfmt-rfc-style}/bin/nixfmt";
-        
+
         "[nix]" = {
           "editor.defaultFormatter" = "jnoortheen.nix-ide";
           "editor.formatOnSave" = true;
           "editor.tabSize" = 2;
         };
-        
+
         "nix.serverSettings" = {
           "nixd" = {
             "formatting" = {
@@ -128,10 +128,12 @@ in
             };
             "options" = {
               "nixos" = {
-                "expr" = "(builtins.getFlake \"/home/${config.home.username}/nixos\").nixosConfigurations.desktop.options";
+                "expr" =
+                  "(builtins.getFlake \"/home/${config.home.username}/nixos\").nixosConfigurations.desktop.options";
               };
               "home-manager" = {
-                "expr" = "(builtins.getFlake \"/home/${config.home.username}/nixos\").homeConfigurations.desktop.options";
+                "expr" =
+                  "(builtins.getFlake \"/home/${config.home.username}/nixos\").homeConfigurations.desktop.options";
               };
             };
           };
@@ -183,15 +185,17 @@ in
     };
   };
 
-  home.activation.makeVSCodeConfigWritable = let
-    configPath = "${config.xdg.configHome}/Code/User/settings.json";
-  in {
-    after = [ "writeBoundary" ];
-    before = [ ];
-    data = ''
-      if [ -L ${configPath} ]; then
-        install -m 0640 "$(readlink ${configPath})" ${configPath}
-      fi
-    '';
-  };
+  home.activation.makeVSCodeConfigWritable =
+    let
+      configPath = "${config.xdg.configHome}/Code/User/settings.json";
+    in
+    {
+      after = [ "writeBoundary" ];
+      before = [ ];
+      data = ''
+        if [ -L ${configPath} ]; then
+          install -m 0640 "$(readlink ${configPath})" ${configPath}
+        fi
+      '';
+    };
 }

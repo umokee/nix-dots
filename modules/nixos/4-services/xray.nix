@@ -15,42 +15,12 @@ in
         log = {
           loglevel = "warning";
         };
-        routing = {
-          rules = [
-            {
-              ip = [ "geoip:private" ];
-              outboundTag = "BLOCK";
-              type = "field";
-            }
-            {
-              protocol = "bittorrent";
-              outboundTag = "BLOCK";
-              type = "field";
-            }
-            {
-              domain = [
-                "geosite:category-gov-ru"
-                "regexp:.*\\.ru$"
-                "regexp:.*\\.рф$"
-                "regexp:.*\\.su$"
-              ];
-              outboundTag = "BLOCK";
-              type = "field";
-            }
-            {
-              ip = [ "geoip:ru" ];
-              outboundTag = "BLOCK";
-              type = "field";
-            }
-          ];
-        };
         inbounds = [
           {
             tag = "vless-in";
             listen = "127.0.0.1";
             port = 8443;
             protocol = "vless";
-
             settings = {
               clients = [
                 {
@@ -101,6 +71,35 @@ in
             tag = "BLOCK";
           }
         ];
+        routing = {
+          rules = [
+            {
+              ip = [ "geoip:private" ];
+              outboundTag = "BLOCK";
+              type = "field";
+            }
+            {
+              protocol = "bittorrent";
+              outboundTag = "BLOCK";
+              type = "field";
+            }
+            {
+              domain = [
+                "geosite:category-gov-ru"
+                "regexp:.*\\.ru$"
+                "regexp:.*\\.рф$"
+                "regexp:.*\\.su$"
+              ];
+              outboundTag = "BLOCK";
+              type = "field";
+            }
+            {
+              ip = [ "geoip:ru" ];
+              outboundTag = "BLOCK";
+              type = "field";
+            }
+          ];
+        };
       };
     };
   };

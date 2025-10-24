@@ -2,7 +2,6 @@
   pkgs,
   lib,
   helpers,
-  inputs,
   ...
 }:
 {
@@ -22,7 +21,7 @@
       xmind
       #discord
       (termius.overrideAttrs (oldAttrs: {
-        buildInputs = (oldAttrs.buildInputs or []) ++ [ sqlite ];
+        buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ sqlite ];
       }))
     ]
     ++ lib.optionals (helpers.hasIn "hardware" "sound") [

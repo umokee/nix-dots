@@ -16,7 +16,6 @@ in
           web = {
             address = ":80";
           };
-
           websecure = {
             address = ":443";
           };
@@ -59,7 +58,6 @@ in
               priority = 100;
             };
           };
-
           services = {
             github-redirect = {
               loadBalancer = {
@@ -69,7 +67,6 @@ in
               };
             };
           };
-
           middlewares = {
             redirect-github = {
               redirectRegex = {
@@ -92,7 +89,6 @@ in
               };
               priority = 50;
             };
-
             fallback-tcp = {
               rule = "HostSNI(`*`)";
               entryPoints = [ "websecure" ];
@@ -112,7 +108,6 @@ in
                 ];
               };
             };
-
             github-service = {
               loadBalancer = {
                 servers = [

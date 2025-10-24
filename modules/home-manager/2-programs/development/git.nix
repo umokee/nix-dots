@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
   config = {
     home.packages = with pkgs; [
@@ -12,11 +12,6 @@
       diff-so-fancy.enable = true;
       userName = "umokee";
       userEmail = "hituaev@gmail.com";
-        
-      extraConfig = {
-        credential."https://github.com".helper = "${pkgs.gh}/bin/gh auth git-credential";
-        credential."https://gist.github.com".helper = "${pkgs.gh}/bin/gh auth git-credential";
-      };
 
       ignores = [
         ".vscode/"
