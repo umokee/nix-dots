@@ -194,35 +194,48 @@ let
     };
   };
 
-  singboxWrapper =
-    pkgs.runCommand "singbox-wrapper"
-      {
-        buildInputs = [ pkgs.gcc ];
+  singboxWrapper = pkgs.stdenv.mkDerivation {
+    name = "singbox-wrapper";
+    version = "1.0";
+
+    src = pkgs.writeText "wrapper.c" ''
+      #include <unistd.h>
+      #include <signal.h>
+      #include <sys/wait.h>
+      #include <stdlib.h>
+
+      int main() {
+          pid_t pid = fork();
+          if (pid == 0) {
+              char *args[] = {"${pkgs.sing-box}/bin/sing-box", "run", "-c", "/etc/sing-box-config.json", NULL};
+              execv(args[0], args);
+              return 1;
+          } else if (pid > 0) {
+              int status;
+              waitpid(pid, &status, 0);
+              return WIFEXITED(status) ? WEXITSTATUS(status) : 1;
+          } else {
+              return 1;
+          }
       }
-      ''
-      cat > singbox_wrapper.c <<EOF
-        #include <unistd.h>
-        #include <signal.h>
-        #include <sys/wait.h>
-        #include <stdlib.h>
-        int main() {
-            pid_t pid = fork();
-            if (pid == 0) {
-                char *args[] = {"/run/current-system/sw/bin/sing-box", "run", "-c", "/etc/sing-box-config.json", NULL};
-                execv(args[0], args);
-                return 1;
-            } else if (pid > 0) {
-                int status;
-                waitpid(pid, &status, 0);
-                return WIFEXITED(status) ? WEXITSTATUS(status) : 1;
-            } else {
-                return 1;
-            }
-        }
-        EOF
-          mkdir -p $out/bin
-          gcc singbox_wrapper.c -o $out/bin/singbox_wrapper
-      '';
+    '';
+
+    nativeBuildInputs = [
+      pkgs.gcc
+      pkgs.patchelf
+    ];
+
+    unpackPhase = "true";
+
+    buildPhase = ''
+      gcc $src -o singbox_wrapper
+    '';
+
+    installPhase = ''
+      mkdir -p $out/bin
+      install -m755 singbox-wrapper $out/bin/
+    '';
+  };
 in
 {
   config = lib.mkIf enable {
@@ -233,7 +246,7 @@ in
 
     systemd.services.singbox-wrapper = {
       description = "Singbox Wrapper Service";
-      wantedBy = [ ]; #"multi-user.target"
+      wantedBy = [ ]; # "multi-user.target"
       after = [ "network.target" ];
       serviceConfig = {
         ExecStart = "${singboxWrapper}/bin/singbox_wrapper";
