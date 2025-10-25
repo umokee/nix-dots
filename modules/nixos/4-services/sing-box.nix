@@ -155,9 +155,9 @@ let
           process_path_regex = [
             ".*/mullvad-browser.*"
             #".*/Tor.*"
-            ".*/bubblewrap.*/bwrap.*"
-            ".*/bottles-unwrapped.*/bin/.*bottles.*"
-            ".*/python3.*/bottles.*"
+            "/nix/store/[^/]*/bin/python3.13"
+            "/nix/store/[^/]*/bin/bwrap"
+            ".*bottles.*"
           ];
           outbound = "proxy";
         }
