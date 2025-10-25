@@ -157,7 +157,6 @@ let
 
             #"/nix/store/[^/]*/bin/python3.13"
             #"/nix/store/[^/]*/bin/bwrap"
-            #".*bottles.*"
           ];
           outbound = "proxy";
         }

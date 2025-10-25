@@ -9,20 +9,21 @@ let
   directory = "${config.home.homeDirectory}/Pictures/Screenshots";
 
   selectedTool = if helpers.isWayland then "grim" else "maim";
+  filename = "\\$(${pkgs.coreutils}/bin/date +%Y-%m-%d_%H-%M-%S).png";
 
   screenshotCommands = {
     grim = {
-      fullscreen = "grim - | tee '${directory}/$(date +%Y-%m-%d_%H-%M-%S).png' | wl-copy -t image/png";
-      area = "grim -g \"$(slurp)\" - | tee '${directory}/$(date +%Y-%m-%d_%H-%M-%S).png' | wl-copy -t image/png";
-      clipboard = "grim -g \"$(slurp)\" - | wl-copy -t image/png";
-      window = "hyprctl -j activewindow | jq -r '\"\\(.at[0]),\\(.at[1]) \\(.size[0])x\\(.size[1])\"' | grim -g - - | tee '${directory}/$(date +%Y-%m-%d_%H-%M-%S).png' | wl-copy -t image/png";
+      fullscreen = "${pkgs.grim}/bin/grim - | ${pkgs.coreutils}/bin/tee '${directory}/${filename}' | ${pkgs.wl-clipboard}/bin/wl-copy -t image/png";
+      area = "${pkgs.grim}/bin/grim -g \"\\$(${pkgs.slurp}/bin/slurp)\" - | ${pkgs.coreutils}/bin/tee '${directory}/${filename}' | ${pkgs.wl-clipboard}/bin/wl-copy -t image/png";
+      clipboard = "${pkgs.grim}/bin/grim -g \"\\$(${pkgs.slurp}/bin/slurp)\" - | ${pkgs.wl-clipboard}/bin/wl-copy -t image/png";
+      window = "${pkgs.hyprland}/bin/hyprctl -j activewindow | ${pkgs.jq}/bin/jq -r '\"\\(.at[0]),\\(.at[1]) \\(.size[0])x\\(.size[1])\"' | ${pkgs.grim}/bin/grim -g - - | ${pkgs.coreutils}/bin/tee '${directory}/${filename}' | ${pkgs.wl-clipboard}/bin/wl-copy -t image/png";
     };
 
     maim = {
-      fullscreen = "maim '${directory}/$(date +%Y-%m-%d_%H-%M-%S).png'";
-      area = "maim -s '${directory}/$(date +%Y-%m-%d_%H-%M-%S).png'";
-      clipboard = "maim -s | xclip -selection clipboard -t image/png";
-      window = "maim -i $(xdotool getactivewindow) '${directory}/$(date +%Y-%m-%d_%H-%M-%S).png'";
+      fullscreen = "${pkgs.maim}/bin/maim '${directory}/${filename}'";
+      area = "${pkgs.maim}/bin/maim -s '${directory}/${filename}'";
+      clipboard = "${pkgs.maim}/bin/maim -s | ${pkgs.xclip}/bin/xclip -selection clipboard -t image/png";
+      window = "${pkgs.maim}/bin/maim -i \\$(${pkgs.xdotool}/bin/xdotool getactivewindow) '${directory}/${filename}'";
     };
   };
 in
@@ -33,26 +34,20 @@ in
         home.packages = [
           pkgs.grim
           pkgs.slurp
+          pkgs.jq
         ];
       })
       (lib.mkIf helpers.isX11 {
         home.packages = [
           pkgs.maim
           pkgs.xclip
+          pkgs.xdotool
         ];
       })
       {
         home.activation.createScreenshotDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           mkdir -p ${directory}
         '';
-
-        home.file.".local/bin/screenshot-area" = {
-          executable = true;
-          text = ''
-            #!${pkgs.bash}/bin/bash
-            ${screenshotCommands.${selectedTool}.area}
-          '';
-        };
 
         home.file.".local/bin/screenshot-tool" = {
           executable = true;
