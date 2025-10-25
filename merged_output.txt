@@ -1,0 +1,6744 @@
+================== BEGIN FILE ==================
+File: /home/user/nixos/flake.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  description = "NixOS";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    nix-colors.url = "github:misterio77/nix-colors";
+    mango.url = "github:DreamMaoMao/mango";
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    minimalFox = {
+      url = "github:Jamir-boop/minimalisticfox";
+      flake = false;
+    };
+
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      ...
+    }@inputs:
+    let
+      system = "x86_64-linux";
+      lib = nixpkgs.lib;
+
+      hosts = [
+        "desktop"
+        "laptop"
+        "server"
+      ];
+
+      wallpapers = import ./shared/wallpapers.nix;
+
+      commonPkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+
+      mkCommonArgs =
+        hostname:
+        let
+          conf = import ./shared/config.nix { inherit lib hostname; };
+        in
+        {
+          inherit
+            inputs
+            wallpapers
+            conf
+            system
+            ;
+          helpers = import ./shared/helpers.nix { inherit lib conf; };
+        };
+
+      mkNixosSystem =
+        hostname:
+        lib.nixosSystem {
+          inherit system;
+          specialArgs = mkCommonArgs hostname;
+          modules = [
+            inputs.disko.nixosModules.disko
+            inputs.chaotic.nixosModules.default
+            inputs.mango.nixosModules.mango
+            { nixpkgs.config.allowUnfree = true; }
+            ./modules/nixos
+            ./hosts/${hostname}/configuration.nix
+          ];
+        };
+
+      mkHomeConfiguration =
+        hostname:
+        home-manager.lib.homeManagerConfiguration {
+          pkgs = commonPkgs;
+          extraSpecialArgs = mkCommonArgs hostname;
+          modules = [
+            inputs.nix-colors.homeManagerModules.default
+            inputs.mango.hmModules.mango
+            { colorScheme = inputs.nix-colors.colorSchemes.ayu-dark; }
+            ./modules/home-manager
+            ./hosts/${hostname}/home.nix
+          ];
+        };
+    in
+    {
+      nixosConfigurations = lib.genAttrs hosts mkNixosSystem;
+      homeConfigurations = lib.genAttrs hosts mkHomeConfiguration;
+    };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/flake.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/shared/helpers.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ lib, conf }:
+let
+  waylandCompositors = [
+    "hyprland"
+    "niri"
+    "dwl"
+    "mangowc"
+  ];
+  x11WMs = [
+    "bspwm"
+    "dwm"
+  ];
+  wlrCompositors = [
+    "sway"
+    "dwl"
+    "mangowc"
+  ];
+
+  hasIn =
+    category: feature:
+    let
+      categoryList = conf.${category}.enable or [ ];
+      checkList = features: lib.any (f: lib.elem f categoryList) features;
+      checkSingle = f: lib.elem f categoryList;
+    in
+    lib.isList categoryList && (if lib.isList feature then checkList feature else checkSingle feature);
+in
+{
+  isLaptop = conf.machineType == "laptop";
+  isDesktop = conf.machineType == "desktop";
+  isServer = conf.machineType == "server";
+
+  isWayland = hasIn "workspace" waylandCompositors;
+  isX11 = hasIn "workspace" x11WMs;
+  isWM = hasIn "workspace" (waylandCompositors ++ x11WMs);
+
+  isHyprland = hasIn "workspace" "hyprland";
+  isWlr = hasIn "workspace" wlrCompositors;
+  isNiri = hasIn "workspace" "niri";
+  isDwl = hasIn "workspace" "dwl";
+  isMango = hasIn "workspace" "mangowc";
+
+  needsHyprlandPortal = hasIn "workspace" "hyprland";
+  needsWlrPortal = hasIn "workspace" wlrCompositors;
+
+  hasNvidia = hasIn "hardware" "nvidia";
+  hasIntel = hasIn "hardware" "intel";
+  hasAMD = hasIn "hardware" "amd";
+
+  inherit hasIn;
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/shared/helpers.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/shared/config.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ lib, hostname }:
+let
+  machineType = hostname;
+
+  commonVars = {
+    hostname = "nixos";
+    inherit machineType;
+
+    username = "user";
+
+    colorScheme = "dark";
+    wallpaperName = "backyard";
+
+    default = {
+      terminal = "foot";
+      editor = "code";
+      visual = "code";
+      browser = "zen";
+    };
+  };
+
+  desktopVars = lib.recursiveUpdate commonVars {
+    base = {
+      enable = [
+        "boot"
+        "system"
+        "security"
+        "locale"
+        "network"
+        "users"
+        "fonts"
+      ];
+    };
+    hardware = {
+      enable = [
+        "sound"
+        "keyboard-mouse"
+        "intel"
+        "nvidia"
+        "power"
+        "print"
+      ];
+    };
+    workspace = {
+      enable = [
+        "mangowc"
+        #"wallpapers"
+        "screenshots"
+        "themes"
+      ];
+    };
+    programs = {
+      enable = [
+        "appimage"
+        "nix-lang"
+        "python-lang"
+        "dotnet"
+        "nodejs"
+        "gaming"
+      ];
+    };
+    services = {
+      enable = [
+        "openssh"
+        "gammastep"
+        "virtual-machine"
+        "print"
+      ];
+    };
+  };
+
+  laptopVars = lib.recursiveUpdate commonVars {
+    base = {
+      enable = [
+        "boot"
+        "system"
+        "security"
+        "locale"
+        "network"
+        "users"
+        "fonts"
+      ];
+    };
+    hardware = {
+      enable = [
+        "keyboard-mouse"
+        "amd"
+        "power"
+      ];
+    };
+    workspace = {
+      enable = [
+        "dwl"
+        "wallpapers"
+        "themes"
+      ];
+    };
+    programs = {
+      enable = [
+        "nix-lang"
+        "python-lang"
+        "dotnet"
+        "nodejs"
+      ];
+    };
+    services = {
+      enable = [
+        "openssh"
+        "sing-box"
+        "brightnessctl"
+      ];
+    };
+  };
+
+  serverVars = lib.recursiveUpdate commonVars {
+    base = {
+      enable = [
+        "boot"
+        "system"
+        "security"
+        "locale"
+        "network"
+        "users"
+      ];
+    };
+    hardware = {
+      enable = [ ];
+    };
+    workspace = {
+      enable = [ ];
+    };
+    programs = {
+      enable = [ ];
+    };
+    services = {
+      enable = [
+        "openssh"
+        "xray"
+        "traefik"
+        "fail2ban"
+      ];
+    };
+  };
+in
+if machineType == "laptop" then
+  laptopVars
+else if machineType == "server" then
+  serverVars
+else if machineType == "desktop" then
+  desktopVars
+else
+  throw "Unknown hostname: ${hostname}. Expected: desktop, laptop, or server"
+
+=================== END FILE ===================
+File: /home/user/nixos/shared/config.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/shared/wallpapers.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  backyard = ./wallpapers/Backyard.png;
+  lanscape = ./wallpapers/Fantasy-Lanscape-Night.png;
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/shared/wallpapers.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/tofi.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  config,
+  lib,
+  helpers,
+  conf,
+  ...
+}:
+let
+  colors = config.colorScheme.palette;
+in
+{
+  programs.tofi = lib.mkIf (!helpers.isDwl) {
+    enable = true;
+
+    settings = {
+      anchor = "top";
+      width = "100%";
+      height = 40;
+      margin-top = 0;
+      margin-bottom = 0;
+
+      border-width = 0;
+      outline-width = 0;
+
+      horizontal = true;
+      result-spacing = 25;
+      num-results = 8;
+
+      font = "JetBrainsMono Nerd Font Mono";
+      font-style = "Bold";
+      font-size = 12;
+
+      # Цвета из nix-colors (base16)
+      background-color = "#${colors.base00}"; # Фон
+      text-color = "#${colors.base05}"; # Основной текст
+      prompt-color = "#${colors.base0D}"; # Промпт (синий)
+      placeholder-color = "#${colors.base03}"; # Placeholder
+      selection-color = "#${colors.base0D}"; # Выбранный элемент (синий)
+      selection-background = "#${colors.base02}"; # Фон выбранного
+      selection-match-color = "#${colors.base0B}"; # Совпадения (зелёный)
+
+      # Дополнительно
+      prompt-text = "run: ";
+      placeholder-text = "...";
+
+      # Поведение
+      fuzzy-match = true;
+      hide-cursor = true;
+      history = true;
+
+      # Производительность
+      drun-launch = true;
+      terminal = conf.default.terminal;
+    };
+  };
+
+  home.activation.clearTofiCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    rm -f ${config.home.homeDirectory}/.cache/tofi-drun
+  '';
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/tofi.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/dunst.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  helpers,
+  ...
+}:
+{
+  services.dunst = {
+    enable = true;
+    settings = {
+      global = {
+        monitor = if helpers.isDesktop then "DP-3" else "eDP-1";
+        origin = "bottom-center";
+        offset = "(0, 20)";
+        width = "(300, 500)";
+        height = 300;
+
+        transparency = 10;
+        padding = 12;
+        horizontal_padding = 12;
+        text_icon_padding = 16;
+
+        frame_width = 2;
+        corner_radius = 0;
+        gap_size = 6;
+
+        font = "JetBrainsMono Nerd Font 13";
+        format = "<b>%s</b>\\n%b";
+        markup = "full";
+        alignment = "left";
+        vertical_alignment = "center";
+
+        icon_position = "left";
+        min_icon_size = 48;
+        max_icon_size = 64;
+        icon_theme = "Papirus_Dark";
+        enable_recursive_icon_lookup = true;
+
+        sticky_history = true;
+        history_length = 50;
+        show_indicators = true;
+        show_age_threshold = 60;
+        stack_duplicates = true;
+        hide_duplicate_count = false;
+        notification_limit = 5;
+
+        progress_bar = true;
+        progress_bar_height = 14;
+        progress_bar_frame_width = 1;
+        progress_bar_min_width = 150;
+        progress_bar_max_width = 300;
+        progress_bar_corner_radius = 5;
+
+        sort = true;
+        idle_threshold = 120;
+        word_wrap = true;
+        ignore_newline = false;
+
+        mouse_left_click = "close_current";
+        mouse_middle_click = "do_action, close_current";
+        mouse_right_click = "close_all";
+
+        layer = "overlay";
+        force_xwayland = false;
+
+        browser = "/usr/bin/xdg-open";
+        dmenu = "rofi -dmenu";
+      };
+
+      urgency_low = {
+        timeout = 3;
+      };
+
+      urgency_normal = {
+        timeout = 6;
+      };
+
+      urgency_critical = {
+        timeout = 0;
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/dunst.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/scripts/collect.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  pkgs,
+  ...
+}:
+{
+  config = {
+    home.file.".local/bin/collect" = {
+      executable = true;
+      text = ''
+        #!${pkgs.bash}/bin/bash
+
+        if [ "$#" -lt 2 ]; then
+          echo "Usage: $0 <directory> <extension> [output_file]"
+          echo "Example: $0 /path/to/dir .txt output.txt"
+          echo "Example with multiple extensions: $0 /path/to/dir '.txt .md .sh' output.txt"
+          exit 1
+        fi
+
+        DIRECTORY="$1"
+        EXTENSIONS="$2"
+        OUTPUT_FILE="''${3:-merged_output.txt}"
+
+        if [ ! -d "$DIRECTORY" ]; then
+          echo "Error: Directory '$DIRECTORY' does not exist"
+          exit 1
+        fi
+
+        > "$OUTPUT_FILE"
+
+        echo "Starting file collection from: $DIRECTORY"
+        echo "Extensions: $EXTENSIONS"
+        echo "Output file: $OUTPUT_FILE"
+        echo ""
+
+        COUNT=0
+
+        process_extension() {
+          local ext="$1"
+          
+          ext="''${ext#.}"
+          
+          while IFS= read -r -d ''' file; do
+            echo "Обработка: $file"
+            echo "================== BEGIN FILE ==================" >> "$OUTPUT_FILE"
+            echo "File: $file" >> "$OUTPUT_FILE"
+            echo "Extension: .$ext" >> "$OUTPUT_FILE"
+            echo "Date: $(date '+%Y-%m-%d %H:%M:%S')" >> "$OUTPUT_FILE"
+            echo "================================================" >> "$OUTPUT_FILE"
+            echo "" >> "$OUTPUT_FILE"
+            
+            cat "$file" >> "$OUTPUT_FILE"
+            
+            echo "" >> "$OUTPUT_FILE"
+            echo "=================== END FILE ===================" >> "$OUTPUT_FILE"
+            echo "File: $file" >> "$OUTPUT_FILE"
+            echo "================================================" >> "$OUTPUT_FILE"
+            echo "" >> "$OUTPUT_FILE"
+            echo "" >> "$OUTPUT_FILE"
+            
+            ((COUNT++))
+          done < <(find "$DIRECTORY" -type f -name "*.$ext" -print0)
+        }
+
+        for extension in $EXTENSIONS; do
+          process_extension "$extension"
+        done
+
+        echo ""
+        echo "Complete! Files processed: $COUNT"
+        echo "Result saved to: $OUTPUT_FILE"
+      '';
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/scripts/collect.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/scripts/screenshots.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  config,
+  lib,
+  pkgs,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "workspace" "screenshots";
+  directory = "${config.home.homeDirectory}/Pictures/Screenshots";
+
+  selectedTool = if helpers.isWayland then "grim" else "maim";
+
+  screenshotCommands = {
+    grim = {
+      fullscreen = "grim - | tee '${directory}/$(date +%Y-%m-%d_%H-%M-%S).png' | wl-copy -t image/png";
+      area = "grim -g \"$(slurp)\" - | tee '${directory}/$(date +%Y-%m-%d_%H-%M-%S).png' | wl-copy -t image/png";
+      clipboard = "grim -g \"$(slurp)\" - | wl-copy -t image/png";
+      window = "hyprctl -j activewindow | jq -r '\"\\(.at[0]),\\(.at[1]) \\(.size[0])x\\(.size[1])\"' | grim -g - - | tee '${directory}/$(date +%Y-%m-%d_%H-%M-%S).png' | wl-copy -t image/png";
+    };
+
+    maim = {
+      fullscreen = "maim '${directory}/$(date +%Y-%m-%d_%H-%M-%S).png'";
+      area = "maim -s '${directory}/$(date +%Y-%m-%d_%H-%M-%S).png'";
+      clipboard = "maim -s | xclip -selection clipboard -t image/png";
+      window = "maim -i $(xdotool getactivewindow) '${directory}/$(date +%Y-%m-%d_%H-%M-%S).png'";
+    };
+  };
+in
+{
+  config = lib.mkIf enable (
+    lib.mkMerge [
+      (lib.mkIf helpers.isWayland {
+        home.packages = [
+          pkgs.grim
+          pkgs.slurp
+        ];
+      })
+      (lib.mkIf helpers.isX11 {
+        home.packages = [
+          pkgs.maim
+          pkgs.xclip
+        ];
+      })
+      {
+        home.activation.createScreenshotDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          mkdir -p ${directory}
+        '';
+
+        home.file.".local/bin/screenshot-area" = {
+          executable = true;
+          text = ''
+            #!${pkgs.bash}/bin/bash
+            ${screenshotCommands.${selectedTool}.area}
+          '';
+        };
+
+        home.file.".local/bin/screenshot-tool" = {
+          executable = true;
+          text = ''
+            #!${pkgs.bash}/bin/bash
+            case "$1" in
+              "window") ${screenshotCommands.${selectedTool}.window} ;;
+              "area") ${screenshotCommands.${selectedTool}.area} ;;
+              "full") ${screenshotCommands.${selectedTool}.fullscreen} ;;
+              "clip") ${screenshotCommands.${selectedTool}.clipboard} ;;
+              *)
+                echo "Usage: $0 {window|area|full|clip}"
+                echo "  window - Screenshot active window"
+                echo "  area   - Screenshot selected area"
+                echo "  full   - Screenshot entire screen"
+                echo "  clip   - Screenshot area to clipboard"
+                ;;
+            esac
+          '';
+        };
+      }
+    ]
+  );
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/scripts/screenshots.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/scripts/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./collect.nix
+    ./screenshots.nix
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/scripts/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/xdg.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  pkgs,
+  helpers,
+  ...
+}:
+{
+  config = lib.mkIf helpers.isWM {
+    xdg.portal = {
+      enable = true;
+      xdgOpenUsePortal = true;
+
+      extraPortals =
+        with pkgs;
+        [
+          xdg-desktop-portal-gtk
+        ]
+        ++ lib.optionals helpers.isWlr [
+          xdg-desktop-portal-wlr
+        ]
+        ++ lib.optionals helpers.isHyprland [
+          xdg-desktop-portal-hyprland
+        ];
+
+      config = {
+        hyprland = {
+          default = [
+            "hyprland"
+            "gtk"
+          ];
+          "org.freedesktop.impl.portal.ScreenCast" = [ "hyprland" ];
+          "org.freedesktop.impl.portal.Screenshot" = [ "hyprland" ];
+          "org.freedesktop.impl.portal.Settings" = "gtk";
+          "org.freedesktop.impl.portal.FileChooser" = "gtk";
+          "org.freedesktop.impl.portal.Inhibit" = "gtk";
+        };
+        mangowc = {
+          default = [
+            "wlr"
+            "gtk"
+          ];
+          "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
+          "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
+          "org.freedesktop.impl.portal.Settings" = "gtk";
+          "org.freedesktop.impl.portal.FileChooser" = "gtk";
+          "org.freedesktop.impl.portal.Inhibit" = "gtk";
+        };
+        common = {
+          default = [ "gtk" ];
+        };
+      };
+    };
+
+    xdg = {
+      enable = true;
+      userDirs = {
+        enable = true;
+        createDirectories = true;
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/xdg.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/WMs/mangowc/rules.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "workspace" "mangowc";
+  monitorTags = {
+    "DP-3" = {
+      "1" = "tile";
+      "2" = "tile";
+      "3" = "tile";
+      "4" = "tile";
+      "5" = "tile";
+      "6" = "tile";
+      "7" = "tile";
+      "8" = "tile";
+      "9" = "tile";
+    };
+    "DP-4" = {
+      "1" = "vertical_scroller";
+      "2" = "vertical_scroller";
+      "3" = "vertical_scroller";
+      "4" = "vertical_scroller";
+      "5" = "vertical_scroller";
+      "6" = "vertical_scroller";
+      "7" = "vertical_scroller";
+      "8" = "vertical_scroller";
+      "9" = "vertical_scroller";
+    };
+    "HDMI-A-5" = {
+      "1" = "tile";
+      "2" = "tile";
+      "3" = "tile";
+      "4" = "tile";
+      "5" = "tile";
+      "6" = "tile";
+      "7" = "tile";
+      "8" = "tile";
+      "9" = "tile";
+    };
+  };
+
+  generateTagRules = lib.concatStringsSep "\n" (
+    lib.flatten (
+      lib.mapAttrsToList (
+        monitor: tags:
+        lib.mapAttrsToList (
+          id: layout: "tagrule=id:${id},monitor_name:${monitor},layout_name:${layout}"
+        ) tags
+      ) monitorTags
+    )
+  );
+in
+{
+  config = lib.mkIf enable {
+    home.file.".config/mango/rules.conf".text = ''
+      # Tag rules
+      ${generateTagRules}
+
+      # Window rules
+      windowrule=focused_opacity:0.95,unfocused_opacity:0.95
+      windowrule=focused_opacity:1.0,unfocused_opacity:1.0,noblur:1,appid:foot|equibop|org\.quickshell|imv|swappy
+
+      # Float rules
+      windowrule=isfloating:1,no_force_center:0,appid:guifetch
+      windowrule=isfloating:1,no_force_center:0,appid:yad
+      windowrule=isfloating:1,no_force_center:0,appid:zenity
+      windowrule=isfloating:1,no_force_center:0,appid:wev
+      windowrule=isfloating:1,no_force_center:0,appid:org\.gnome\.FileRoller
+      windowrule=isfloating:1,no_force_center:0,appid:file-roller
+      windowrule=isfloating:1,no_force_center:0,appid:blueman-manager
+      windowrule=isfloating:1,no_force_center:0,appid:com\.github\.GradienceTeam\.Gradience
+      windowrule=isfloating:1,no_force_center:0,appid:feh
+      windowrule=isfloating:1,no_force_center:0,appid:imv
+      windowrule=isfloating:1,no_force_center:0,appid:system-config-printer
+      windowrule=isfloating:1,no_force_center:0,appid:org\.quickshell
+
+      # Float + size rules
+      windowrule=isfloating:1,width:800,height:600,no_force_center:0,appid:foot,title:nmtui
+      windowrule=isfloating:1,width:1000,height:800,no_force_center:0,appid:org\.gnome\.Settings
+      windowrule=isfloating:1,width:900,height:700,no_force_center:0,appid:org\.pulseaudio\.pavucontrol|yad-icon-browser
+      windowrule=isfloating:1,width:800,height:600,no_force_center:0,appid:nwg-look
+
+      # Title-based float rules
+      windowrule=isfloating:1,no_force_center:0,title:(Select|Open)( a)? (File|Folder)(s)?
+      windowrule=isfloating:1,no_force_center:0,title:File (Operation|Upload)( Progress)?
+      windowrule=isfloating:1,no_force_center:0,title:.* Properties
+      windowrule=isfloating:1,no_force_center:0,title:Export Image as PNG
+      windowrule=isfloating:1,no_force_center:0,title:GIMP Crash Debug
+      windowrule=isfloating:1,no_force_center:0,title:Save As
+      windowrule=isfloating:1,no_force_center:0,title:Library
+
+      # Picture-in-Picture
+      windowrule=isfloating:1,offsetx:45,offsety:45,width:400,height:300,isoverlay:1,title:Picture(-| )in(-| )[Pp]icture
+
+      # Steam rules
+      windowrule=isfloating:1,no_force_center:0,title:Friends List,appid:steam
+      windowrule=appid:steam_app_[0-9]+
+
+      # ATLauncher
+      windowrule=isfloating:1,no_force_center:0,appid:com-atlauncher-App,title:ATLauncher Console
+
+      # Fusion360
+      windowrule=noblur:1,title:Fusion360|(Marking Menu),appid:fusion360\.exe
+    '';
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/WMs/mangowc/rules.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/WMs/mangowc/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  config,
+  lib,
+  helpers,
+  pkgs,
+  ...
+}:
+let
+  enable = helpers.hasIn "workspace" "mangowc";
+  colors = config.colorScheme.palette;
+in
+{
+  imports = [
+    ./binds.nix
+    ./rules.nix
+  ];
+
+  config = lib.mkIf enable {
+    programs.bash.profileExtra = lib.mkIf helpers.isWM ''
+      if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
+        exec mango
+      fi
+    '';
+
+    wayland.windowManager.mango = {
+      enable = true;
+      settings = ''
+        # https://github.com/DreamMaoMao/mango/wiki/
+
+        # Window effect
+        blur=0
+        blur_layer=0
+
+        shadows = 0
+        layer_shadows = 0
+        shadow_only_ing = 1
+        shadows_size = 10
+        shadows_blur = 15
+        shadows_position_x = 0
+        shadows_position_y = 0
+        shadowscolor= 0x000000ff
+
+        # Animation Configuration
+        animations=0
+        layer_animations=0
+
+        # Scroller Layout Setting
+        scroller_structs=20
+        scroller_default_proportion=1.0
+        scroller_focus_center=0
+        scroller_prefer_center=0
+        edge_scroller_pointer_focus=1
+        scroller_default_proportion_single=1.0
+        scroller_proportion_preset=0.5,0.8,1.0
+
+        # Master-Stack Layout Setting
+        new_is_master=1
+        default_mfact=0.55
+        default_nmaster=1
+        smartgaps=0
+
+        # Overview Setting
+        hotarea_size=10
+        enable_hotarea=0
+        ov_tab_mode=0
+        overviewgappi=2
+        overviewgappo=10
+
+        # Misc
+        no_border_when_single=0
+        axis_bind_apply_timeout=100
+        focus_on_activate=0
+        inhibit_regardless_of_visibility=0
+        sloppyfocus=1
+        warpcursor=1
+        focus_cross_monitor=0
+        focus_cross_tag=0
+        enable_floating_snap=0
+        snap_distance=30
+        cursor_size=24
+        drag_tile_to_tile=1
+
+        # Mouse
+        mouse_natural_scrolling=0
+
+        # Keyboard
+        repeat_rate=50
+        repeat_delay=300
+        numlockon=0
+        xkb_rules_layout=us,ru
+        xkb_rules_options=grp:ctrl_shift_toggle
+
+        # Trackpad
+        disable_trackpad=${if helpers.isLaptop then "1" else "0"}
+        tap_to_click=1
+        tap_and_drag=1
+        drag_lock=1
+        trackpad_natural_scrolling=0
+        disable_while_typing=1
+        left_handed=0
+        middle_button_emulation=0
+        swipe_min_threshold=1
+
+        # Appearance
+        border_radius=0
+        no_radius_when_single=0
+        focused_opacity=1.0
+        unfocused_opacity=1.0
+        borderpx=1
+        gappih=2
+        gappiv=2
+        gappoh=2
+        gappov=2
+        scratchpad_width_ratio=0.8
+        scratchpad_height_ratio=0.9
+
+        rootcolor=0x${colors.base00}ff
+        bordercolor=0x${colors.base03}ff
+        focuscolor=0x${colors.base0D}ff
+        maxmizescreencolor=0x${colors.base0B}ff
+        urgentcolor=0x${colors.base08}ff
+        scratchpadcolor=0x${colors.base0E}ff
+        globalcolor=0x${colors.base0E}ff
+        overlaycolor=0x${colors.base0C}ff
+
+        source=~/.config/mango/binds.conf
+        source=~/.config/mango/rules.conf
+      '';
+      autostart_sh = ''
+        ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
+        systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
+      '';
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/WMs/mangowc/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/WMs/mangowc/binds.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  helpers,
+  pkgs,
+  ...
+}:
+let
+  enable = helpers.hasIn "workspace" "mangowc";
+  mainBtn = "SUPER";
+in
+{
+  config = lib.mkIf enable {
+    home.file.".config/mango/binds.conf".text = ''
+      bind=${mainBtn}+SHIFT,R,reload_config
+      bind=${mainBtn},r,reset_layout
+      bind=${mainBtn},m,quit
+
+      bind=${mainBtn},a,spawn,${pkgs.tofi}/bin/tofi-drun --drun-launch=true
+      bind=${mainBtn},Return,spawn,foot
+      bind=${mainBtn},w,spawn,zen
+      bind=${mainBtn},e,spawn,nemo
+      bind=${mainBtn}+SHIFT,S,spawn,screenshot-tool area
+
+      bind=${mainBtn},Tab,focusstack,next
+
+      bind=${mainBtn}+SHIFT,k,exchange_client,up
+      bind=${mainBtn}+SHIFT,j,exchange_client,down
+      bind=${mainBtn}+SHIFT,h,exchange_client,left
+      bind=${mainBtn}+SHIFT,l,exchange_client,right
+
+      bind=${mainBtn},g,toggleglobal,
+      bind=${mainBtn}+SHIFT,Tab,toggleoverview,
+      bind=${mainBtn},f,togglemaxmizescreen, # togglefakefullscreen
+      bind=${mainBtn},v,togglefloating,
+      bind=${mainBtn},i,minimized,R
+      bind=${mainBtn}+SHIFT,I,restore_minimized
+      bind=${mainBtn},q,killclient,
+
+      bind=${mainBtn},h,viewtoleft_have_client,0
+      bind=${mainBtn},l,viewtoright_have_client,0
+      bind=${mainBtn},j,tagtoleft,0
+      bind=${mainBtn},k,tagtoright,0
+
+      bind=${mainBtn},1,view,1,0
+      bind=${mainBtn},2,view,2,0
+      bind=${mainBtn},3,view,3,0
+      bind=${mainBtn},4,view,4,0
+      bind=${mainBtn},5,view,5,0
+      bind=${mainBtn},6,view,6,0
+      bind=${mainBtn},7,view,7,0
+      bind=${mainBtn},8,view,8,0
+      bind=${mainBtn},9,view,9,0
+
+      # tag, tagsilent
+      bind=${mainBtn}+SHIFT,1,tag,1,0
+      bind=${mainBtn}+SHIFT,2,tag,2,0
+      bind=${mainBtn}+SHIFT,3,tag,3,0
+      bind=${mainBtn}+SHIFT,4,tag,4,0
+      bind=${mainBtn}+SHIFT,5,tag,5,0
+      bind=${mainBtn}+SHIFT,6,tag,6,0
+      bind=${mainBtn}+SHIFT,7,tag,7,0
+      bind=${mainBtn}+SHIFT,8,tag,8,0
+      bind=${mainBtn}+SHIFT,9,tag,9,0
+
+      # resizewin
+      #bind=CTRL+ALT,Up,resizewin,+0,-50
+      #bind=CTRL+ALT,Down,resizewin,+0,+50
+      #bind=CTRL+ALT,Left,resizewin,-50,+0
+      #bind=CTRL+ALT,Right,resizewin,+50,+0
+
+      # Mouse Button Bindings
+      mousebind=${mainBtn},btn_left,moveresize,curmove
+      mousebind=${mainBtn},btn_right,moveresize,curresize
+      axisbind=${mainBtn},UP,viewtoleft_have_client
+      axisbind=${mainBtn},DOWN,viewtoright_have_client
+    '';
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/WMs/mangowc/binds.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/WMs/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./hyprland
+    ./mangowc
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/WMs/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/WMs/hyprland/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  helpers,
+  pkgs,
+  ...
+}:
+let
+  enable = helpers.hasIn "workspace" "hyprland";
+in
+{
+  config = lib.mkIf enable {
+    programs.bash.profileExtra = lib.mkIf helpers.isWM ''
+      if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
+        exec uwsm start hyprland-uwsm.desktop
+      fi
+    '';
+
+    wayland.windowManager.hyprland = {
+      enable = true;
+
+      settings = {
+        exec-once = [
+          "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+          "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+        ];
+
+        monitor = [
+          "DP-3,2560x1440@165,0x0,1"
+          "DP-4,1920x1080@100,2560x0,1,transform,3"
+          "HDMI-A-5,1920x1080@60,510x1440,1.5"
+        ];
+
+        xwayland.force_zero_scaling = true;
+
+        workspace = [
+          "1, monitor:HDMI-A-5, default:true"
+          "2, monitor:HDMI-A-5"
+          "3, monitor:HDMI-A-5"
+          "4, monitor:HDMI-A-5"
+          "5, monitor:DP-3, default:true"
+          "6, monitor:DP-3"
+          "7, monitor:DP-3"
+          "8, monitor:DP-3"
+          "9, monitor:DP-4, default:true"
+        ];
+
+        input = {
+          kb_layout = "us, ru";
+          kb_options = "grp:ctrl_shift_toggle";
+          repeat_rate = 50;
+          repeat_delay = 300;
+
+          follow_mouse = 1;
+          focus_on_close = 1;
+          sensitivity = 0;
+
+          touchpad = {
+            natural_scroll = true;
+            disable_while_typing = true;
+            scroll_factor = 0.3;
+          };
+        };
+
+        general = {
+          gaps_in = 2;
+          gaps_out = 2;
+          border_size = 1;
+
+          resize_on_border = false;
+          allow_tearing = false;
+
+          layout = "dwindle";
+        };
+
+        decoration = {
+          rounding = 0;
+          rounding_power = 0;
+
+          active_opacity = 1.0;
+          inactive_opacity = 1.0;
+
+          blur = {
+            enabled = false;
+            xray = false;
+            special = false;
+            ignore_opacity = true;
+            new_optimizations = true;
+            popups = true;
+            input_methods = true;
+            size = 8;
+            passes = 2;
+          };
+
+          shadow = {
+            enabled = false;
+          };
+        };
+
+        animations = {
+          enabled = false;
+
+          bezier = [
+            "specialWorkSwitch, 0.05, 0.7, 0.1, 1"
+            "emphasizedAccel, 0.3, 0, 0.8, 0.15"
+            "emphasizedDecel, 0.05, 0.7, 0.1, 1"
+            "standard, 0.2, 0, 0, 1"
+          ];
+
+          animation = [
+            "layersIn, 1, 5, emphasizedDecel, slide"
+            "layersOut, 1, 4, emphasizedAccel, slide"
+            "fadeLayers, 1, 5, standard"
+            "windowsIn, 1, 5, emphasizedDecel"
+            "windowsOut, 1, 3, emphasizedAccel"
+            "windowsMove, 1, 6, standard"
+            "workspaces, 1, 5, standard"
+            "specialWorkspace, 1, 4, specialWorkSwitch, slidefadevert 15%"
+            "fade, 1, 6, standard"
+            "fadeDim, 1, 6, standard"
+            "border, 1, 6, standard"
+          ];
+        };
+
+        dwindle = {
+          preserve_split = true;
+          smart_split = false;
+          smart_resizing = true;
+        };
+
+        misc = {
+          vfr = true;
+          vrr = 1;
+
+          animate_manual_resizes = false;
+          animate_mouse_windowdragging = false;
+
+          disable_hyprland_logo = true;
+          force_default_wallpaper = 0;
+
+          new_window_takes_over_fullscreen = 2;
+          allow_session_lock_restore = true;
+          middle_click_paste = false;
+          focus_on_activate = true;
+          #session_lock_xray = true;
+
+          mouse_move_enables_dpms = true;
+          key_press_enables_dpms = true;
+        };
+
+        #gestures = {
+        #  #workspace_swipe = true;
+        #  workspace_swipe_distance = 700;
+        #  #workspace_swipe_fingers = 4;
+        #  workspace_swipe_cancel_ratio = 0.15;
+        #  workspace_swipe_min_speed_to_force = 5;
+        #  workspace_swipe_direction_lock = true;
+        #  workspace_swipe_direction_lock_threshold = 10;
+        #  workspace_swipe_create_new = true;
+        #};
+
+        binds = {
+          scroll_event_delay = 0;
+        };
+
+        bind = [
+          "Super, A, exec, ${pkgs.tofi}/bin/tofi-drun --drun-launch=true"
+          "Super, Return, exec, foot"
+          "Super, W, exec, zen"
+          "Super, E, exec, nemo"
+          "Super+Shift, S, exec, screenshot-tool clip"
+          "Super, Q, killactive,"
+          "Super, V, togglefloating"
+          "Super, F, fullscreen,"
+          "Super, h, movefocus, l"
+          "Super, l, movefocus, r"
+          "Super, k, movefocus, u"
+          "Super, j, movefocus, d"
+          "Super+Shift, h, movewindow, l"
+          "Super+Shift, l, movewindow, r"
+          "Super+Shift, k, movewindow, u"
+          "Super+Shift, j, movewindow, d"
+          "Super, 1, workspace, 1"
+          "Super, 2, workspace, 2"
+          "Super, 3, workspace, 3"
+          "Super, 4, workspace, 4"
+          "Super, 5, workspace, 5"
+          "Super, 6, workspace, 6"
+          "Super, 7, workspace, 7"
+          "Super, 8, workspace, 8"
+          "Super, 9, workspace, 9"
+          "Super, 0, workspace, 10"
+          "Super+Shift, 1, movetoworkspace, 1"
+          "Super+Shift, 2, movetoworkspace, 2"
+          "Super+Shift, 3, movetoworkspace, 3"
+          "Super+Shift, 4, movetoworkspace, 4"
+          "Super+Shift, 5, movetoworkspace, 5"
+          "Super+Shift, 6, movetoworkspace, 6"
+          "Super+Shift, 7, movetoworkspace, 7"
+          "Super+Shift, 8, movetoworkspace, 8"
+          "Super+Shift, 9, movetoworkspace, 9"
+          "Super+Shift, 0, movetoworkspace, 10"
+        ];
+
+        bindm = [
+          "Super, mouse:272, movewindow"
+          "Super, mouse:273, resizewindow"
+        ];
+
+        bindel = [
+          ",XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%"
+          ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%"
+        ];
+
+        windowrule = [
+          "opacity 0.95 override, fullscreen:0"
+          "opaque, class:foot|equibop|org\.quickshell|imv|swappy"
+          "center 1, floating:1, xwayland:0"
+          "float, class:guifetch"
+          "float, class:yad"
+          "float, class:zenity"
+          "float, class:wev"
+          "float, class:org\.gnome\.FileRoller"
+          "float, class:file-roller"
+          "float, class:blueman-manager"
+          "float, class:com\.github\.GradienceTeam\.Gradience"
+          "float, class:feh"
+          "float, class:imv"
+          "float, class:system-config-printer"
+          "float, class:org\.quickshell"
+          "float, class:foot, title:nmtui"
+          "size 60% 70%, class:foot, title:nmtui"
+          "center 1, class:foot, title:nmtui"
+          "float, class:org\.gnome\.Settings"
+          "size 70% 80%, class:org\.gnome\.Settings"
+          "center 1, class:org\.gnome\.Settings"
+          "float, class:org\.pulseaudio\.pavucontrol|yad-icon-browser"
+          "size 60% 70%, class:org\.pulseaudio\.pavucontrol|yad-icon-browser"
+          "center 1, class:org\.pulseaudio\.pavucontrol|yad-icon-browser"
+          "float, class:nwg-look"
+          "size 50% 60%, class:nwg-look"
+          "center 1, class:nwg-look"
+          "float, title:(Select|Open)( a)? (File|Folder)(s)?"
+          "float, title:File (Operation|Upload)( Progress)?"
+          "float, title:.* Properties"
+          "float, title:Export Image as PNG"
+          "float, title:GIMP Crash Debug"
+          "float, title:Save As"
+          "float, title:Library"
+          "move 100%-w-2% 100%-w-3%, title:Picture(-| )in(-| )[Pp]icture"
+          "keepaspectratio, title:Picture(-| )in(-| )[Pp]icture"
+          "float, title:Picture(-| )in(-| )[Pp]icture"
+          "pin, title:Picture(-| )in(-| )[Pp]icture"
+          "rounding 10, title:, class:steam"
+          "float, title:Friends List, class:steam"
+          "immediate, class:steam_app_[0-9]+"
+          "idleinhibit always, class:steam_app_[0-9]+"
+          "float, class:com-atlauncher-App, title:ATLauncher Console"
+          "noblur, title:Fusion360|(Marking Menu), class:fusion360\.exe"
+          "nodim, xwayland:1, title:win[0-9]+"
+          "noshadow, xwayland:1, title:win[0-9]+"
+          "rounding 10, xwayland:1, title:win[0-9]+"
+        ];
+
+        windowrulev2 = [
+          "noinitialfocus, class:^(.*jetbrains.*)$, title:^(win.*)$"
+        ];
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/WMs/hyprland/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./WMs
+    ./scripts
+    ./waybar.nix
+    ./wallpapers.nix
+    ./dunst.nix
+    ./tofi.nix
+    ./xdg.nix
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/waybar.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  config,
+  helpers,
+  lib,
+  ...
+}:
+{
+  programs.waybar = lib.mkIf (!helpers.isDwl) {
+    enable = true;
+    systemd = {
+      enable = true;
+      target = "graphical-session.target";
+    };
+
+    settings = {
+      mainBar = {
+        layer = "top";
+        position = "top";
+        height = 30;
+        spacing = 4;
+
+        modules-left =
+          [ ]
+          ++ lib.optionals helpers.isHyprland [
+            "hyprland/workspaces"
+            "custom/sep"
+            "hyprland/window"
+            "custom/sep"
+          ]
+          ++ lib.optionals helpers.isMango [
+            "ext/workspaces"
+            "custom/sep"
+            "dwl/window"
+            "custom/sep"
+          ];
+
+        modules-center = [ ];
+
+        modules-right =
+          [ ]
+          ++ lib.optionals helpers.isLaptop [
+            "custom/sep"
+            "battery"
+          ]
+          ++ [
+            "custom/sep"
+            "network"
+            "custom/sep"
+            "cpu"
+            "custom/sep"
+            "memory"
+            "custom/sep"
+            "disk"
+            "custom/sep"
+            "clock"
+            "custom/sep"
+            "tray"
+          ];
+
+        "hyprland/workspaces" = {
+          disable-scroll = true;
+          all-outputs = true;
+          warp-on-scroll = false;
+          format = "{name}";
+          persistent-workspaces = {
+            "*" = 9;
+          };
+        };
+
+        "hyprland/window" = {
+          max-length = 40;
+          separate-outputs = false;
+        };
+
+        "ext/workspaces" = {
+          format = "{icon}";
+          ignore-hidden = false;
+          on-click = "activate";
+          sort-by-id = true;
+        };
+
+        "dwl/tags" = {
+          num-tags = 9;
+        };
+
+        "dwl/window" = {
+          format = "[{layout}]{title}";
+        };
+
+        tray = {
+          spacing = 10;
+        };
+
+        clock = {
+          format-alt = "{:%Y-%m-%d}";
+        };
+
+        cpu = {
+          format = "CPU: {usage}%";
+          tooltip = false;
+        };
+
+        memory = {
+          format = "Mem: {used}GiB";
+        };
+
+        disk = {
+          interval = 60;
+          path = "/";
+          format = "Disk: {free}";
+        };
+
+        battery = {
+          states = {
+            good = 95;
+            warning = 30;
+            critical = 15;
+          };
+          format = "Bat: {capacity}% {icon} {time}";
+          format-plugged = "{capacity}% ";
+          format-alt = "Bat {capacity}%";
+          format-time = "{H}:{M}";
+          format-icons = [
+            ""
+            ""
+            ""
+            ""
+            ""
+          ];
+        };
+
+        network = {
+          format = "Online";
+          format-disconnected = "Disconnected ⚠";
+        };
+
+        "custom/sep" = {
+          format = "|";
+          interval = "once";
+          tooltip = false;
+        };
+      };
+    };
+
+    style =
+      let
+        palette = config.colorScheme.palette;
+      in
+      ''
+        @define-color bg    #${palette.base00}; 
+        @define-color fg    #${palette.base05}; 
+        @define-color blk   #${palette.base01}; 
+        @define-color red   #${palette.base08}; 
+        @define-color grn   #${palette.base0B}; 
+        @define-color ylw   #${palette.base0A}; 
+        @define-color blu   #${palette.base0D}; 
+        @define-color mag   #${palette.base0E}; 
+        @define-color cyn   #${palette.base0C}; 
+        @define-color brblk #${palette.base02}; 
+        @define-color white #${palette.base06}; 
+
+        * {
+            font-family: "JetBrainsMono Nerd Font", monospace;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        window#waybar {
+            background-color: @bg;
+            color: @fg;
+        }
+
+        #workspaces button {
+            padding: 0 6px;
+            color: @cyn;
+            background: transparent;
+            border-bottom: 3px solid @bg;
+            border-radius: 0;
+        }
+
+        #workspaces button.active {
+            color: @cyn;
+            border-bottom: 3px solid @mag;
+        }
+
+        #workspaces button.empty {
+            color: @white;
+        }
+
+        #workspaces button.empty.active {
+            color: @cyn;
+            border-bottom: 3px solid @mag;
+        }
+
+        #workspaces button.urgent {
+            background-color: @red;
+        }
+
+        button:hover {
+            background: inherit;
+            box-shadow: inset 0 -3px @mag;
+        }
+
+        #clock,
+        #custom-sep,
+        #battery,
+        #cpu,
+        #memory,
+        #disk,
+        #network,
+        #tray {
+            padding: 0 8px;
+            color: @white;
+        }
+
+        #custom-sep {
+            color: @brblk;
+        }
+
+        #clock {
+            color: @cyn;
+            border-bottom: 4px solid @cyn;
+        }
+
+        #battery {
+            color: @mag;
+            border-bottom: 4px solid @mag;
+        }
+
+        #disk {
+            color: @ylw;
+            border-bottom: 4px solid @ylw;
+        }
+
+        #memory {
+            color: @mag;
+            border-bottom: 4px solid @mag;
+        }
+
+        #cpu {
+            color: @grn;
+            border-bottom: 4px solid @grn;
+        }
+
+        #network {
+            color: @blu;
+            border-bottom: 4px solid @blu;
+        }
+
+        #network.disconnected {
+            background-color: @red;
+        }
+
+        #tray {
+            background-color: @blu;
+        }
+      '';
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/waybar.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/wallpapers.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  pkgs,
+  lib,
+  conf,
+  helpers,
+  wallpapers,
+  ...
+}:
+let
+  enable = helpers.hasIn "workspace" "wallpapers";
+  wallpaper = wallpapers.${conf.wallpaperName} or wallpapers.backyard;
+in
+{
+  config = lib.mkIf enable (
+    lib.mkMerge [
+      (lib.mkIf helpers.isWayland {
+        home.packages = [ pkgs.swaybg ];
+
+        systemd.user.services.swaybg-daemon = {
+          Unit = {
+            Description = "Swaybg Wallpaper Daemon";
+            After = [ "graphical-session.target" ];
+            PartOf = [ "graphical-session.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStart = "${pkgs.swaybg}/bin/swaybg -i ${wallpaper} -m fill";
+            Restart = "on-failure";
+            RestartSec = "3";
+          };
+          Install.WantedBy = [ "graphical-session.target" ];
+        };
+      })
+
+      (lib.mkIf helpers.isX11 {
+        home.packages = [ pkgs.feh ];
+
+        systemd.user.services.feh-daemon = {
+          Unit = {
+            Description = "Feh Wallpaper Daemon";
+            After = [ "graphical-session-pre.target" ];
+          };
+          Service = {
+            Type = "oneshot";
+            ExecStart = "${pkgs.feh}/bin/feh --bg-fill ${wallpaper}";
+            RemainAfterExit = true;
+            Restart = "on-failure";
+            RestartSec = "3";
+          };
+          Install.WantedBy = [ "graphical-session.target" ];
+        };
+      })
+    ]
+  );
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/desktop/wallpapers.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./terminal
+    ./desktop
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/terminal/tmux.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ pkgs, ... }:
+{
+  programs.tmux = {
+    enable = true;
+    package = pkgs.tmux;
+
+    terminal = "tmux-256color";
+    prefix = "C-a";
+    baseIndex = 1;
+    keyMode = "vi";
+    mouse = true;
+    sensibleOnTop = true;
+
+    plugins = with pkgs; [
+      tmuxPlugins.sensible
+      tmuxPlugins.vim-tmux-navigator
+      {
+        plugin = tmuxPlugins.catppuccin;
+        extraConfig = ''
+          set -g @catppuccin_flavour 'mocha'
+          set -g @catppuccin_window_status_style "rounded"
+
+          set -g status-right-length 100
+          set -g status-left-length 100
+          set -g status-left ""
+          set -g status-right "#{E:@catppuccin_status_application}"
+          set -agF status-right "#{E:@catppuccin_status_cpu}"
+          set -ag status-right "#{E:@catppuccin_status_session}"
+          set -ag status-right "#{E:@catppuccin_status_uptime}"
+          set -agF status-right "#{E:@catppuccin_status_battery}"
+        '';
+      }
+      {
+        plugin = tmuxPlugins.resurrect;
+        extraConfig = ''
+          set -g @resurrect-capture-pane-contents 'on'
+        '';
+      }
+      {
+        plugin = tmuxPlugins.continuum;
+        extraConfig = ''
+          set -g @continuum-restore 'on'
+        '';
+      }
+      tmuxPlugins.sessionist
+    ];
+
+    extraConfig = ''
+      bind s choose-tree -sZ -O name
+
+      unbind %
+      bind | split-window -v
+      unbind '"'
+      bind - split-window -h
+
+      unbind r
+      bind r source-file ~/.config/tmux/tmux.conf \; display-message "Config reload
+
+      bind -r j resize-pane -D 5
+      bind -r k resize-pane -U 5
+      bind -r l resize-pane -R 5
+      bind -r h resize-pane -L 5
+      bind -r m resize-pane -Z
+
+      bind-key -T copy-mode-vi 'v' send -X begin-selection 
+      bind-key -T copy-mode-vi 'y' send -X copy-selection 
+      unbind -T copy-mode-vi MouseDragEnd1Pane
+    '';
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/terminal/tmux.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/terminal/starship.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ pkgs, ... }:
+{
+  programs.starship = {
+    enable = true;
+    package = pkgs.starship;
+
+    settings = {
+      add_newline = false;
+      command_timeout = 1000;
+      format = "$all$nix_shell$character";
+
+      character = {
+        success_symbol = "[➜](bold cyan)";
+        error_symbol = "[✗](bold red)";
+      };
+
+      directory = {
+        truncation_length = 3;
+        truncate_to_repo = true;
+      };
+
+      git_branch = {
+        symbol = " ";
+        style = "bold purple";
+        format = "[$symbol$branch]($style) ";
+      };
+
+      git_status = {
+        ahead = "⇡\${count}";
+        diverged = "⇕⇡\${ahead_count}⇣\${behind_count}";
+        behind = "⇣\${count}";
+        deleted = "x";
+      };
+
+      nix_shell = {
+        symbol = " ";
+        format = "[$symbol$state]($style) ";
+        style = "bold blue";
+      };
+
+      cmd_duration = {
+        min_time = 500;
+        format = "took [$duration](bold yellow) ";
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/terminal/starship.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/terminal/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./bash.nix
+    ./starship.nix
+    ./tmux.nix
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/terminal/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/1-workspace/terminal/bash.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ ... }:
+{
+  programs.bash = {
+    enable = true;
+    enableCompletion = true;
+
+    shellAliases = {
+      ns-desktop = "sudo nixos-rebuild switch --flake ~/nixos#desktop";
+      ns-laptop = "sudo nixos-rebuild switch --flake ~/nixos#laptop";
+      hs-desktop = "home-manager switch --flake ~/nixos#desktop -b backup";
+      hs-laptop = "home-manager switch --flake ~/nixos#laptop -b backup";
+      rebuild-server = "nixos-rebuild switch --flake ~/nixos#server --target-host user@185.223.169.86 -sudo";
+      nc = "sudo nix-collect-garbage -d";
+      hc = "nix-collect-garbage -d";
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/1-workspace/terminal/bash.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/0-base/environment.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  conf,
+  ...
+}:
+{
+  config = {
+    home.sessionPath = [
+      "$HOME/.local/bin"
+    ];
+
+    home.sessionVariables = {
+      DOTS = "$HOME/nixos";
+      TERMINAL = conf.default.terminal;
+      EDITOR = conf.default.editor;
+      VISUAL = conf.default.visual;
+      BROWSER = conf.default.browser;
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/0-base/environment.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/0-base/packages.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  pkgs,
+  ...
+}:
+{
+  home.packages = with pkgs; [
+    bat
+    lsd
+    btop
+    wl-clipboard
+    inxi
+    tree
+    exfatprogs
+    libva-utils
+    ffmpeg
+    ffmpegthumbnailer
+    gftp
+
+    arj
+    lha
+    lrzip
+    lzop
+    p7zip
+    pbzip2
+    pigz
+    pixz
+    unrar
+    unzip
+    zip
+    brotli
+    cpio
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/0-base/packages.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/0-base/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./environment.nix
+    ./packages.nix
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/0-base/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/3-services/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./gammastep.nix
+    ./brightness.nix
+    ./kanshi.nix
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/3-services/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/3-services/gammastep.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  pkgs,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "services" "gammastep";
+in
+{
+  config = lib.mkIf enable {
+    services.gammastep = {
+      enable = true;
+      package = pkgs.gammastep;
+
+      latitude = 43.1155;
+      longitude = 131.8855;
+
+      temperature = {
+        day = 6000;
+        night = 3200;
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/3-services/gammastep.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/3-services/brightness.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  pkgs,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "services" "brightnessctl";
+in
+{
+  config = lib.mkIf enable {
+    home.packages = [ pkgs.brightnessctl ];
+
+    systemd.user.services.brightness = {
+      description = "Set screen brightness";
+      wantedBy = [ "graphical-session.target" ];
+      partOf = [ "graphical-session.target" ];
+      after = [ "graphical-session.target" ];
+
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.brightnessctl}/bin/brightnessctl set 40%";
+        RemainAfterExit = true;
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/3-services/brightness.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/3-services/kanshi.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  helpers,
+  ...
+}:
+{
+  config = lib.mkIf (helpers.isWM && helpers.isWayland) {
+    services.kanshi = {
+      enable = true;
+      systemdTarget = "graphical-session.target";
+
+      settings = [
+        {
+          profile.name = "desktop";
+          profile.outputs = [
+            {
+              criteria = "DP-3";
+              mode = "2560x1440@165Hz";
+              position = "0,0";
+              scale = 1.0;
+            }
+            {
+              criteria = "DP-4";
+              mode = "1920x1080@100Hz";
+              transform = "270";
+              position = "2560,0";
+              scale = 1.0;
+            }
+            {
+              criteria = "HDMI-A-5";
+              mode = "1920x1080@60Hz";
+              position = "1024,1440";
+              scale = 1.25;
+            }
+          ];
+        }
+        {
+          profile.name = "laptop";
+          profile.outputs = [
+            {
+              criteria = "eDP-1";
+              position = "0,0";
+              scale = 1.25;
+            }
+          ];
+        }
+      ];
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/3-services/kanshi.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./0-base
+    ./1-workspace
+    ./2-programs
+    ./3-services
+    ./4-appearance
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/2-programs/packages.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  pkgs,
+  lib,
+  helpers,
+  ...
+}:
+{
+  home.packages =
+    with pkgs;
+    [
+      qimgv
+      czkawka-full
+      mullvad-browser
+      tor-browser
+      telegram-desktop
+      libreoffice-fresh
+      xlsclients
+      xarchiver
+      transmission_4-gtk
+      nemo
+      xmind
+      #discord
+      (termius.overrideAttrs (oldAttrs: {
+        buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ sqlite ];
+      }))
+    ]
+    ++ lib.optionals (helpers.hasIn "hardware" "sound") [
+      pavucontrol
+      easyeffects
+    ]
+    ++ lib.optionals (helpers.hasIn "hardware" "print") [
+      simple-scan
+      sane-frontends
+    ]
+    ++
+      lib.optionals
+        (helpers.hasIn "services" [
+          "postgresql"
+          "ms-sql"
+        ])
+        [
+          dbgate
+        ]
+    ++ lib.optionals (helpers.hasIn "services" "virtual-machine") [
+      virt-manager
+    ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/2-programs/packages.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/2-programs/applications/rclone.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ config, pkgs, ... }:
+let
+  knastuConfig = ''
+    ## Remotes:
+    remoteA = "${config.home.homeDirectory}/knastu"
+    remoteB = "cloud:sync/knastu"
+
+    workdirA = None
+    workdirB = None
+
+    name = "knastu-sync"
+
+    ## rclone flags
+    rclone_exe = "rclone"
+
+    filter_flags = [
+      '--exclude', '*.tmp',
+      '--exclude', '*.temp',
+      '--exclude', '*.cache',
+      '--exclude', '*.log',
+      '--exclude', '.git/**',
+      '--exclude', '.git',
+      '--exclude', 'node_modules/**',
+      '--exclude', '__pycache__/**',
+      '--exclude', '*.pyc',
+      '--exclude', '.DS_Store',
+      '--exclude', 'Thumbs.db',
+      '--exclude', '~$*',
+      '--exclude', '.~lock.*',
+      '--exclude', '*.swp',
+      '--exclude', '*.swo',
+      '--exclude', '.syncrclone/**',
+    ]
+
+    rclone_flags = []
+
+    rclone_env = {}
+
+    rclone_flagsA = []
+    rclone_flagsB = []
+
+    ## Sync Options
+    compare = "mtime"
+
+    dt = 1.1
+
+    conflict_mode = "newer"
+    tag_conflict = False
+
+    reuse_hashesA = False
+    reuse_hashesB = False
+
+    always_get_mtime = True
+
+    backup = True
+    backup_with_copy = None
+
+    sync_backups = False
+
+    hash_fail_fallback = "mtime"
+
+    set_lock = True
+
+    action_threads = 4
+
+    cleanup_empty_dirsA = None
+    cleanup_empty_dirsB = None
+
+    avoid_relist = True
+
+    ## Rename Tracking
+    renamesA = "hash"
+    renamesB = "hash"
+
+    ## Status
+    list_status_dt = 10
+
+    ## Logs
+    save_logs = True
+    local_log_dest = ""  # NOT on a remote
+
+    pre_sync_shell = ""
+    post_sync_shell = ""
+
+    stop_on_shell_error = False
+
+    tempdir = None
+
+    ## Version
+    _syncrclone_version = "20230310.0.BETA"
+  '';
+
+  nixosConfig = ''
+     ## Remotes:
+    remoteA = "${config.home.homeDirectory}/nixos"
+    remoteB = "cloud:sync/nixos"
+
+    workdirA = None
+    workdirB = None
+
+    name = "nixos-sync"
+
+    ## rclone flags
+    rclone_exe = "rclone"
+
+    filter_flags = [
+      '--exclude', '*.tmp',
+      '--exclude', '*.temp',
+      '--exclude', '*.cache',
+      '--exclude', '*.log',
+      '--exclude', '.git/**',
+      '--exclude', '.git',
+      '--exclude', 'node_modules/**',
+      '--exclude', '__pycache__/**',
+      '--exclude', '*.pyc',
+      '--exclude', '.DS_Store',
+      '--exclude', 'Thumbs.db',
+      '--exclude', '~$*',
+      '--exclude', '.~lock.*',
+      '--exclude', '*.swp',
+      '--exclude', '*.swo',
+      '--exclude', '.syncrclone/**',
+    ]
+
+    rclone_flags = []
+
+    rclone_env = {}
+
+    rclone_flagsA = []
+    rclone_flagsB = []
+
+    ## Sync Options
+    compare = "mtime"
+
+    dt = 1.1
+
+    conflict_mode = "newer"
+    tag_conflict = False
+
+    reuse_hashesA = False
+    reuse_hashesB = False
+
+    always_get_mtime = True
+
+    backup = True
+    backup_with_copy = None
+
+    sync_backups = False
+
+    hash_fail_fallback = "mtime"
+
+    set_lock = True
+
+    action_threads = 4
+
+    cleanup_empty_dirsA = None
+    cleanup_empty_dirsB = None
+
+    avoid_relist = True
+
+    ## Rename Tracking
+    renamesA = "hash"
+    renamesB = "hash"
+
+    ## Status
+    list_status_dt = 10
+
+    ## Logs
+    save_logs = True
+    local_log_dest = ""  # NOT on a remote
+
+    pre_sync_shell = ""
+    post_sync_shell = ""
+
+    stop_on_shell_error = False
+
+    tempdir = None
+
+    ## Version
+    _syncrclone_version = "20230310.0.BETA"
+  '';
+in
+{
+  home.packages = [
+    pkgs.rclone
+    pkgs.rclone-browser
+    pkgs.syncrclone
+  ];
+
+  home.file = {
+    ".syncrclone/knastu.py".text = knastuConfig;
+    ".syncrclone/nixos.py".text = nixosConfig;
+  };
+
+  home.file.".local/bin/sync-folders" = {
+    executable = true;
+    text = ''
+      #!${pkgs.bash}/bin/bash
+      set -e
+
+      echo "=== Syncing knastu ==="
+      ${pkgs.syncrclone}/bin/syncrclone ${config.home.homeDirectory}/.syncrclone/knastu.py
+
+      echo "=== Syncing nixos ==="
+      ${pkgs.syncrclone}/bin/syncrclone ${config.home.homeDirectory}/.syncrclone/nixos.py
+
+      echo "=== Sync completed ==="
+    '';
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/2-programs/applications/rclone.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/2-programs/applications/firefox.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  pkgs,
+  inputs,
+  ...
+}:
+{
+  home.packages = [
+    pkgs.cascadia-code
+  ];
+
+  programs.firefox = {
+    enable = true;
+    package = pkgs.firefox-esr;
+
+    profiles.default = {
+      id = 0;
+      name = "default";
+      isDefault = true;
+
+      userChrome = builtins.concatStringsSep "\n" [
+        (builtins.readFile "${inputs.minimalFox}/userChrome.css")
+        ''
+          #nav-bar {
+            top: 0 !important;
+            margin-top: 8px !important;
+          }
+        ''
+      ];
+
+      settings = {
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+        "browser.compactmode.show" = true;
+        "browser.uidensity" = 1;
+
+        "font.name.monospace.x-western" = "Cascadia Code";
+        "font.name.sans-serif.x-western" = "Cascadia Code";
+        "font.name.serif.x-western" = "Cascadia Code";
+        "font.size.monospace.x-western" = 12;
+
+        "browser.tabs.tabmanager.enabled" = false;
+        "browser.tabs.hoverPreview" = false;
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/2-programs/applications/firefox.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/2-programs/applications/foot.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  config,
+  pkgs,
+  ...
+}:
+{
+  programs.foot = {
+    enable = true;
+    package = pkgs.foot;
+
+    settings = {
+      main = {
+        term = "xterm-256color";
+
+        font = "JetBrainsMono Nerd Font:size=16";
+        font-bold = "JetBrainsMono Nerd Font:style=Bold:size=16";
+        font-italic = "JetBrainsMono Nerd Font:style=Italic:size=16";
+        font-bold-italic = "JetBrainsMono Nerd Font:style=Bold Italic:size=16";
+
+        pad = "15x15 center";
+        dpi-aware = "yes";
+        selection-target = "clipboard";
+      };
+
+      colors = {
+        alpha = 0.95;
+
+        # Базовые цвета из colorscheme
+        foreground = "${config.colorScheme.palette.base05}";
+        background = "${config.colorScheme.palette.base00}";
+
+        # Обычные цвета (regular)
+        regular0 = "${config.colorScheme.palette.base00}"; # black
+        regular1 = "${config.colorScheme.palette.base08}"; # red
+        regular2 = "${config.colorScheme.palette.base0B}"; # green
+        regular3 = "${config.colorScheme.palette.base0A}"; # yellow
+        regular4 = "${config.colorScheme.palette.base0D}"; # blue
+        regular5 = "${config.colorScheme.palette.base0E}"; # magenta
+        regular6 = "${config.colorScheme.palette.base0C}"; # cyan
+        regular7 = "${config.colorScheme.palette.base05}"; # white
+
+        # Яркие цвета (bright)
+        bright0 = "${config.colorScheme.palette.base03}"; # bright black
+        bright1 = "${config.colorScheme.palette.base08}"; # bright red
+        bright2 = "${config.colorScheme.palette.base0B}"; # bright green
+        bright3 = "${config.colorScheme.palette.base0A}"; # bright yellow
+        bright4 = "${config.colorScheme.palette.base0D}"; # bright blue
+        bright5 = "${config.colorScheme.palette.base0E}"; # bright magenta
+        bright6 = "${config.colorScheme.palette.base0C}"; # bright cyan
+        bright7 = "${config.colorScheme.palette.base07}"; # bright white
+
+        # Цвет выделения
+        selection-foreground = "${config.colorScheme.palette.base00}";
+        selection-background = "${config.colorScheme.palette.base05}";
+      };
+
+      scrollback = {
+        # История прокрутки
+        lines = 10000;
+
+        # Множитель прокрутки
+        multiplier = 3.0;
+      };
+
+      cursor = {
+        # Стиль курсора: block, beam, underline
+        style = "block";
+
+        # Мигание курсора
+        blink = "no";
+
+        # Курсор в неактивном окне: unchanged, hollow, none
+        unfocused-style = "hollow";
+      };
+
+      mouse = {
+        # Скрытие курсора при вводе
+        hide-when-typing = "yes";
+      };
+
+      mouse-bindings = {
+        # Отключаем расширение выделения правой кнопкой
+        select-extend = "none";
+
+        # Назначаем вставку на правую кнопку
+        # Можно использовать primary-paste или clipboard-paste
+        clipboard-paste = "BTN_RIGHT";
+
+        # Стандартные привязки
+        select-begin = "BTN_LEFT";
+        select-begin-block = "Control+BTN_LEFT";
+        select-word = "BTN_LEFT-2";
+
+        # Средняя кнопка для вставки из primary selection
+        primary-paste = "BTN_MIDDLE";
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/2-programs/applications/foot.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/2-programs/applications/alacritty.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  pkgs,
+  ...
+}:
+{
+  programs.alacritty = {
+    enable = true;
+    package = pkgs.alacritty;
+
+    settings = {
+      env = {
+        TERM = "xterm-256color";
+      };
+
+      window = {
+        padding = {
+          x = 15;
+          y = 15;
+        };
+        dynamic_padding = true;
+        decorations = "Full";
+        startup_mode = "Windowed";
+        opacity = 0.95;
+        blur = false;
+      };
+
+      scrolling = {
+        history = 10000;
+        multiplier = 3;
+      };
+
+      font = {
+        normal = {
+          family = "JetBrainsMono Nerd Font";
+          style = "Regular";
+        };
+        bold = {
+          family = "JetBrainsMono Nerd Font";
+          style = "Bold";
+        };
+        italic = {
+          family = "JetBrainsMono Nerd Font";
+          style = "Italic";
+        };
+        size = 16;
+        offset = {
+          x = 0;
+          y = 1;
+        };
+      };
+
+      cursor = {
+        style = {
+          shape = "Block";
+          blinking = "Off";
+        };
+        unfocused_hollow = true;
+      };
+
+      selection.save_to_clipboard = true;
+
+      mouse.bindings = [
+        {
+          mouse = "Right";
+          action = "Paste";
+        }
+      ];
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/2-programs/applications/alacritty.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/2-programs/applications/obs.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  pkgs,
+  helpers,
+  ...
+}:
+{
+  config = lib.mkMerge [
+    {
+      programs.obs-studio = {
+        enable = true;
+
+        plugins = with pkgs.obs-studio-plugins; [
+          obs-pipewire-audio-capture
+          obs-gstreamer
+          obs-websocket
+          obs-move-transition
+          obs-backgroundremoval
+          obs-shaderfilter
+          obs-vkcapture
+          obs-source-record
+          obs-vertical-canvas
+          input-overlay
+          advanced-scene-switcher
+        ];
+      };
+    }
+
+    (lib.mkIf helpers.isWayland {
+      programs.obs-studio.plugins = with pkgs.obs-studio-plugins; [
+        wlrobs
+      ];
+    })
+
+    (lib.mkIf helpers.hasNvidia {
+      programs.obs-studio = {
+        package = pkgs.obs-studio.override {
+          cudaSupport = true;
+        };
+      };
+    })
+
+    (lib.mkIf (!helpers.hasNvidia) {
+      programs.obs-studio.plugins = with pkgs.obs-studio-plugins; [
+        obs-vaapi
+      ];
+    })
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/2-programs/applications/obs.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/2-programs/applications/zen-browser.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  config,
+  pkgs,
+  inputs,
+  wallpapers,
+  conf,
+  ...
+}:
+let
+  colors = config.colorScheme.palette;
+  wallpaper = wallpapers.${conf.wallpaperName} or wallpapers.backyard;
+in
+{
+  config = {
+    home.packages = [
+      pkgs.pywalfox-native
+      inputs.zen-browser.packages.${pkgs.system}.default
+    ];
+
+    home.file.".zen/native-messaging-hosts/pywalfox.json".text = builtins.toJSON {
+      name = "pywalfox";
+      description = "Pywalfox native messaging host";
+      path = "${pkgs.pywalfox-native}/bin/pywalfox";
+      type = "stdio";
+      allowed_extensions = [ "pywalfox@frewacom.org" ];
+    };
+
+    home.file.".cache/wal/colors.json".text = builtins.toJSON {
+      wallpaper = "${wallpaper}";
+      alpha = "100";
+      colors = {
+        color0 = "#${colors.base00}";
+        color1 = "#${colors.base08}";
+        color2 = "#${colors.base0B}";
+        color3 = "#${colors.base0A}";
+        color4 = "#${colors.base0D}";
+        color5 = "#${colors.base0E}";
+        color6 = "#${colors.base0C}";
+        color7 = "#${colors.base05}";
+        color8 = "#${colors.base03}";
+        color9 = "#${colors.base05}";
+        color10 = "#${colors.base0B}";
+        color11 = "#${colors.base0A}";
+        color12 = "#${colors.base0D}";
+        color13 = "#${colors.base0E}";
+        color14 = "#${colors.base0C}";
+        color15 = "#${colors.base07}";
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/2-programs/applications/zen-browser.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/2-programs/applications/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    #./alacritty.nix
+    ./foot.nix
+    ./firefox.nix
+    ./rclone.nix
+    ./obs.nix
+    ./zen-browser.nix
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/2-programs/applications/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/2-programs/development/intellij-ide.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ pkgs, ... }:
+{
+  config = {
+    home.packages = with pkgs; [
+      #jetbrains.rider
+    ];
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/2-programs/development/intellij-ide.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/2-programs/development/git.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ pkgs, ... }:
+{
+  config = {
+    home.packages = with pkgs; [
+      gh
+    ];
+
+    programs.git = {
+      enable = true;
+      package = pkgs.git;
+
+      diff-so-fancy.enable = true;
+      userName = "umokee";
+      userEmail = "hituaev@gmail.com";
+
+      ignores = [
+        ".vscode/"
+        ".idea/"
+        "__pycache__/"
+        ".syncrclone"
+      ];
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/2-programs/development/git.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/2-programs/development/vscode.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ config, pkgs, ... }:
+let
+  vscode = pkgs.vscode.overrideAttrs (oldAttrs: {
+    buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ pkgs.makeWrapper ];
+
+    postFixup = (oldAttrs.postFixup or "") + ''
+      wrapProgram $out/bin/code \
+        --add-flags "--ozone-platform=wayland" \
+        --add-flags "--disable-gpu"
+    '';
+  });
+in
+{
+  programs.vscode = {
+    enable = true;
+    package = vscode;
+    mutableExtensionsDir = true;
+
+    profiles.default = {
+      userSettings = {
+        "editor.fontFamily" = "'JetBrainsMono Nerd Font', monospace";
+        "editor.fontSize" = 18;
+        "window.zoomLevel" = 1;
+
+        "workbench.iconTheme" = "bearded-icons";
+        "workbench.colorTheme" = "base16-ayu-dark";
+
+        "editor.formatOnSave" = false;
+        "editor.formatOnPaste" = false;
+        "editor.codeActionsOnSave" = {
+          "source.fixAll.eslint" = "explicit";
+          "source.organizeImports" = "explicit";
+        };
+
+        "errorLens.enabled" = true;
+        "errorLens.enabledDiagnosticLevels" = [
+          "error"
+          "warning"
+          "info"
+          "hint"
+        ];
+        "errorLens.fontSize" = "14";
+        "errorLens.fontWeight" = "bold";
+        "errorLens.fontStyleItalic" = true;
+        "errorLens.gutterIconsEnabled" = true;
+        "errorLens.messageTemplate" = "$message";
+        "errorLens.delay" = 0;
+
+        "problems.showCurrentInStatus" = true;
+        "problems.sortOrder" = "severity";
+
+        "editor.tabSize" = 2;
+        "editor.detectIndentation" = false;
+        "editor.lineNumbers" = "relative";
+        "workbench.tree.indent" = 14;
+        "files.insertFinalNewline" = true;
+
+        "workbench.sideBar.location" = "left";
+        "workbench.statusBar.visible" = false;
+        "workbench.activityBar.location" = "hidden";
+        "workbench.editor.showTabs" = "single";
+        "workbench.startupEditor" = "none";
+        "chat.commandCenter.enabled" = false;
+        "workbench.layoutControl.enabled" = false;
+        "window.customTitleBarVisibility" = "never";
+        "window.titleBarStyle" = "native";
+        "window.menuBarVisibility" = "toggle";
+
+        "editor.scrollbar.vertical" = "hidden";
+        "editor.scrollbar.horizontal" = "hidden";
+        "editor.minimap.enabled" = true;
+        "editor.minimap.renderCharacters" = false;
+
+        "editor.multiCursorModifier" = "ctrlCmd";
+        "editor.cursorBlinking" = "solid";
+        "editor.matchBrackets" = "never";
+        "editor.occurrencesHighlight" = "off";
+
+        "editor.bracketPairColorization.enabled" = true;
+        "editor.guides.bracketPairs" = true;
+        #"editor.guides.bracketPairsHorizontal" = true;
+        #"editor.guides.highlightActiveIndentation" = true;
+
+        "editor.lightbulb.enabled" = "off";
+        "editor.showFoldingControls" = "never";
+        "breadcrumbs.enabled" = false;
+        "workbench.tips.enabled" = false;
+
+        "editor.overviewRulerBorder" = false;
+        "editor.hideCursorInOverviewRuler" = true;
+
+        "editor.stickyScroll.enabled" = false;
+        "workbench.tree.enableStickyScroll" = false;
+
+        "explorer.confirmDragAndDrop" = true;
+        "explorer.confirmDelete" = true;
+        "explorer.decorations.badges" = false;
+        "workbench.tree.renderIndentGuides" = "none";
+
+        "git.decorations.enabled" = false;
+        "scm.diffDecorations" = "none";
+
+        "files.autoSave" = "afterDelay";
+        "editor.wordWrap" = "on";
+        "update.mode" = "none";
+
+        #"extensions.ignoreRecommendations" = true;
+        "[python]" = {
+          "editor.defaultFormatter" = "ms-python.autopep8";
+          "editor.formatOnSave" = true;
+          "editor.tabSize" = 4;
+        };
+
+        "nix.enableLanguageServer" = true;
+        "nix.serverPath" = "${pkgs.nixd}/bin/nixd";
+        "nix.formatterPath" = "${pkgs.nixfmt-rfc-style}/bin/nixfmt";
+
+        "[nix]" = {
+          "editor.defaultFormatter" = "jnoortheen.nix-ide";
+          "editor.formatOnSave" = true;
+          "editor.tabSize" = 2;
+        };
+
+        "nix.serverSettings" = {
+          "nixd" = {
+            "formatting" = {
+              "command" = [ "${pkgs.nixfmt-rfc-style}/bin/nixfmt" ];
+            };
+            "options" = {
+              "nixos" = {
+                "expr" =
+                  "(builtins.getFlake \"/home/${config.home.username}/nixos\").nixosConfigurations.desktop.options";
+              };
+              "home-manager" = {
+                "expr" =
+                  "(builtins.getFlake \"/home/${config.home.username}/nixos\").homeConfigurations.desktop.options";
+              };
+            };
+          };
+        };
+      };
+      keybindings = [
+        {
+          key = "alt+d";
+          command = "workbench.view.explorer";
+        }
+        {
+          key = "alt+g";
+          command = "workbench.view.scm";
+        }
+        {
+          key = "alt+x";
+          command = "workbench.view.extensions";
+        }
+        {
+          key = "alt+t";
+          command = "workbench.action.terminal.toggleTerminal";
+        }
+
+        # ===== ДОПОЛНИТЕЛЬНЫЕ ПОЛЕЗНЫЕ БИНДИНГИ =====
+
+        # Debug панель
+        {
+          key = "ctrl+5";
+          command = "workbench.view.debug";
+        }
+        # Search панель
+        {
+          key = "ctrl+6";
+          command = "workbench.view.search";
+        }
+
+        # Скрыть/показать боковую панель
+        {
+          key = "ctrl+b";
+          command = "workbench.action.toggleSidebarVisibility";
+        }
+
+        # Скрыть/показать панель (где терминал)
+        {
+          key = "ctrl+j";
+          command = "workbench.action.togglePanel";
+        }
+      ];
+    };
+  };
+
+  home.activation.makeVSCodeConfigWritable =
+    let
+      configPath = "${config.xdg.configHome}/Code/User/settings.json";
+    in
+    {
+      after = [ "writeBoundary" ];
+      before = [ ];
+      data = ''
+        if [ -L ${configPath} ]; then
+          install -m 0640 "$(readlink ${configPath})" ${configPath}
+        fi
+      '';
+    };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/2-programs/development/vscode.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/2-programs/development/languages.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  pkgs,
+  lib,
+  helpers,
+  ...
+}:
+let
+  pythonWithPackages = pkgs.python3.withPackages (
+    ps: with ps; [
+      pytubefix
+      requests
+      numpy
+      pillow
+      cairosvg
+      autopep8
+    ]
+  );
+in
+{
+  home.packages =
+    with pkgs;
+    [ ]
+    ++ lib.optionals (helpers.hasIn "programs" "nodejs") [
+      nodejs_20
+      yarn
+      pnpm
+    ]
+    ++ lib.optionals (helpers.hasIn "programs" "dotnet") [
+      dotnet-sdk_9
+    ]
+    ++ lib.optionals (helpers.hasIn "programs" "nix-lang") [
+      nixd
+      nixfmt
+      nixd
+    ]
+    ++ lib.optionals (helpers.hasIn "programs" "python-lang") [
+      pythonWithPackages
+    ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/2-programs/development/languages.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/2-programs/development/nvim/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/2-programs/development/nvim/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/2-programs/development/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./git.nix
+    ./vscode.nix
+    ./languages.nix
+    ./intellij-ide.nix
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/2-programs/development/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/2-programs/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./packages.nix
+    ./applications
+    ./development
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/2-programs/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/4-appearance/icons.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  pkgs,
+  lib,
+  helpers,
+  ...
+}:
+{
+  config = lib.mkIf helpers.isWM {
+    gtk = {
+      enable = true;
+      iconTheme = {
+        name = "Tela-circle";
+        package = pkgs.tela-circle-icon-theme;
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/4-appearance/icons.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/4-appearance/qt.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  pkgs,
+  helpers,
+  ...
+}:
+{
+  config = lib.mkIf helpers.isWM {
+    home.packages = with pkgs; [
+      libsForQt5.qt5ct
+      qt6ct
+      adwaita-qt
+      adwaita-qt6
+    ];
+
+    qt = {
+      enable = true;
+      platformTheme.name = "qt6ct";
+
+      style = {
+        name = "Adwaita-dark";
+        package = pkgs.adwaita-qt6;
+      };
+    };
+
+    # TODO ПЕРЕМЕСТИТЬ ПЕРЕМЕННЫЕ
+    home.sessionVariables = {
+      QT_QPA_PLATFORMTHEME = "qt6ct";
+      QT_STYLE_OVERRIDE = "Adwaita-dark";
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/4-appearance/qt.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/4-appearance/gtk.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  pkgs,
+  helpers,
+  ...
+}:
+let
+  cfg = {
+    theme = {
+      name = "adw-gtk3-dark";
+      package = pkgs.adw-gtk3;
+    };
+    font = {
+      name = "Inter";
+      package = pkgs.inter;
+      size = 11;
+    };
+  };
+in
+{
+  config = lib.mkIf helpers.isWM {
+    dconf = {
+      enable = true;
+      settings = {
+        "org/gnome/desktop/interface" = {
+          color-scheme = "prefer-dark";
+        };
+        "org/gnome/desktop/wm/preferences" = {
+          button-layout = ":";
+        };
+        "org/nemo/preferences" = {
+          ignore-view-metadata = true;
+        };
+        "org/nemo/icon-view" = {
+          default-zoom-level = "larger";
+        };
+        "org/nemo/list-view" = {
+          default-zoom-level = "larger";
+        };
+      };
+    };
+
+    gtk = {
+      enable = true;
+
+      font = {
+        name = cfg.font.name;
+        size = cfg.font.size;
+        package = cfg.font.package;
+      };
+
+      theme = {
+        name = cfg.theme.name;
+        package = cfg.theme.package;
+      };
+
+      gtk3 = {
+        extraConfig = {
+          gtk-application-prefer-dark-theme = 1;
+        };
+      };
+    };
+
+    home.sessionVariables = {
+      GTK_THEME = cfg.theme.name;
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/4-appearance/gtk.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/4-appearance/colors/gtk.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  config,
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "workspace" "themes";
+  colors = config.colorScheme.palette;
+in
+{
+  config = lib.mkIf enable {
+    gtk = {
+      gtk2.extraConfig = ''
+        gtk-color-scheme = "bg_color:#${colors.base01}\nfg_color:#${colors.base05}\nselected_bg_color:#${colors.base0D}\nselected_fg_color:#${colors.base00}"
+      '';
+    };
+
+    xdg.configFile."gtk-3.0/gtk.css".text = ''
+      @define-color accent_color #${colors.base0D};
+      @define-color accent_fg_color #${colors.base00};
+      @define-color accent_bg_color #${colors.base0D};
+      @define-color window_bg_color #${colors.base01};
+      @define-color window_fg_color #${colors.base05};
+      @define-color headerbar_bg_color #${colors.base01};
+      @define-color headerbar_fg_color #${colors.base05};
+      @define-color popover_bg_color #${colors.base01};
+      @define-color popover_fg_color #${colors.base05};
+      @define-color view_bg_color #${colors.base00};
+      @define-color view_fg_color #${colors.base05};
+      @define-color card_bg_color #${colors.base00};
+      @define-color card_fg_color #${colors.base05};
+      @define-color sidebar_bg_color #${colors.base01};
+      @define-color sidebar_fg_color #${colors.base05};
+      @define-color sidebar_border_color #${colors.base01};
+      @define-color sidebar_backdrop_color #${colors.base01};
+
+      @define-color destructive_bg_color #${colors.base08};
+      @define-color destructive_fg_color #${colors.base00};
+      @define-color success_bg_color #${colors.base0B};
+      @define-color success_fg_color #${colors.base00};
+      @define-color warning_bg_color #${colors.base0A};
+      @define-color warning_fg_color #${colors.base00};
+    '';
+
+    xdg.configFile."gtk-4.0/gtk.css".text = ''
+      @define-color accent_color #${colors.base0D};
+      @define-color accent_fg_color #${colors.base00};
+      @define-color accent_bg_color #${colors.base0D};
+      @define-color window_bg_color #${colors.base01};
+      @define-color window_fg_color #${colors.base05};
+      @define-color headerbar_bg_color #${colors.base01};
+      @define-color headerbar_fg_color #${colors.base05};
+      @define-color popover_bg_color #${colors.base01};
+      @define-color popover_fg_color #${colors.base05};
+      @define-color view_bg_color #${colors.base00};
+      @define-color view_fg_color #${colors.base05};
+      @define-color card_bg_color #${colors.base00};
+      @define-color card_fg_color #${colors.base05};
+      @define-color sidebar_bg_color #${colors.base01};
+      @define-color sidebar_fg_color #${colors.base05};
+      @define-color sidebar_border_color #${colors.base01};
+      @define-color sidebar_backdrop_color #${colors.base01};
+
+      @define-color destructive_bg_color #${colors.base08};
+      @define-color destructive_fg_color #${colors.base00};
+      @define-color success_bg_color #${colors.base0B};
+      @define-color success_fg_color #${colors.base00};
+      @define-color warning_bg_color #${colors.base0A};
+      @define-color warning_fg_color #${colors.base00};
+    '';
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/4-appearance/colors/gtk.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/4-appearance/colors/firefox.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  config,
+  lib,
+  conf,
+  wallpapers,
+  pkgs,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "workspace" "themes";
+  colors = config.colorScheme.palette;
+  wallpaper = wallpapers.${conf.wallpaperName} or wallpapers.backyard;
+in
+{
+  config = lib.mkIf enable {
+    home.packages = [
+      pkgs.pywalfox-native
+    ];
+
+    programs.firefox = {
+      nativeMessagingHosts = [ pkgs.pywalfox-native ];
+    };
+
+    home.file.".mozilla/native-messaging-hosts/pywalfox.json".text = builtins.toJSON {
+      name = "pywalfox";
+      description = "Pywalfox native messaging host";
+      path = "${pkgs.pywalfox-native}/bin/pywalfox";
+      type = "stdio";
+      allowed_extensions = [ "pywalfox@frewacom.org" ];
+    };
+
+    home.file.".cache/wal/colors.json".text = builtins.toJSON {
+      wallpaper = "${wallpaper}";
+      alpha = "100";
+      colors = {
+        color0 = "#${colors.base00}";
+        color1 = "#${colors.base08}";
+        color2 = "#${colors.base0B}";
+        color3 = "#${colors.base0A}";
+        color4 = "#${colors.base0D}";
+        color5 = "#${colors.base0E}";
+        color6 = "#${colors.base0C}";
+        color7 = "#${colors.base05}";
+        color8 = "#${colors.base03}";
+        color9 = "#${colors.base05}";
+        color10 = "#${colors.base0B}";
+        color11 = "#${colors.base0A}";
+        color12 = "#${colors.base0D}";
+        color13 = "#${colors.base0E}";
+        color14 = "#${colors.base0C}";
+        color15 = "#${colors.base07}";
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/4-appearance/colors/firefox.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/4-appearance/colors/dunst.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  config,
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "workspace" "themes";
+  colors = config.colorScheme.palette;
+in
+{
+  config = lib.mkIf enable {
+    services.dunst.settings = {
+      global = {
+        frame_color = "#${colors.base0D}";
+        separator_color = "#${colors.base0D}";
+      };
+
+      urgency_low = {
+        background = "#${colors.base01}";
+        foreground = "#${colors.base04}";
+        frame_color = "#${colors.base03}";
+      };
+
+      urgency_normal = {
+        background = "#${colors.base01}";
+        foreground = "#${colors.base05}";
+        frame_color = "#${colors.base0D}";
+      };
+
+      urgency_critical = {
+        background = "#${colors.base01}";
+        foreground = "#${colors.base05}";
+        frame_color = "#${colors.base08}";
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/4-appearance/colors/dunst.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/4-appearance/colors/hyprland.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  config,
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "workspace" "themes";
+  colors = config.colorScheme.palette;
+in
+{
+  config = lib.mkIf enable {
+    wayland.windowManager.hyprland.settings = {
+      general = {
+        "col.active_border" = "rgba(${colors.base0D}ee)";
+        "col.inactive_border" = "rgba(${colors.base03}ee)";
+      };
+
+      misc = {
+        background_color = "rgba(${colors.base00}ee)";
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/4-appearance/colors/hyprland.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/4-appearance/colors/alacritty.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  config,
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "workspace" "themes";
+  colors = config.colorScheme.palette;
+in
+{
+  config = lib.mkIf enable {
+    programs.alacritty.settings = {
+      colors = {
+        primary = {
+          background = "#${colors.base00}";
+          foreground = "#${colors.base05}";
+        };
+
+        cursor = {
+          text = "#${colors.base00}";
+          cursor = "#${colors.base05}";
+        };
+
+        normal = {
+          black = "#${colors.base00}";
+          red = "#${colors.base08}";
+          green = "#${colors.base0B}";
+          yellow = "#${colors.base0A}";
+          blue = "#${colors.base0D}";
+          magenta = "#${colors.base0E}";
+          cyan = "#${colors.base0C}";
+          white = "#${colors.base05}";
+        };
+
+        bright = {
+          black = "#${colors.base03}";
+          red = "#${colors.base08}";
+          green = "#${colors.base0B}";
+          yellow = "#${colors.base0A}";
+          blue = "#${colors.base0D}";
+          magenta = "#${colors.base0E}";
+          cyan = "#${colors.base0C}";
+          white = "#${colors.base07}";
+        };
+
+        indexed_colors = [
+          {
+            index = 16;
+            color = "#${colors.base09}";
+          }
+          {
+            index = 17;
+            color = "#${colors.base0F}";
+          }
+          {
+            index = 18;
+            color = "#${colors.base01}";
+          }
+          {
+            index = 19;
+            color = "#${colors.base02}";
+          }
+          {
+            index = 20;
+            color = "#${colors.base04}";
+          }
+          {
+            index = 21;
+            color = "#${colors.base06}";
+          }
+        ];
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/4-appearance/colors/alacritty.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/4-appearance/colors/folders.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  config,
+  pkgs,
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "workspace" "themes";
+
+  colorDetectionScript = pkgs.writeScript "papirus-color-finder.py" ''
+    #!/usr/bin/env python3
+    import sys
+
+    PAPIRUS_COLORS = {
+        'adwaita': '#93c0ea',
+        'black': '#4f4f4f',
+        'blue': '#5294e2',
+        'bluegrey': '#607d8b',
+        'breeze': '#57b8ec',
+        'brown': '#ae8e6c',
+        'carmine': '#a30002',
+        'cyan': '#00bcd4',
+        'darkcyan': '#45abb7',
+        'deeporange': '#eb6637',
+        'green': '#87b158',
+        'grey': '#8e8e8e',
+        'indigo': '#5c6bc0',
+        'magenta': '#ca71df',
+        'nordic': '#81a1c1',
+        'orange': '#ee923a',
+        'palebrown': '#d1bfae',
+        'paleorange': '#eeca8f',
+        'pink': '#f06292',
+        'red': '#e25252',
+        'teal': '#16a085',
+        'violet': '#7e57c2',
+        'white': '#e4e4e4',
+        'yaru': '#676767',
+        'yellow': '#f9bd30',
+    }
+
+    def hex_to_rgb(hex_color):
+        hex_color = hex_color.lstrip('#')
+        return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+
+    def color_distance(rgb1, rgb2):
+        return sum((a - b) ** 2 for a, b in zip(rgb1, rgb2)) ** 0.5
+
+    def find_closest_papirus_color(hex_input):
+        rgb_input = hex_to_rgb(hex_input)
+        min_distance = float('inf')
+        closest_name = None
+
+        for name, hex_val in PAPIRUS_COLORS.items():
+            distance = color_distance(rgb_input, hex_to_rgb(hex_val))
+            if distance < min_distance:
+                min_distance = distance
+                closest_name = name 
+        return closest_name
+
+    if __name__ == "__main__":
+        if len(sys.argv) != 2:
+            print("Использование: python3 papirus_color_finder.py '#94EBEB'")
+            sys.exit(1)
+
+        input_hex = sys.argv[1] if sys.argv[1].startswith('#') else '#' + sys.argv[1]
+        name = find_closest_papirus_color(input_hex)
+        print(name)
+  '';
+in
+{
+  config = lib.mkIf enable {
+    home.packages = with pkgs; [
+      papirus-folders
+    ];
+
+    home.activation = {
+      papirusColorDetector = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        export PATH="${
+          lib.makeBinPath (
+            with pkgs;
+            [
+              gawk
+              gtk3
+            ]
+          )
+        }:$PATH"
+
+        requested_hex="${config.colorScheme.palette.base0D or "5294e2"}"
+        papirus_color=$(${pkgs.python3}/bin/python3 ${colorDetectionScript} "$requested_hex")
+        ${pkgs.papirus-folders}/bin/papirus-folders -C "$papirus_color" --theme "Papirus-Dark"
+        ${pkgs.gtk3}/bin/gtk-update-icon-cache -f "$HOME/.local/share/icons" 2>/dev/null || true
+      '';
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/4-appearance/colors/folders.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/4-appearance/colors/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./alacritty.nix
+    ./dunst.nix
+    #./firefox.nix
+    ./gtk.nix
+    ./hyprland.nix
+    #./folders.nix
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/4-appearance/colors/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/4-appearance/cursor.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  pkgs,
+  helpers,
+  ...
+}:
+let
+  cfg = {
+    name = "Posy_Cursor_Black";
+    package = pkgs.posy-cursors;
+    size = 24;
+  };
+in
+{
+  config = lib.mkIf helpers.isWM {
+    home.pointerCursor = {
+      gtk.enable = true;
+      x11.enable = true;
+      name = cfg.name;
+      package = cfg.package;
+      size = cfg.size;
+    };
+
+    gtk.cursorTheme = {
+      name = cfg.name;
+      package = cfg.package;
+      size = cfg.size;
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/4-appearance/cursor.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/4-appearance/fonts.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  pkgs,
+  lib,
+  helpers,
+  ...
+}:
+{
+  home.packages =
+    with pkgs;
+    lib.mkIf helpers.isWM [
+      nerd-fonts.fira-code
+      nerd-fonts.hack
+      montserrat
+      inter
+      roboto
+      font-awesome
+    ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/4-appearance/fonts.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/home-manager/4-appearance/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./gtk.nix
+    ./qt.nix
+    ./cursor.nix
+    ./icons.nix
+    ./fonts.nix
+    ./colors
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/home-manager/4-appearance/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/4-services/kanata.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  pkgs,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "services" "kanata";
+in
+{
+  config = lib.mkIf enable {
+    services.kanata = {
+      enable = true;
+      package = pkgs.kanata;
+
+      keyboards = {
+        default = {
+          extraDefCfg = ''
+            concurrent-tap-hold yes
+            sequence-timeout 200
+          '';
+
+          config = ''
+            (defsrc
+              esc  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  
+              grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+              tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+              caps a    s    d    f    g    h    j    k    l    ;    '    ret
+              lsft z    x    c    v    b    n    m    ,    .    /    rsft
+              lctl lmet lalt           spc            ralt rmet menu rctl
+            )
+
+            (deflayermap (default)
+              caps (tap-hold 100 200 esc lctl)
+            )
+          '';
+        };
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/4-services/kanata.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/4-services/xray.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "services" "xray";
+in
+{
+  config = lib.mkIf enable {
+    services.xray = {
+      enable = true;
+
+      settings = {
+        log = {
+          loglevel = "warning";
+        };
+        inbounds = [
+          {
+            tag = "vless-in";
+            listen = "127.0.0.1";
+            port = 8443;
+            protocol = "vless";
+            settings = {
+              clients = [
+                {
+                  id = "2bb6e04c-e434-4065-bfde-3e92a4e926c2";
+                  flow = "xtls-rprx-vision";
+                }
+                {
+                  id = "fd539ebe-41ea-4e8d-af6a-ae58a5636ab4";
+                  flow = "xtls-rprx-vision";
+                }
+              ];
+              decryption = "none";
+            };
+            streamSettings = {
+              network = "tcp";
+              security = "reality";
+              realitySettings = {
+                show = false;
+                dest = "github.com:443";
+                xver = 0;
+                serverNames = [
+                  "github.com"
+                  "www.github.com"
+                ];
+                privateKey = "SBE7KNctHSGVO4Yk5p0mP1IwS5qEd3xd_-4SjPh_iEQ";
+                shortIds = [
+                  "1d0702eb71b9b044"
+                ];
+              };
+            };
+            sniffing = {
+              enabled = true;
+              destOverride = [
+                "http"
+                "tls"
+                "quic"
+              ];
+            };
+          }
+        ];
+        outbounds = [
+          {
+            protocol = "freedom";
+            tag = "DIRECT";
+          }
+          {
+            protocol = "blackhole";
+            tag = "BLOCK";
+          }
+        ];
+        routing = {
+          rules = [
+            {
+              ip = [ "geoip:private" ];
+              outboundTag = "BLOCK";
+              type = "field";
+            }
+            {
+              protocol = "bittorrent";
+              outboundTag = "BLOCK";
+              type = "field";
+            }
+            {
+              domain = [
+                "geosite:category-gov-ru"
+                "regexp:.*\\.ru$"
+                "regexp:.*\\.рф$"
+                "regexp:.*\\.su$"
+              ];
+              outboundTag = "BLOCK";
+              type = "field";
+            }
+            {
+              ip = [ "geoip:ru" ];
+              outboundTag = "BLOCK";
+              type = "field";
+            }
+          ];
+        };
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/4-services/xray.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/4-services/file-management.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ lib, helpers, ... }:
+{
+  config = lib.mkIf helpers.isWM {
+    services = {
+      tumbler.enable = true;
+      gvfs.enable = true;
+      udisks2.enable = true;
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/4-services/file-management.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/4-services/fail2ban.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "services" "fail2ban";
+in
+{
+  config = lib.mkIf enable {
+    services.fail2ban = {
+      enable = true;
+      maxretry = 3;
+
+      bantime = "365d";
+      bantime-increment = {
+        enable = true;
+        multipliers = "1 2 4 8 16 32 64";
+      };
+      
+      jails = {
+        sshd.settings = {
+          enabled = true;
+          filter = "sshd";
+          port = "ssh";
+          mode = "aggresive";
+        };
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/4-services/fail2ban.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/4-services/virtualization.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  pkgs,
+  conf,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "services" "virtual-machine";
+in
+{
+  config = lib.mkIf enable {
+    networking = {
+      bridges.br0.interfaces = [ "enp4s0" ];
+      interfaces.br0.ipv4.addresses = [
+        {
+          address = "192.168.1.100";
+          prefixLength = 24;
+        }
+      ];
+      defaultGateway = "192.168.1.1";
+      nameservers = [
+        "192.168.1.1"
+        "8.8.8.8"
+      ];
+    };
+
+    virtualisation.libvirtd = {
+      enable = true;
+      allowedBridges = [ "br0" ];
+
+      qemu = {
+        package = pkgs.qemu_kvm;
+        runAsRoot = true;
+        swtpm.enable = true;
+
+        ovmf = {
+          enable = true;
+          packages = [ pkgs.OVMFFull.fd ];
+        };
+
+        verbatimConfig = ''
+          namespaces = []
+        '';
+      };
+    };
+
+    users.users = lib.genAttrs [ conf.username ] (user: {
+      extraGroups = [
+        "libvirtd"
+        "kvm"
+      ];
+    });
+
+    environment.sessionVariables = {
+      LIBVIRT_DEFAULT_URI = "qemu:///system";
+    };
+
+    environment.systemPackages = with pkgs; [
+      virt-viewer
+      spice
+      spice-gtk
+      spice-protocol
+      win-virtio
+      win-spice
+    ];
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/4-services/virtualization.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/4-services/postgresql.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  pkgs,
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "services" "postgresql";
+
+  postgresData = "/home/user/postgresql/pgdata";
+  postgresBackup = "/home/user/postgresql/pg_backup";
+  postgresConfig = "/home/user/postgresql/pg_config";
+in
+{
+  config = lib.mkIf enable {
+    systemd.services.postgres-podman = {
+      description = "PostgreSQL 16 container via Podman";
+      wants = [ "network.target" ];
+      after = [ "network.target" ];
+      serviceConfig = {
+        Restart = "always";
+        User = "root";
+        ExecStartPre = ''
+          ${pkgs.coreutils}/bin/mkdir -p ${postgresData} ${postgresBackup} ${postgresConfig}
+          ${pkgs.coreutils}/bin/mkdir -p ${postgresBackup}/physical ${postgresBackup}/logical ${postgresBackup}/wal
+          ${pkgs.coreutils}/bin/chown -R 999:999 ${postgresData} ${postgresBackup} ${postgresConfig}
+          ${pkgs.coreutils}/bin/chmod -R 755 ${postgresData} ${postgresBackup} ${postgresConfig}
+        '';
+        ExecStart = ''
+          ${pkgs.podman}/bin/podman run --name postgres \
+            -e POSTGRES_PASSWORD=1postgres1 \
+            -v ${postgresData}:/var/lib/postgresql/data:z \
+            -v ${postgresBackup}:/var/lib/pg_backup:z \
+            -v ${postgresConfig}/postgresql.conf:/etc/postgresql/postgresql.conf:z \
+            -v ${postgresConfig}/pg_hba.conf:/etc/postgresql/pg_hba.conf:z \
+            -p 5432:5432 \
+            postgres:16 \
+            -c config_file=/etc/postgresql/postgresql.conf \
+            -c hba_file=/etc/postgresql/pg_hba.conf
+        '';
+        ExecStop = "${pkgs.podman}/bin/podman stop postgres";
+        ExecStopPost = "${pkgs.podman}/bin/podman rm postgres";
+        KillMode = "control-group";
+        TimeoutStopSec = "30";
+        RestartSec = "10";
+      };
+      wantedBy = [ "multi-user.target" ];
+    };
+
+    environment.systemPackages = with pkgs; [
+      postgresql
+    ];
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/4-services/postgresql.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/4-services/ms-sql.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  pkgs,
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "services" "ms-sql";
+in
+{
+  config = lib.mkIf enable {
+    virtualisation.docker.enable = true;
+    virtualisation.oci-containers.backend = "docker";
+
+    systemd.tmpfiles.rules = [
+      "d /var/lib/mssql 0755 10001 10001 -"
+    ];
+
+    virtualisation.oci-containers.containers.mssql = {
+      image = "mcr.microsoft.com/mssql/server:2022-latest";
+
+      environment = {
+        ACCEPT_EULA = "Y";
+        MSSQL_SA_PASSWORD = "Password!11!";
+        MSSQL_PID = "Developer";
+      };
+
+      ports = [ "1433:1433" ];
+      volumes = [ "/var/lib/mssql:/var/opt/mssql" ];
+      extraOptions = [ "--hostname=mssql-server" ];
+    };
+
+    environment.systemPackages = with pkgs; [
+      sqlcmd
+    ];
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/4-services/ms-sql.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/4-services/fstrim.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ lib, helpers, ... }:
+{
+  config = lib.mkIf (helpers.isDesktop || helpers.isLaptop) {
+    services.fstrim = {
+      enable = true;
+      interval = "daily";
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/4-services/fstrim.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/4-services/sing-box.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  pkgs,
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "services" "sing-box";
+in
+{
+  config = lib.mkIf enable {
+    services.sing-box = {
+      enable = true;
+      package = pkgs.sing-box;
+      
+      settings = {
+        log = {
+          level = "info";
+          timestamp = true;
+        };
+
+        dns = {
+          servers = [
+            {
+              tag = "cloudflare";
+              address = "https://1.1.1.1/dns-query";
+            }
+            {
+              tag = "google";
+              address = "https://8.8.8.8/dns-query";
+            }
+          ];
+          rules = [
+            {
+              geosite = "cn";
+              server = "cloudflare";
+            }
+          ];
+          strategy = "prefer_ipv4";
+        };
+
+        inbounds = [
+          {
+            type = "vless";
+            tag = "vless-in";
+            listen = "127.0.0.1";
+            listen_port = 8443;
+            
+            users = [
+              {
+                uuid = "2bb6e04c-e434-4065-bfde-3e92a4e926c2";
+                flow = "xtls-rprx-vision";
+              }
+              {
+                uuid = "fd539ebe-41ea-4e8d-af6a-ae58a5636ab4";
+                flow = "xtls-rprx-vision";
+              }
+            ];
+
+            tls = {
+              enabled = true;
+              server_name = "www.github.com";
+              reality = {
+                enabled = true;
+                handshake = {
+                  server = "www.github.com";
+                  server_port = 443;
+                };
+                private_key = "6DMV09BexNFlw1zf1My259gOc_Z1IsyYwNVCi1RWqFg";
+                short_id = [ "1d0702eb71b9b044" ];
+              };
+            };
+
+            transport = {
+              type = "http";
+            };
+          }
+
+          {
+            type = "mixed";
+            tag = "mixed-in";
+            listen = "127.0.0.1";
+            listen_port = 10808;
+          }
+        ];
+
+        outbounds = [
+          {
+            type = "direct";
+            tag = "direct";
+          }
+          {
+            type = "block";
+            tag = "block";
+          }
+        ];
+
+        route = {
+          rules = [
+            {
+              inbound = [ "vless-in" "mixed-in" ];
+              outbound = "direct";
+            }
+          ];
+        };
+      };
+    };
+
+    systemd.services.sing-box.serviceConfig = {
+      DynamicUser = lib.mkForce false;
+      User = "sing-box";
+      Group = "sing-box";
+      NoNewPrivileges = true;
+      PrivateTmp = true;
+      ProtectSystem = "strict";
+      ProtectHome = true;
+      ReadWritePaths = [ "/var/lib/sing-box" ];
+    };
+
+    users.users.sing-box = {
+      isSystemUser = true;
+      group = "sing-box";
+      home = "/var/lib/sing-box";
+      createHome = true;
+    };
+    users.groups.sing-box = {};
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/4-services/sing-box.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/4-services/openssh.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  conf,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "services" "openssh";
+
+  authorizedKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII/gto5eMkM9Ghp5VScGT58ebz1VHCMhCpj8Hse4OjKI user@nixos-desktop"
+  ];
+in
+{
+  config = lib.mkIf enable {
+    services.openssh = {
+      enable = true;
+      ports = [ 22 ];
+
+      settings = {
+        PermitRootLogin = if helpers.isServer then "prohibit-password" else "yes";
+        PasswordAuthentication = if helpers.isServer then false else true;
+        KbdInteractiveAuthentication = false;
+
+        X11Forwarding = lib.mkIf helpers.isServer false;
+        AllowTcpForwarding = lib.mkIf helpers.isServer "yes";
+        AllowAgentForwarding = lib.mkIf helpers.isServer false;
+
+        PubkeyAuthentication = true;
+        AuthenticationMethods = if helpers.isServer then "publickey" else "publickey,password";
+
+        ClientAliveInterval = 300;
+        ClientAliveCountMax = 2;
+        MaxAuthTries = 3;
+        LoginGraceTime = 60;
+      };
+
+      extraConfig = lib.mkIf helpers.isServer ''
+        AllowUsers user
+        Protocol 2
+        HostbasedAuthentication no
+        IgnoreRhosts yes
+        PermitEmptyPasswords no
+      '';
+    };
+
+    users.users.${conf.username}.openssh.authorizedKeys.keys = authorizedKeys;
+    users.users.root.openssh.authorizedKeys.keys = authorizedKeys;
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/4-services/openssh.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/4-services/traefik.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "services" "traefik";
+in
+{
+  config = lib.mkIf enable {
+    services.traefik = {
+      enable = true;
+
+      staticConfigOptions = {
+        entryPoints = {
+          web = {
+            address = ":80";
+          };
+          websecure = {
+            address = ":443";
+          };
+        };
+
+        certificatesResolvers = {
+          letsencrypt = {
+            acme = {
+              email = "hituaev@gmail.com";
+              storage = "/var/lib/traefik/acme.json";
+              httpChallenge = {
+                entryPoint = "web";
+              };
+            };
+          };
+        };
+
+        api = {
+          dashboard = true;
+        };
+
+        log = {
+          level = "INFO";
+        };
+
+        accessLog = { };
+      };
+
+      dynamicConfigOptions = {
+        http = {
+          routers = {
+            domain-https = {
+              rule = "Host(`umkcloud.ru`) || Host(`www.umkcloud.ru`)";
+              entryPoints = [ "websecure" ];
+              service = "github-redirect";
+              middlewares = [ "redirect-github" ];
+              tls = {
+                certResolver = "letsencrypt";
+              };
+              priority = 100;
+            };
+          };
+          services = {
+            github-redirect = {
+              loadBalancer = {
+                servers = [
+                  { url = "http://127.0.0.1:1"; }
+                ];
+              };
+            };
+          };
+          middlewares = {
+            redirect-github = {
+              redirectRegex = {
+                regex = ".*";
+                replacement = "https://github.com";
+                permanent = true;
+              };
+            };
+          };
+        };
+
+        tcp = {
+          routers = {
+            vless-tcp = {
+              rule = "HostSNI(`github.com`) || HostSNI(`www.github.com`)";
+              entryPoints = [ "websecure" ];
+              service = "xray-service";
+              tls = {
+                passthrough = true;
+              };
+              priority = 50;
+            };
+            fallback-tcp = {
+              rule = "HostSNI(`*`)";
+              entryPoints = [ "websecure" ];
+              service = "github-service";
+              tls = {
+                passthrough = true;
+              };
+              priority = 1;
+            };
+          };
+
+          services = {
+            xray-service = {
+              loadBalancer = {
+                servers = [
+                  { address = "127.0.0.1:8443"; }
+                ];
+              };
+            };
+            github-service = {
+              loadBalancer = {
+                servers = [
+                  { address = "github.com:443"; }
+                ];
+              };
+            };
+          };
+        };
+      };
+    };
+
+    systemd.tmpfiles.rules = [
+      "d /var/lib/traefik 0750 traefik traefik -"
+      "f /var/lib/traefik/acme.json 0600 traefik traefik -"
+    ];
+
+    users.users.traefik = {
+      isSystemUser = true;
+      group = "traefik";
+    };
+    users.groups.traefik = { };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/4-services/traefik.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/4-services/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./openssh.nix
+    ./virtualization.nix
+    ./sing-box.nix
+    ./file-management.nix
+    ./kanata.nix
+    ./fstrim.nix
+    ./podman.nix
+    ./postgresql.nix
+    ./ms-sql.nix
+    ./fail2ban.nix
+    ./xray.nix
+    ./traefik.nix
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/4-services/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/4-services/podman.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  pkgs,
+  conf,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "services" "podman";
+in
+{
+  config = lib.mkIf enable {
+    virtualisation.podman = {
+      enable = true;
+      dockerCompat = true;
+      defaultNetwork.settings.dns_enabled = true;
+    };
+
+    users.users.${conf.username}.extraGroups = [ "podman" ];
+
+    environment.systemPackages = with pkgs; [
+      podman
+      podman-compose
+    ];
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/4-services/podman.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/3-programs/gaming.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  pkgs,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "programs" "gaming";
+in
+{
+  config = lib.mkIf enable {
+    environment.systemPackages = with pkgs; [
+      (lutris.override {
+        extraLibraries = p: [
+          p.libadwaita
+          p.gtk4
+        ];
+      })
+
+      glxinfo
+      heroic
+      (bottles-unwrapped.override {
+        removeWarningPopup = true;
+      })
+      joystickwake
+      mangohud
+      #mesa
+      oversteer
+      umu-launcher
+      wineWowPackages.staging
+      winetricks
+      openrgb-with-all-plugins
+    ];
+
+    environment.sessionVariables = {
+      STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
+    };
+    services.hardware.openrgb.enable = true;
+    services.udev.extraRules = ''
+      # USB
+      ATTRS{name}=="Sony Interactive Entertainment Wireless Controller Touchpad", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+      ATTRS{name}=="Sony Interactive Entertainment DualSense Wireless Controller Touchpad", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+      # Bluetooth
+      ATTRS{name}=="Wireless Controller Touchpad", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+      ATTRS{name}=="DualSense Wireless Controller Touchpad", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+    '';
+
+    hardware.steam-hardware.enable = true;
+    hardware.opentabletdriver.enable = true;
+
+    programs.gamemode.enable = true;
+
+    programs.gamescope = {
+      enable = true;
+      capSysNice = true;
+    };
+
+    programs.steam = {
+      enable = true;
+      gamescopeSession.enable = true;
+      package = pkgs.steam.override {
+        extraEnv = {
+          OBS_VKCAPTURE = true;
+        };
+      };
+      remotePlay.openFirewall = true;
+      localNetworkGameTransfers.openFirewall = true;
+      extraCompatPackages = with pkgs; [
+        proton-ge-bin
+        proton-cachyos
+      ];
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/3-programs/gaming.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/3-programs/appimage.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "programs" "appimage";
+in
+{
+  config = lib.mkIf enable {
+    programs.appimage = {
+      enable = true;
+      binfmt = true;
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/3-programs/appimage.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/3-programs/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./gaming.nix
+    ./appimage.nix
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/3-programs/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/2-workspace/window-managers.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  helpers,
+  pkgs,
+  ...
+}:
+{
+  config = lib.mkMerge [
+    (lib.mkIf helpers.isHyprland {
+      programs.hyprland = {
+        enable = true;
+        withUWSM = true;
+        xwayland.enable = true;
+      };
+    })
+
+    (lib.mkIf helpers.isDwl {
+      environment.systemPackages = with pkgs; [
+        wayland
+        wayland-protocols
+        wlroots_0_19
+        wmenu
+      ];
+      programs.xwayland.enable = true;
+    })
+
+    (lib.mkIf helpers.isMango {
+      programs.mango.enable = true;
+    })
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/2-workspace/window-managers.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/2-workspace/display-manager.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "workspace" "display-manager";
+in
+{
+  config = lib.mkIf enable {
+    #services.getty.autologinUser = conf.username;
+
+    #services.displayManager.ly = {
+    #  enable = false;
+    #  settings = {
+    #    animation = "none";
+    #    clock = "%c";
+    #    bigclock = true;
+    #    hide_borders = true;
+    #    hide_f1_commands = true;
+    #  };
+    #};
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/2-workspace/display-manager.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/2-workspace/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./display-manager.nix
+    ./window-managers.nix
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/2-workspace/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/0-base/environment.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  helpers,
+  ...
+}:
+{
+  config = {
+    environment.sessionVariables = lib.mkMerge [
+      (lib.mkIf helpers.isWayland {
+        NIXOS_OZONE_WL = "1";
+        XDG_SESSION_TYPE = "wayland";
+        QT_QPA_PLATFORM = "wayland;xcb";
+        GDK_BACKEND = "wayland,x11";
+        _JAVA_AWT_WM_NONREPARENTING = "1";
+        SDL_VIDEODRIVER = "wayland,x11";
+        CLUTTER_BACKEND = "wayland";
+      })
+
+      (lib.mkIf helpers.isDwl {
+        XDG_CURRENT_DESKTOP = "dwl";
+        XDG_SESSION_DESKTOP = "dwl";
+      })
+
+      (lib.mkIf helpers.isHyprland {
+        XDG_CURRENT_DESKTOP = "Hyprland";
+        XDG_SESSION_DESKTOP = "Hyprland";
+      })
+
+      (lib.mkIf helpers.hasNvidia {
+        GBM_BACKEND = "nvidia-drm";
+        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+        LIBVA_DRIVER_NAME = "nvidia";
+      })
+
+      (lib.mkIf (!helpers.hasNvidia && helpers.hasIntel) {
+        LIBVA_DRIVER_NAME = "iHD";
+      })
+
+      (lib.mkIf (!helpers.hasNvidia && helpers.hasAMD) {
+        LIBVA_DRIVER_NAME = "radeonsi";
+      })
+    ];
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/0-base/environment.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/0-base/locale.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "base" "locale";
+
+  timezone = "Asia/Vladivostok";
+  locale = "en_US.UTF-8";
+in
+{
+  config = lib.mkIf enable {
+    time.timeZone = timezone;
+    i18n.defaultLocale = locale;
+    i18n.supportedLocales = [
+      "ru_RU.UTF-8/UTF-8"
+      "en_US.UTF-8/UTF-8"
+    ];
+    i18n.extraLocaleSettings = {
+      LC_ADDRESS = locale;
+      LC_IDENTIFICATION = locale;
+      LC_MEASUREMENT = locale;
+      LC_MONETARY = locale;
+      LC_NAME = locale;
+      LC_NUMERIC = locale;
+      LC_PAPER = locale;
+      LC_TELEPHONE = locale;
+      LC_TIME = locale;
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/0-base/locale.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/0-base/users.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  pkgs,
+  conf,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "base" "users";
+in
+{
+  config = lib.mkIf enable {
+    users.users.${conf.username} = {
+      isNormalUser = true;
+      description = "Main user";
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+        "input"
+      ]
+      ++ lib.optionals (helpers.hasIn "hardware" "sound") [
+        "sound"
+      ]
+      ++
+        lib.optionals
+          (helpers.hasIn "hardware" [
+            "nvidia"
+            "amd"
+          ])
+          [
+            "video"
+            "render"
+          ];
+      shell = pkgs.bash;
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/0-base/users.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/0-base/boot.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  config,
+  lib,
+  helpers,
+  pkgs,
+  ...
+}:
+let
+  enable = helpers.hasIn "base" "boot";
+in
+{
+  config = lib.mkIf enable {
+    nixpkgs.overlays = [
+      (self: super: {
+        linuxPackages = super.linuxPackages // {
+          kernel = super.linuxPackages.kernel.override {
+            structuredExtraConfig = with lib.kernel; {
+              HZ_1000 = yes;
+              HZ = 1000;
+              PREEMPT_FULL = yes;
+              IOSCHED_BFQ = yes;
+              DEFAULT_BFQ = yes;
+              DEFAULT_IOSCHED = "bfq";
+              V4L2_LOOPBACK = module;
+              HID = yes;
+            };
+          };
+        };
+      })
+    ];
+
+    services.udev.extraRules = ''
+      ACTION=="add|change", SUBSYSTEM=="block", ATTR{queue/scheduler}="bfq"
+    '';
+
+    boot.loader.grub = {
+      enable = true;
+      device = if helpers.isServer then "/dev/sda" else "nodev";
+      #useOSProber = true; # For dual boot
+      efiSupport = !helpers.isServer;
+      efiInstallAsRemovable = !helpers.isServer;
+    };
+    boot.loader.timeout = 3;
+
+    boot = {
+      #kernelPackages = if helpers.isDesktop then pkgs.linuxPackages_6_16 else pkgs.linuxPackages;
+      tmp.cleanOnBoot = true;
+      supportedFilesystems.zfs = lib.mkForce false;
+      kernelParams =
+        if builtins.elem "kvm-amd" config.boot.kernelModules then [ "amd_pstate=active" "nosplit_lock_mitigate" "clearcpuid=514" ] else [ "nosplit_lock_mitigate" ]++ [
+        "quiet"
+        "splash"
+      ];
+      kernel.sysctl = {
+        "kernel.split_lock_mitigate" = 0;
+        "vm.swappiness" = 10;
+        "vm.vfs_cache_pressure" = 50;
+        "vm.dirty_bytes" = 268435456;
+        "vm.max_map_count" = 16777216;
+        "vm.dirty_background_bytes" = 67108864;
+        "vm.dirty_writeback_centisecs" = 1500;
+        "kernel.nmi_watchdog" = 0;
+        "kernel.unprivileged_userns_clone" = 1;
+        "kernel.printk" = "3 3 3 3";
+        "kernel.kptr_restrict" = 2;
+        "kernel.kexec_load_disabled" = 1;
+      };
+
+      initrd.verbose = false;
+      consoleLogLevel = 3;
+    };
+
+    hardware.graphics = {
+      enable = true;
+      package = pkgs.mesa;
+      package32 = pkgs.pkgsi686Linux.mesa;
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/0-base/boot.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/0-base/system.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  conf,
+  lib,
+  helpers,
+  pkgs,
+  ...
+}:
+let
+  enable = helpers.hasIn "base" "system";
+in
+{
+  config = lib.mkMerge [
+    (lib.mkIf enable {
+      time.hardwareClockInLocalTime = true;
+
+      hardware.graphics = {
+        enable = true;
+        enable32Bit = true;
+        extraPackages = with pkgs; [
+          intel-gpu-tools
+          intel-media-driver
+          vaapiIntel
+          vaapiVdpau
+          libvdpau-va-gl
+          libva
+          vulkan-loader
+          vulkan-validation-layers
+        ];
+        extraPackages32 = with pkgs; [
+          intel-gpu-tools
+          intel-media-driver
+          vaapiIntel
+          vaapiVdpau
+          libvdpau-va-gl
+          libva
+        ];
+      };
+
+      zramSwap = {
+        enable = true;
+        algorithm = "zstd";
+        memoryPercent = if helpers.isServer then 150 else 25;
+        priority = 5;
+      };
+
+      nix = {
+        settings = {
+          trusted-users = [
+            "root"
+            conf.username
+          ];
+          auto-optimise-store = true;
+          experimental-features = [
+            "nix-command"
+            "flakes"
+          ];
+        };
+
+        gc = {
+          automatic = true;
+          dates = "weekly";
+          options = "--delete-older-than 7d";
+        };
+
+        optimise = {
+          automatic = true;
+          dates = [ "03:00" ];
+        };
+      };
+
+      #system.autoUpgrade = {
+      #  enable = true;
+      #  flake = "/home/user/nix-dots#server";
+      #  flags = [
+      #    "--update-input"
+      #    "nixpkgs"
+      #    "--commit-lock-file"
+      #  ];
+      #  dates = "04:00";
+      #  randomizedDelaySec = "45min";
+      #  allowReboot = false;
+      #};
+
+      documentation = {
+        enable = false;
+        nixos.enable = false;
+        man.enable = false;
+        doc.enable = false;
+      };
+
+      programs.nix-ld.enable = true;
+    })
+
+    (lib.mkIf helpers.isServer {
+      #boot.kernelParams = [
+      #  "console=tty0"
+      #  "console=ttyS0,115200n8"
+      #];
+
+      services.xserver.enable = lib.mkForce false;
+
+      services.journald.extraConfig = ''
+        SystemMaxUse=500M
+        MaxRetentionSec=1week
+      '';
+    })
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/0-base/system.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/0-base/packages.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  pkgs,
+  lib,
+  helpers,
+  ...
+}:
+{
+  environment.systemPackages =
+    with pkgs;
+    [
+      coreutils
+      util-linux
+      shadow
+      curl
+      wget
+      nano
+      vim
+      git
+
+      pciutils
+      lsof
+      gawk
+
+      gnutar
+      gzip
+      unzip
+      xz
+      zstd
+      lz4
+      bzip2
+      libarchive
+    ]
+    ++ lib.optionals (!helpers.isServer) [
+      libnotify
+      usbutils
+      upower
+      home-manager
+    ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/0-base/packages.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/0-base/fonts.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  pkgs,
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "base" "fonts";
+in
+{
+  config = lib.mkIf enable {
+    fonts = {
+      packages = with pkgs; [
+        vistafonts
+        corefonts
+        dejavu_fonts
+        liberation_ttf
+        noto-fonts
+        noto-fonts-emoji
+        nerd-fonts.jetbrains-mono
+      ];
+
+      fontconfig = {
+        enable = true;
+        antialias = true;
+        hinting.enable = true;
+
+        defaultFonts = {
+          serif = [ "DejaVu Serif" ];
+          sansSerif = [ "DejaVu Sans" ];
+          monospace = [ "JetBrainsMono Nerd Font" ];
+        };
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/0-base/fonts.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/0-base/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./boot.nix
+    ./system.nix
+    ./users.nix
+    ./locale.nix
+    ./security.nix
+    ./network.nix
+    ./packages.nix
+    ./fonts.nix
+    ./environment.nix
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/0-base/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/0-base/network.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  conf,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "base" "network";
+in
+{
+  config = lib.mkIf enable {
+    networking = {
+      hostName = conf.hostname;
+      networkmanager.enable = true;
+
+      firewall = {
+        enable = helpers.isServer;
+
+        allowedTCPPorts = [
+          22
+          80
+          443
+        ]
+        ++ lib.optionals (helpers.hasIn "services" "postgresql") [
+          5432
+        ]
+        ++ lib.optionals (helpers.hasIn "services" "ms-sql") [
+          1433
+        ];
+
+        allowedUDPPorts = [ ];
+
+        allowPing = true;
+
+        interfaces = {
+          "lo" = {
+            allowedTCPPorts = [ ];
+            allowedUDPPorts = [ ];
+          };
+        };
+      };
+    };
+
+    boot.kernel.sysctl = lib.mkIf helpers.isServer {
+      # Enable BBR
+      "net.ipv4.tcp_fastopen" = 3;
+      "net.ipv4.tcp_congestion_control" = "bbr";
+      "net.core.default_qdisc" = "fq";
+      "net.ipv4.ip_forward" = 1;
+
+      # Защита от IP spoofing
+      #"net.ipv4.conf.all.rp_filter" = 1;
+      #"net.ipv4.conf.default.rp_filter" = 1;
+
+      # Игнорировать ICMP redirects
+      #"net.ipv4.conf.all.accept_redirects" = 0;
+      #"net.ipv4.conf.default.accept_redirects" = 0;
+      #"net.ipv4.conf.all.secure_redirects" = 0;
+      #"net.ipv4.conf.default.secure_redirects" = 0;
+      #"net.ipv6.conf.all.accept_redirects" = 0;
+      #"net.ipv6.conf.default.accept_redirects" = 0;
+
+      # Не отправлять ICMP redirects
+      #"net.ipv4.conf.all.send_redirects" = 0;
+      #"net.ipv4.conf.default.send_redirects" = 0;
+
+      # Игнорировать source routed packets
+      #"net.ipv4.conf.all.accept_source_route" = 0;
+      #"net.ipv4.conf.default.accept_source_route" = 0;
+      #"net.ipv6.conf.all.accept_source_route" = 0;
+      #"net.ipv6.conf.default.accept_source_route" = 0;
+
+      # Защита от SYN flood
+      #"net.ipv4.tcp_syncookies" = 1;
+      #"net.ipv4.tcp_syn_retries" = 2;
+      #"net.ipv4.tcp_synack_retries" = 2;
+      #"net.ipv4.tcp_max_syn_backlog" = 4096;
+
+      # Защита от TIME-WAIT assassination
+      #"net.ipv4.tcp_rfc1337" = 1;
+
+      # Логирование подозрительных пакетов
+      #"net.ipv4.conf.all.log_martians" = 1;
+      #"net.ipv4.conf.default.log_martians" = 1;
+
+      # Отключаем IPv6 (если не используется)
+      # "net.ipv6.conf.all.disable_ipv6" = 1;
+      # "net.ipv6.conf.default.disable_ipv6" = 1;
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/0-base/network.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/0-base/security.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "base" "security";
+in
+{
+  config = lib.mkIf enable {
+    security.sudo = {
+      enable = true;
+      execWheelOnly = !helpers.isServer;
+      wheelNeedsPassword = !helpers.isServer;
+      extraConfig = ''
+        Defaults timestamp_timeout=5
+        Defaults lecture="never"
+      '';
+    };
+
+    security.polkit.enable = true;
+
+    security.pam.loginLimits = [
+      {
+        domain = "*";
+        item = "nice";
+        type = "soft";
+        value = "-20";
+      }
+      {
+        domain = "*";
+        item = "nice";
+        type = "hard";
+        value = "-20";
+      }
+    ];
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/0-base/security.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./0-base
+    ./1-hardware
+    ./2-workspace
+    ./3-programs
+    ./4-services
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/1-hardware/sound.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "hardware" "sound";
+in
+{
+  config = lib.mkIf enable {
+    boot.kernelParams = [ "usbcore.autosuspend=-1" ];
+    security.rtkit.enable = true;
+    services.pipewire = {
+      enable = true;
+      jack.enable = true;
+      pulse.enable = true;
+
+      alsa = {
+        enable = true;
+        support32Bit = true;
+      };
+
+      extraConfig.pipewire."92-low-latency" = {
+        "context.properties" = {
+          "default.clock.rate" = 48000;
+          "default.clock.quantum" = 256;
+          "default.clock.min-quantum" = 256;
+          "default.clock.max-quantum" = 256;
+        };
+      };
+
+      wireplumber.extraConfig = {
+        "10-disable-camera" = {
+          "wireplumber.profiles" = {
+            main = {
+              "monitor.libcamera" = "disabled";
+            };
+          };
+        };
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/1-hardware/sound.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/1-hardware/bluetooth.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  pkgs,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "hardware" "bluetooth";
+in
+{
+  config = lib.mkIf enable {
+    hardware.bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+      package = pkgs.bluez;
+
+      settings = {
+        General = {
+          Enable = "Source,Sink,Media,Socket";
+          Experimental = true;
+        };
+      };
+    };
+
+    environment.systemPackages = with pkgs; [
+      bluez-tools
+    ];
+
+    services.blueman.enable = true;
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/1-hardware/bluetooth.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/1-hardware/peripherals.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "hardware" "keyboard-mouse";
+in
+{
+  config = lib.mkIf enable {
+    services.xserver.xkb = {
+      layout = "us,ru";
+      variant = "";
+      options = "grp:ctrl_shift_toggle";
+    };
+
+    console.keyMap = lib.mkDefault (lib.head (lib.splitString "," "us"));
+
+    services.libinput = {
+      enable = true;
+      mouse = {
+        accelProfile = "adaptive";
+        accelSpeed = "0.0";
+      };
+
+      touchpad = {
+        naturalScrolling = true;
+        tapping = true;
+        clickMethod = "clickfinger";
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/1-hardware/peripherals.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/1-hardware/power.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  pkgs,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "hardware" "power-management";
+
+  laptopTlpSettings = {
+    CPU_SCALING_GOVERNOR_ON_AC = "schedutil";
+    CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+    CPU_ENERGY_PERF_POLICY_ON_AC = "balance_power";
+    CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+
+    CPU_BOOST_ON_AC = 1;
+    CPU_BOOST_ON_BAT = 0;
+
+    CPU_MIN_PERF_ON_AC = 0;
+    CPU_MAX_PERF_ON_AC = 90;
+    CPU_MIN_PERF_ON_BAT = 0;
+    CPU_MAX_PERF_ON_BAT = 40;
+
+    #START_CHARGE_THRESH_BAT0 = 70;
+    STOP_CHARGE_THRESH_BAT0 = 0;
+
+    WIFI_PWR_ON_AC = "off";
+    WIFI_PWR_ON_BAT = "on";
+
+    SOUND_POWER_SAVE_ON_AC = 10;
+    SOUND_POWER_SAVE_ON_BAT = 1;
+
+    USB_AUTOSUSPEND = 1;
+    USB_BLACKLIST_BTUSB = 0;
+    USB_BLACKLIST_PHONE = 0;
+
+    #SATA_LINKPWR_ON_AC = "med_power_with_dipm";
+    #SATA_LINKPWR_ON_BAT = "min_power";
+
+    #PCIE_ASPM_ON_AC = "default";
+    #PCIE_ASPM_ON_BAT = "powersupersave";
+
+    #RUNTIME_PM_ON_AC = "auto";
+    #RUNTIME_PM_ON_BAT = "auto";
+
+    #RESTORE_DEVICE_STATE_ON_STARTUP = 0;
+    #DEVICES_TO_DISABLE_ON_STARTUP = "bluetooth wifi";
+    #DEVICES_TO_ENABLE_ON_STARTUP = "";
+  };
+
+  desktopTlpSettings = {
+    CPU_SCALING_GOVERNOR_ON_AC = "performance";
+    CPU_SCALING_GOVERNOR_ON_BAT = "performance";
+
+    CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+    CPU_ENERGY_PERF_POLICY_ON_BAT = "performance";
+
+    CPU_BOOST_ON_AC = 1;
+    CPU_BOOST_ON_BAT = 1;
+
+    CPU_MIN_PERF_ON_AC = 0;
+    CPU_MAX_PERF_ON_AC = 100;
+    CPU_MIN_PERF_ON_BAT = 0;
+    CPU_MAX_PERF_ON_BAT = 100;
+
+    WIFI_PWR_ON_AC = "off";
+    WIFI_PWR_ON_BAT = "off";
+
+    SOUND_POWER_SAVE_ON_AC = 0;
+    SOUND_POWER_SAVE_ON_BAT = 0;
+
+    USB_AUTOSUSPEND = 0;
+
+    #SATA_LINKPWR_ON_AC = "max_performance";
+    #SATA_LINKPWR_ON_BAT = "max_performance";
+
+    #PCIE_ASPM_ON_AC = "performance";
+    #PCIE_ASPM_ON_BAT = "performance";
+
+    #RUNTIME_PM_ON_AC = "on";
+    #RUNTIME_PM_ON_BAT = "on";
+  };
+
+  tlpSettings = if helpers.isLaptop then laptopTlpSettings else desktopTlpSettings;
+in
+{
+  config = lib.mkIf enable (
+    lib.mkMerge [
+      {
+        powerManagement = {
+          enable = true;
+          cpuFreqGovernor = if helpers.isLaptop then "schedutil" else "performance";
+          powertop.enable = helpers.isLaptop;
+        };
+
+        environment.systemPackages = with pkgs; [
+          powertop
+          acpi
+          tlp
+        ];
+      }
+
+      (lib.mkIf helpers.isLaptop {
+        services.tlp = {
+          enable = true;
+          settings = tlpSettings;
+        };
+
+        services.auto-cpufreq.enable = false;
+        services.power-profiles-daemon.enable = false;
+      })
+
+      (lib.mkIf helpers.isDesktop {
+        services.tlp = {
+          enable = true;
+          settings = tlpSettings;
+        };
+
+        services.auto-cpufreq.enable = false;
+        services.power-profiles-daemon.enable = false;
+      })
+    ]
+  );
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/1-hardware/power.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/1-hardware/amd.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  lib,
+  pkgs,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "hardware" "amd";
+in
+{
+  config = lib.mkIf enable {
+    boot.kernelParams = [
+      "amd_pstate=active"
+      "amdgpu.dcdebugmask=0x10"
+    ]
+    ++ lib.optionals helpers.isLaptop [
+      "processor.max_cstate=5"
+    ];
+
+    hardware = {
+      cpu.amd.updateMicrocode = true;
+      enableRedistributableFirmware = true;
+
+      graphics = {
+        enable = true;
+        enable32Bit = true;
+
+        extraPackages = with pkgs; [
+          mesa
+
+          #libva-mesa-driver
+          libva-utils
+
+          vulkan-loader
+          vulkan-validation-layers
+        ];
+      };
+    };
+
+    environment.systemPackages =
+      with pkgs;
+      [
+        libva-utils
+        vulkan-tools
+        vdpauinfo
+        clinfo
+      ]
+      ++ lib.optionals helpers.isLaptop [
+        ryzenadj
+        zenmonitor
+      ];
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/1-hardware/amd.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/1-hardware/intel.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  pkgs,
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "hardware" "intel";
+in
+{
+  config = lib.mkIf enable {
+    hardware.cpu.intel.updateMicrocode = true;
+
+    hardware.graphics = {
+      enable = true;
+      enable32Bit = true;
+
+      extraPackages = with pkgs; [
+        intel-gpu-tools
+        intel-media-driver
+        vaapiIntel
+        vaapiVdpau
+        libvdpau-va-gl
+        libva
+        vulkan-loader
+        vulkan-validation-layers
+      ];
+
+      extraPackages32 = with pkgs; [
+        intel-gpu-tools
+        intel-media-driver
+        vaapiIntel
+        vaapiVdpau
+        libvdpau-va-gl
+        libva
+      ];
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/1-hardware/intel.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/1-hardware/nvidia.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  config,
+  lib,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "hardware" "nvidia";
+in
+{
+  config = lib.mkIf enable {
+    services.xserver.videoDrivers = [ "nvidia" ];
+
+    hardware.nvidia = {
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      open = true;
+
+      nvidiaSettings = true;
+      modesetting.enable = true;
+
+      dynamicBoost.enable = false;
+      powerManagement.enable = false;
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/1-hardware/nvidia.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/1-hardware/default.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  imports = [
+    ./nvidia.nix
+    ./intel.nix
+    ./amd.nix
+    ./sound.nix
+    ./bluetooth.nix
+    ./power.nix
+    ./print.nix
+    ./peripherals.nix
+  ];
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/1-hardware/default.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/modules/nixos/1-hardware/print.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  config,
+  lib,
+  pkgs,
+  helpers,
+  ...
+}:
+let
+  enable = helpers.hasIn "hardware" "print";
+in
+{
+  config = lib.mkIf enable (
+    let
+      allUsers = builtins.attrNames config.users.users;
+      normalUsers = builtins.filter (user: config.users.users.${user}.isNormalUser) allUsers;
+    in
+    {
+      environment.systemPackages = with pkgs; [
+        gutenprint
+      ];
+
+      services.printing = {
+        enable = true;
+        startWhenNeeded = true;
+        drivers = with pkgs; [
+          #brgenml1cupswrapper
+          #brgenml1lpr
+          #brlaser
+          #cnijfilter2
+          #epkowa
+          #gutenprintBin unic
+          #hplip
+          #epson-escpr2
+          #epson-escpr
+          epson-201401w
+
+          #samsung-unified-linux-driver
+          #splix
+        ];
+      };
+
+      services.avahi = {
+        enable = false;
+        nssmdns4 = true;
+        openFirewall = true;
+      };
+
+      services.udev.packages = with pkgs; [
+        sane-airscan
+        utsushi
+      ];
+
+      hardware.sane = {
+        enable = true;
+        extraBackends = with pkgs; [
+          sane-airscan
+          epkowa
+          utsushi
+          epsonscan2
+        ];
+      };
+
+      programs.system-config-printer.enable = true;
+
+      users.groups.scanner.members = normalUsers;
+      users.groups.lp.members = normalUsers;
+    }
+  );
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/modules/nixos/1-hardware/print.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/hosts/server/disko.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  disko.devices = {
+    disk = {
+      main = {
+        type = "disk";
+        device = "/dev/sda";
+        content = {
+          type = "gpt";
+          partitions = {
+            boot = {
+              size = "1M";
+              type = "EF02";
+            };
+            ESP = {
+              size = "512M";
+              type = "EF00";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+              };
+            };
+            root = {
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/";
+                mountOptions = [
+                  "defaults"
+                ];
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/hosts/server/disko.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/hosts/server/home.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ conf, ... }:
+{
+  home = {
+    username = conf.username;
+    homeDirectory = "/home/${conf.username}";
+    stateVersion = "25.05";
+  };
+
+  programs.home-manager.enable = true;
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/hosts/server/home.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/hosts/server/hardware-configuration.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+# Do not modify this file!  It was generated by ‘nixos-generate-config’
+# and may be overwritten by future invocations.  Please make changes
+# to /etc/nixos/configuration.nix instead.
+{ config, lib, pkgs, modulesPath, ... }:
+
+{
+  imports =
+    [ (modulesPath + "/profiles/qemu-guest.nix")
+    ];
+
+  boot.initrd.availableKernelModules = [ "ahci" "uhci_hcd" "virtio_pci" "virtio_scsi" "sd_mod" ];
+  boot.initrd.kernelModules = [ ];
+  boot.kernelModules = [ "kvm-intel" ];
+  boot.extraModulePackages = [ ];
+
+  fileSystems."/" =
+    { device = "/dev/disk/by-uuid/52fa1b9a-346b-4da5-9f48-90d0eee665ae";
+      fsType = "ext4";
+    };
+
+  swapDevices = [ ];
+
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/hosts/server/hardware-configuration.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/hosts/server/configuration.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ lib, ... }:
+{
+  imports = [
+    ./hardware-configuration.nix
+  ];
+
+  services.dbus = {
+    enable = true;
+    implementation = "broker";
+  };
+
+  networking.useDHCP = lib.mkDefault true;
+  system.stateVersion = "25.05";
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/hosts/server/configuration.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/hosts/desktop/disko.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  disko.devices = {
+    disk = {
+      main = {
+        device = "/dev/nvme0n1";
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            ESP = {
+              type = "EF00";
+              size = "1G";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+              };
+            };
+            swap = {
+              size = "4G";
+              content = {
+                type = "swap";
+                resumeDevice = false;
+              };
+            };
+            root = {
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/";
+              };
+            };
+          };
+        };
+      };
+      data_btrfs = {
+        device = "/dev/sda";
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            btrfs_partition = {
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "btrfs";
+                mountpoint = "/mnt/disk";
+              };
+            };
+          };
+        };
+      };
+      data_ext4 = {
+        device = "/dev/sdb";
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            ext4_partition = {
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/mnt/storage";
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/hosts/desktop/disko.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/hosts/desktop/home.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ conf, ... }:
+{
+  home = {
+    username = conf.username;
+    homeDirectory = "/home/${conf.username}";
+    stateVersion = "25.05";
+  };
+
+  programs.home-manager.enable = true;
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/hosts/desktop/home.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/hosts/desktop/hardware-configuration.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+# Do not modify this file!  It was generated by ‘nixos-generate-config’
+# and may be overwritten by future invocations.  Please make changes
+# to /etc/nixos/configuration.nix instead.
+{ config, lib, pkgs, modulesPath, ... }:
+
+{
+  imports =
+    [ (modulesPath + "/installer/scan/not-detected.nix")
+    ];
+
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "usbhid" "sd_mod" ];
+  boot.initrd.kernelModules = [ ];
+  boot.kernelModules = [ "kvm-intel" ];
+  boot.extraModulePackages = [ ];
+
+  # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
+  # (the default) this is the recommended approach. When using systemd-networkd it's
+  # still possible to use this option, but it's recommended to use it in conjunction
+  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
+  networking.useDHCP = lib.mkDefault true;
+  # networking.interfaces.enp4s0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.wlo1.useDHCP = lib.mkDefault true;
+
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/hosts/desktop/hardware-configuration.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/hosts/desktop/configuration.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ ... }:
+{
+  imports = [
+    ./disko.nix
+    ./hardware-configuration.nix
+  ];
+
+  services.dbus = {
+    enable = true;
+    implementation = "broker";
+  };
+
+  programs.dconf.enable = true;
+  # programs.xfconf.enable = true;
+  system.stateVersion = "25.05";
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/hosts/desktop/configuration.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/hosts/laptop/disko.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{
+  disko.devices = {
+    disk = {
+      main = {
+        device = "/dev/nvme0n1";
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            ESP = {
+              type = "EF00";
+              size = "1G";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+              };
+            };
+            swap = {
+              size = "16G";
+              content = {
+                type = "swap";
+                randomEncryption = true;
+                resumeDevice = true;
+              };
+            };
+            root = {
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "btrfs";
+                mountpoint = "/";
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/hosts/laptop/disko.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/hosts/laptop/home.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ conf, ... }:
+{
+  home = {
+    username = conf.username;
+    homeDirectory = "/home/${conf.username}";
+    stateVersion = "25.05";
+  };
+
+  programs.home-manager.enable = true;
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/hosts/laptop/home.nix
+================================================
+
+
+================== BEGIN FILE ==================
+File: /home/user/nixos/hosts/laptop/configuration.nix
+Extension: .nix
+Date: 2025-10-25 01:41:07
+================================================
+
+{ ... }:
+{
+  imports = [
+    ./disko.nix
+    ./hardware-configuration.nix
+  ];
+
+  services.dbus = {
+    enable = true;
+    implementation = "broker";
+  };
+
+  programs.dconf.enable = true;
+  # programs.xfconf.enable = true;
+  system.stateVersion = "25.05";
+}
+
+=================== END FILE ===================
+File: /home/user/nixos/hosts/laptop/configuration.nix
+================================================
+
+

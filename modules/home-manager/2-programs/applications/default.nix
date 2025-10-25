@@ -6,6 +6,5 @@
     ./rclone.nix
     ./obs.nix
     ./zen-browser.nix
-    ./bottles.nix
   ];
 }

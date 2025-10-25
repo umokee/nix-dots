@@ -6,7 +6,6 @@
   ...
 }:
 let
-  enable = helpers.hasIn "workspace" "screenshots";
   directory = "${config.home.homeDirectory}/Pictures/Screenshots";
 
   selectedTool = if helpers.isWayland then "grim" else "maim";
@@ -28,7 +27,7 @@ let
   };
 in
 {
-  config = lib.mkIf enable (
+  config = lib.mkIf helpers.isWM (
     lib.mkMerge [
       (lib.mkIf helpers.isWayland {
         home.packages = [

@@ -44,8 +44,7 @@ let
     workspace = {
       enable = [
         "mangowc"
-        #"wallpapers"
-        "screenshots"
+        "wallpapers"
         "themes"
       ];
     };
@@ -61,6 +60,7 @@ let
     };
     services = {
       enable = [
+        "sing-box"
         "openssh"
         "gammastep"
         "virtual-machine"
@@ -90,7 +90,7 @@ let
     };
     workspace = {
       enable = [
-        "dwl"
+        "mangowc"
         "wallpapers"
         "themes"
       ];
@@ -105,6 +105,7 @@ let
     };
     services = {
       enable = [
+        "sing-box"
         "openssh"
         "sing-box"
         "brightnessctl"

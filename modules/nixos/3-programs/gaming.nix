@@ -19,9 +19,11 @@ in
 
       glxinfo
       heroic
-      #(bottles.override {
-      #  removeWarningPopup = true;
-      #})
+      (bottles.override {
+        removeWarningPopup = true;
+      })
+      vkd3d-proton
+      dxvk
       joystickwake
       mangohud
       #mesa
