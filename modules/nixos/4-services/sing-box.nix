@@ -28,7 +28,7 @@ let
 
   singboxSettings = {
     log = {
-      level = "info";
+      level = "warn";
       output = "box.log";
       timestamp = true;
     };
@@ -47,12 +47,16 @@ let
           detour = "proxy";
         }
         {
+          type = "udp";
+          tag = "dns-direct";
+          server = "8.8.8.8";
+        }
+        {
           type = "local";
           tag = "dns-local";
-          detour = "direct";
         }
       ];
-      final = "dns-local";
+      final = "dns-direct";
       reverse_mapping = true;
       rules = [
         {
@@ -138,7 +142,7 @@ let
     ];
     route = {
       default_domain_resolver = {
-        server = "dns-local";
+        server = "dns-direct";
       };
       auto_detect_interface = true;
       final = "direct";
@@ -146,6 +150,16 @@ let
         {
           protocol = "dns";
           action = "hijack-dns";
+        }
+        {
+          process_path_regex = [
+            ".*/mullvad-browser.*"
+            #".*/Tor.*"
+            ".*/bubblewrap.*/bwrap.*"
+            ".*/bottles-unwrapped.*/bin/.*bottles.*"
+            ".*/python3.*/bottles.*"
+          ];
+          outbound = "proxy";
         }
         {
           ip_is_private = true;
