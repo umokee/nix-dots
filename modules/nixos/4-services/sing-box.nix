@@ -153,11 +153,11 @@ let
         }
         {
           process_path_regex = [
-            ".*/mullvad-browser.*"
-            #".*/Tor.*"
-            "/nix/store/[^/]*/bin/python3.13"
-            "/nix/store/[^/]*/bin/bwrap"
-            ".*bottles.*"
+            "/nix/store/[^/]*/share/mullvad-browser/mullvadbrowser"
+
+            #"/nix/store/[^/]*/bin/python3.13"
+            #"/nix/store/[^/]*/bin/bwrap"
+            #".*bottles.*"
           ];
           outbound = "proxy";
         }
