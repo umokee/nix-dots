@@ -19,10 +19,10 @@
       transmission_4-gtk
       nemo
       xmind
-      #discord
       (termius.overrideAttrs (oldAttrs: {
         buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ sqlite ];
       }))
+      eclipses.eclipse-cpp
     ]
     ++ lib.optionals (helpers.hasIn "hardware" "sound") [
       pavucontrol

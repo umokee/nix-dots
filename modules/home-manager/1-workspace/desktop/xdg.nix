@@ -6,6 +6,10 @@
 }:
 {
   config = lib.mkIf helpers.isWM {
+    home.packages = with pkgs; [
+      xdg-utils
+    ];
+
     xdg.portal = {
       enable = true;
       xdgOpenUsePortal = true;

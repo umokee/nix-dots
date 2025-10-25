@@ -7,25 +7,53 @@
 let
   enable = helpers.hasIn "services" "sing-box";
 
+  rule_sets = {
+    antizapret = pkgs.fetchurl {
+      url = "https://github.com/savely-krasovsky/antizapret-sing-box/releases/latest/download/antizapret.srs";
+      sha256 = "sha256-rU9fW8VM+/hUrniQg9BBw7ZFMD+sY49GF4XTBdtnd64=";
+    };
+    refilter_domains = pkgs.fetchurl {
+      url = "https://github.com/1andrevich/Re-filter-lists/releases/latest/download/ruleset-domain-refilter_domains.srs";
+      sha256 = "sha256-wZJpqcz225XxFnXKs1kUAF+9UdcaDWQZWua5CQ4fSTw=";
+    };
+    refilter_ipsum = pkgs.fetchurl {
+      url = "https://github.com/1andrevich/Re-filter-lists/releases/latest/download/ruleset-ip-refilter_ipsum.srs";
+      sha256 = "sha256-Rt34UdnrYU5/kVak7PsNRq3BBY+A+DEPJtoFrrQI8Os=";
+    };
+    geoip-ru = pkgs.fetchurl {
+      url = "https://cdn.jsdelivr.net/gh/SagerNet/sing-geoip@rule-set/geoip-ru.srs";
+      sha256 = "sha256-pCwbEX/ltxaLTFgM26E6j1N4ANgl7isazbhTScewkw8=";
+    };
+  };
+
   singboxSettings = {
+    log = {
+      level = "info";
+      output = "box.log";
+      timestamp = true;
+    };
+    experimental = {
+      cache_file = {
+        enabled = true;
+        path = "cache.db";
+      };
+    };
     dns = {
       servers = [
         {
-          tag = "dns-remote";
-          address = "8.8.8.8";
+          type = "udp";
+          tag = "dns-proxy";
+          server = "1.1.1.1";
           detour = "proxy";
         }
         {
-          tag = "dns-direct";
-          address = "1.1.1.1";
-          detour = "direct";
-        }
-        {
+          type = "local";
           tag = "dns-local";
-          address = "local";
           detour = "direct";
         }
       ];
+      final = "dns-local";
+      reverse_mapping = true;
       rules = [
         {
           query_type = [
@@ -45,18 +73,18 @@ let
             "^(.+\\.)?twitchcdn\\.net$"
             "^(.+\\.)?jtvnw\\.net$"
           ];
-          server = "dns-remote";
+          action = "route";
+          server = "dns-proxy";
         }
         {
-          rule_set = "refilter_domains";
-          server = "dns-remote";
-        }
-        {
-          rule_set = "refilter_ipsum";
-          server = "dns-remote";
+          rule_set = [
+            "antizapret"
+            "refilter_domains"
+          ];
+          action = "route";
+          server = "dns-proxy";
         }
       ];
-      final = "dns-direct";
     };
     inbounds = [
       {
@@ -70,7 +98,7 @@ let
         sniff = true;
         sniff_override_destination = true;
         stack = "gvisor";
-        endpoint_independent_nat = true;
+        # endpoint_independent_nat = true;
       }
       {
         type = "socks";
@@ -78,11 +106,9 @@ let
         listen = "127.0.0.1";
         listen_port = 9050;
         sniff = true;
+        sniff_override_destination = true;
       }
     ];
-    log = {
-      level = "info";
-    };
     outbounds = [
       {
         type = "vless";
@@ -111,28 +137,33 @@ let
       }
     ];
     route = {
-      rule_set = [
-        {
-          tag = "refilter_domains";
-          type = "remote";
-          format = "binary";
-          url = "https://github.com/1andrevich/Re-filter-lists/releases/latest/download/ruleset-domain-refilter_domains.srs";
-          download_detour = "proxy";
-        }
-        {
-          tag = "refilter_ipsum";
-          type = "remote";
-          format = "binary";
-          url = "https://github.com/1andrevich/Re-filter-lists/releases/latest/download/ruleset-ip-refilter_ipsum.srs";
-          download_detour = "proxy";
-        }
-      ];
+      default_domain_resolver = {
+        server = "dns-local";
+      };
       auto_detect_interface = true;
       final = "direct";
       rules = [
         {
           protocol = "dns";
           action = "hijack-dns";
+        }
+        {
+          ip_is_private = true;
+          outbound = "direct";
+        }
+        {
+          ip_cidr = [
+            "224.0.0.0/3"
+            "ff00::/8"
+          ];
+          action = "reject";
+        }
+        {
+          source_ip_cidr = [
+            "224.0.0.0/3"
+            "ff00::/8"
+          ];
+          action = "reject";
         }
         {
           network = "udp";
@@ -151,22 +182,12 @@ let
           action = "reject";
         }
         {
-          ip_cidr = [
-            "224.0.0.0/3"
-            "ff00::/8"
-          ];
-          action = "reject";
-        }
-        {
-          source_ip_cidr = [
-            "224.0.0.0/3"
-            "ff00::/8"
-          ];
-          action = "reject";
-        }
-        {
           inbound = [ "socks" ];
           outbound = "proxy";
+        }
+        {
+          rule_set = [ "geoip-ru" ];
+          outbound = "direct";
         }
         {
           domain_regex = [
@@ -178,19 +199,40 @@ let
           outbound = "proxy";
         }
         {
-          rule_set = "refilter_domains";
-          outbound = "proxy";
-        }
-        {
-          rule_set = "refilter_ipsum";
+          rule_set = [
+            "antizapret"
+            "refilter_domains"
+            "refilter_ipsum"
+          ];
           outbound = "proxy";
         }
       ];
-    };
-    experimental = {
-      cache_file = {
-        enabled = true;
-      };
+      rule_set = [
+        {
+          tag = "antizapret";
+          type = "local";
+          format = "binary";
+          path = "${rule_sets.antizapret}";
+        }
+        {
+          tag = "refilter_domains";
+          type = "local";
+          format = "binary";
+          path = "${rule_sets.refilter_domains}";
+        }
+        {
+          tag = "refilter_ipsum";
+          type = "local";
+          format = "binary";
+          path = "${rule_sets.refilter_ipsum}";
+        }
+        {
+          tag = "geoip-ru";
+          type = "local";
+          format = "binary";
+          path = "${rule_sets.geoip-ru}";
+        }
+      ];
     };
   };
 
@@ -228,7 +270,7 @@ let
     unpackPhase = "true";
 
     buildPhase = ''
-      gcc $src -o singbox_wrapper
+      gcc $src -o singbox-wrapper
     '';
 
     installPhase = ''
@@ -249,7 +291,7 @@ in
       wantedBy = [ ]; # "multi-user.target"
       after = [ "network.target" ];
       serviceConfig = {
-        ExecStart = "${singboxWrapper}/bin/singbox_wrapper";
+        ExecStart = "${singboxWrapper}/bin/singbox-wrapper";
         Restart = "on-failure";
         RestartSec = 5;
         StandardOutput = "journal";
