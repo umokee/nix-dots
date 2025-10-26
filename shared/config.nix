@@ -15,7 +15,7 @@ let
       terminal = "foot";
       editor = "code";
       visual = "code";
-      browser = "zen-beta";
+      browser = "zen";
     };
   };
 
