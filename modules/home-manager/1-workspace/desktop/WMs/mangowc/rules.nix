@@ -18,15 +18,15 @@ let
       "9" = "tile";
     };
     "DP-4" = {
-      "1" = "vertical_scroller";
-      "2" = "vertical_scroller";
-      "3" = "vertical_scroller";
-      "4" = "vertical_scroller";
-      "5" = "vertical_scroller";
-      "6" = "vertical_scroller";
-      "7" = "vertical_scroller";
-      "8" = "vertical_scroller";
-      "9" = "vertical_scroller";
+      "1" = "scroller";
+      "2" = "scroller";
+      "3" = "scroller";
+      "4" = "scroller";
+      "5" = "scroller";
+      "6" = "vscroller";
+      "7" = "scroller";
+      "8" = "scroller";
+      "9" = "scroller";
     };
     "HDMI-A-5" = {
       "1" = "tile";

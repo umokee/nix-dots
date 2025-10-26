@@ -11,11 +11,19 @@ let
   wallpaper = wallpapers.${conf.wallpaperName} or wallpapers.backyard;
 in
 {
+  imports = [
+    inputs.zen-browser.homeModules.beta
+    # or inputs.zen-browser.homeModules.twilight
+    # or inputs.zen-browser.homeModules.twilight-official
+  ];
+
   config = {
     home.packages = [
       pkgs.pywalfox-native
-      inputs.zen-browser.packages.${pkgs.system}.default
+      #inputs.zen-browser.packages.${pkgs.system}.default
     ];
+
+    programs.zed-browser.enable = true;
 
     home.file.".zen/native-messaging-hosts/pywalfox.json".text = builtins.toJSON {
       name = "pywalfox";
