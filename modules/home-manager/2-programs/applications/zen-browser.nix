@@ -14,7 +14,7 @@ in
   config = {
     home.packages = [
       pkgs.pywalfox-native
-      inputs.zen-browser.packages.${pkgs.system}.specific
+      inputs.zen-browser.packages.${pkgs.system}.default
     ];
 
     home.file.".zen/native-messaging-hosts/pywalfox.json".text = builtins.toJSON {
