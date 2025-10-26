@@ -13,6 +13,10 @@
       userName = "umokee";
       userEmail = "hituaev@gmail.com";
 
+      extraConfig = {
+        init.defaultBranch = "main";
+      };
+
       ignores = [
         ".vscode/"
         ".idea/"
