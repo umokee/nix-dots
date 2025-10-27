@@ -40,6 +40,7 @@
         ])
         [
           dbgate
+          antares
         ]
     ++ lib.optionals (helpers.hasIn "services" "virtual-machine") [
       virt-manager

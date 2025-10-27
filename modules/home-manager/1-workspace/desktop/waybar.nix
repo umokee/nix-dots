@@ -14,6 +14,7 @@
 
     settings = {
       mainBar = {
+        output = [ "DP-3" "HDMI-A-5" ];
         layer = "top";
         position = "top";
         height = 30;
@@ -252,7 +253,7 @@
         }
 
         #tray {
-            background-color: @blu;
+            background-color: @bg;
         }
       '';
   };

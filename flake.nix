@@ -34,18 +34,13 @@
       system = "x86_64-linux";
       lib = nixpkgs.lib;
 
-      hosts = [
+      hostsWithHm = [
         "desktop"
         "laptop"
-        "server"
       ];
+      hosts = hostsWithHm ++ [ "server" ];
 
       wallpapers = import ./shared/wallpapers.nix;
-
-      commonPkgs = import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
 
       mkCommonArgs =
         hostname:
@@ -62,37 +57,61 @@
           helpers = import ./shared/helpers.nix { inherit lib conf; };
         };
 
+      getModules =
+        type:
+        let
+          moduleMap = {
+            nixos = [
+              inputs.disko.nixosModules.disko
+              inputs.chaotic.nixosModules.default
+              inputs.mango.nixosModules.mango
+              { nixpkgs.config.allowUnfree = true; }
+              ./modules/nixos
+            ];
+
+            home = [
+              inputs.nix-colors.homeManagerModules.default
+              inputs.mango.hmModules.mango
+              { colorScheme = inputs.nix-colors.colorSchemes.ayu-dark; }
+              ./modules/home-manager
+            ];
+          };
+        in
+        moduleMap.${type};
+
+      mkHomeManagerModule = commonArgs: {
+        home-manager = {
+          useGlobalPkgs = true;
+          useUserPackages = true;
+          backupFileExtension = "backup";
+          extraSpecialArgs = commonArgs;
+
+          users.${commonArgs.conf.username} = {
+            imports = (getModules "home") ++ [ ./hosts/${commonArgs.conf.hostname}/home.nix ];
+          };
+        };
+      };
+
       mkNixosSystem =
         hostname:
+        let
+          commonArgs = mkCommonArgs hostname;
+        in
         lib.nixosSystem {
           inherit system;
-          specialArgs = mkCommonArgs hostname;
-          modules = [
-            inputs.disko.nixosModules.disko
-            inputs.chaotic.nixosModules.default
-            inputs.mango.nixosModules.mango
-            { nixpkgs.config.allowUnfree = true; }
-            ./modules/nixos
-            ./hosts/${hostname}/configuration.nix
-          ];
-        };
-
-      mkHomeConfiguration =
-        hostname:
-        home-manager.lib.homeManagerConfiguration {
-          pkgs = commonPkgs;
-          extraSpecialArgs = mkCommonArgs hostname;
-          modules = [
-            inputs.nix-colors.homeManagerModules.default
-            inputs.mango.hmModules.mango
-            { colorScheme = inputs.nix-colors.colorSchemes.ayu-dark; }
-            ./modules/home-manager
-            ./hosts/${hostname}/home.nix
-          ];
+          specialArgs = commonArgs;
+          modules =
+            (getModules "nixos")
+            ++ [
+              ./hosts/${hostname}/configuration.nix
+            ]
+            ++ lib.optionals (builtins.elem hostname hostsWithHm) [
+              home-manager.nixosModules.home-manager
+              (mkHomeManagerModule commonArgs)
+            ];
         };
     in
     {
       nixosConfigurations = lib.genAttrs hosts mkNixosSystem;
-      homeConfigurations = lib.genAttrs hosts mkHomeConfiguration;
     };
 }

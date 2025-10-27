@@ -7,9 +7,7 @@
     shellAliases = {
       ns-desktop = "sudo nixos-rebuild switch --flake ~/nixos#desktop";
       ns-laptop = "sudo nixos-rebuild switch --flake ~/nixos#laptop";
-      hs-desktop = "home-manager switch --flake ~/nixos#desktop -b backup";
-      hs-laptop = "home-manager switch --flake ~/nixos#laptop -b backup";
-      rebuild-server = "nixos-rebuild switch --flake ~/nixos#server --target-host user@185.223.169.86 -sudo";
+      ns-server = "nixos-rebuild switch --flake ~/nixos#server --target-host user@185.223.169.86 -sudo";
       nc = "sudo nix-collect-garbage -d";
       hc = "nix-collect-garbage -d";
       gc = "git add . && git commit -m";

@@ -12,7 +12,6 @@ in
   config = lib.mkIf enable {
     home.file.".config/mango/binds.conf".text = ''
       bind=${mainBtn}+SHIFT,R,reload_config
-      bind=${mainBtn},r,reset_layout
       bind=${mainBtn},m,quit
 
       bind=${mainBtn},a,spawn,${pkgs.tofi}/bin/tofi-drun --drun-launch=true
@@ -23,10 +22,10 @@ in
 
       bind=${mainBtn},Tab,focusstack,next
 
-      bind=${mainBtn}+SHIFT,k,exchange_client,up
-      bind=${mainBtn}+SHIFT,j,exchange_client,down
-      bind=${mainBtn}+SHIFT,h,exchange_client,left
-      bind=${mainBtn}+SHIFT,l,exchange_client,right
+      bind=${mainBtn}+SHIFT,K,exchange_client,up
+      bind=${mainBtn}+SHIFT,J,exchange_client,down
+      bind=${mainBtn}+SHIFT,H,exchange_client,left
+      bind=${mainBtn}+SHIFT,L,exchange_client,right
 
       bind=${mainBtn},g,toggleglobal,
       bind=${mainBtn}+SHIFT,Tab,toggleoverview,
