@@ -79,7 +79,7 @@
         in
         moduleMap.${type};
 
-      mkHomeManagerModule = commonArgs: {
+      mkHomeManagerModule = hostname: commonArgs: {
         home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
@@ -87,7 +87,7 @@
           extraSpecialArgs = commonArgs;
 
           users.${commonArgs.conf.username} = {
-            imports = (getModules "home") ++ [ ./hosts/${commonArgs.conf.hostname}/home.nix ];
+            imports = (getModules "home") ++ [ ./hosts/${hostname}/home.nix ];
           };
         };
       };
@@ -107,7 +107,7 @@
             ]
             ++ lib.optionals (builtins.elem hostname hostsWithHm) [
               home-manager.nixosModules.home-manager
-              (mkHomeManagerModule commonArgs)
+              (mkHomeManagerModule hostname commonArgs)
             ];
         };
     in

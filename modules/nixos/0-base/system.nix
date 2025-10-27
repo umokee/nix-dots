@@ -64,7 +64,7 @@ in
 
         optimise = {
           automatic = true;
-          dates = [ "03:00" ];
+          dates = [ "weekly" ];
         };
       };
 
