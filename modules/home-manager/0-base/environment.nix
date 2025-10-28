@@ -1,5 +1,6 @@
 {
   conf,
+  pkgs,
   ...
 }:
 {
@@ -14,6 +15,7 @@
       EDITOR = conf.default.editor;
       VISUAL = conf.default.visual;
       BROWSER = conf.default.browser;
+      XDG_DATA_DIRS = "$XDG_DATA_DIRS:${pkgs.gsettings-desktop-schemas}/share:${pkgs.gtk3}/share";
     };
   };
 }

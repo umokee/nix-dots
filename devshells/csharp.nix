@@ -9,7 +9,7 @@ pkgs.mkShell {
   
   buildInputs = with pkgs; [
     # .NET SDK
-    dotnet-sdk_8
+    dotnet-sdk_9
     
     # GUI библиотеки
     gtk3
@@ -52,16 +52,5 @@ pkgs.mkShell {
     export LD_LIBRARY_PATH="${pkgs.fontconfig.lib}/lib:${pkgs.libGL}/lib:$LD_LIBRARY_PATH"
     
     echo "# C# Dev Environment"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "📦 .NET SDK: $(dotnet --version)"
-    echo "🖼️  GUI: GTK, Avalonia UI"
-    echo "🔧 Tools: OmniSharp, NetCoreDbg"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "Команды:"
-    echo "  dotnet new console -n MyApp    # Создать консольное приложение"
-    echo "  dotnet new avalonia.app -n GUI # Создать Avalonia UI приложение"
-    echo "  dotnet run                      # Запустить проект"
-    echo ""
   '';
 }
