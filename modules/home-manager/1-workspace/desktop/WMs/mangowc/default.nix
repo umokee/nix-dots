@@ -33,7 +33,7 @@ in
 
         shadows = 0
         layer_shadows = 0
-        shadow_only_ing = 1
+        shadow_only_floating = 1
         shadows_size = 10
         shadows_blur = 15
         shadows_position_x = 0

@@ -6,6 +6,7 @@
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     nix-colors.url = "github:misterio77/nix-colors";
     mango.url = "github:DreamMaoMao/mango";
+    nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -33,6 +34,7 @@
     let
       system = "x86_64-linux";
       lib = nixpkgs.lib;
+      pkgs = nixpkgs.legacyPackages.${system};
 
       hostsWithHm = [
         "desktop"
@@ -70,8 +72,8 @@
             ];
 
             home = [
-              inputs.nix-colors.homeManagerModules.default
               inputs.mango.hmModules.mango
+              inputs.nix-colors.homeManagerModules.default
               { colorScheme = inputs.nix-colors.colorSchemes.ayu-dark; }
               ./modules/home-manager
             ];
@@ -83,11 +85,13 @@
         home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
-          backupFileExtension = "backup";
+          backupFileExtension = "backupHM-" + builtins.substring 0 8 (builtins.hashString "sha256" hostname);
           extraSpecialArgs = commonArgs;
 
           users.${commonArgs.conf.username} = {
-            imports = (getModules "home") ++ [ ./hosts/${hostname}/home.nix ];
+            imports = (getModules "home") ++ [
+              ./hosts/${hostname}/home.nix
+            ];
           };
         };
       };
@@ -113,5 +117,10 @@
     in
     {
       nixosConfigurations = lib.genAttrs hosts mkNixosSystem;
+
+      devShells.${system} = {
+        python = import ./devshells/python.nix { inherit pkgs; };
+        csharp = import ./devshells/csharp.nix { inherit pkgs; };
+      };
     };
 }

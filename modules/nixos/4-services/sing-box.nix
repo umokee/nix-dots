@@ -76,6 +76,15 @@ let
             "^(.+\\.)?ttvnw\\.net$"
             "^(.+\\.)?twitchcdn\\.net$"
             "^(.+\\.)?jtvnw\\.net$"
+
+            "^(.+\\.)?sheets\\.google\\.com$"
+            "^(.+\\.)?docs\\.google\\.com$"
+            "^(.+\\.)?drive\\.google\\.com$"
+            "^(.+\\.)?accounts\\.google\\.com$"
+            "^(.+\\.)?apis\\.google\\.com$"
+            "^(.+\\.)?googleapis\\.com$"
+            "^(.+\\.)?googleusercontent\\.com$"
+            "^(.+\\.)?gstatic\\.com$"
           ];
           action = "route";
           server = "dns-proxy";
@@ -208,6 +217,16 @@ let
             "^(.+\\.)?ttvnw\\.net$"
             "^(.+\\.)?twitchcdn\\.net$"
             "^(.+\\.)?jtvnw\\.net$"
+
+            "^(.+\\.)?sheets\\.google\\.com$"
+            "^(.+\\.)?forms\\.google\\.com$"
+            "^(.+\\.)?docs\\.google\\.com$"
+            "^(.+\\.)?drive\\.google\\.com$"
+            "^(.+\\.)?accounts\\.google\\.com$"
+            "^(.+\\.)?apis\\.google\\.com$"
+            "^(.+\\.)?googleapis\\.com$"
+            "^(.+\\.)?googleusercontent\\.com$"
+            "^(.+\\.)?gstatic\\.com$"
           ];
           outbound = "proxy";
         }

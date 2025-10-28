@@ -19,6 +19,7 @@ in
       bind=${mainBtn},w,spawn,zen
       bind=${mainBtn},e,spawn,nemo
       bind=${mainBtn}+SHIFT,S,spawn,screenshot-tool area
+      bind=${mainBtn},b,spawn_shell,pkill waybar || waybar &
 
       bind=${mainBtn},Tab,focusstack,next
 

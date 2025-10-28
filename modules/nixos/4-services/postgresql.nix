@@ -49,6 +49,7 @@ in
 
     environment.systemPackages = with pkgs; [
       postgresql
+      pgadmin4-desktopmode
     ];
   };
 }

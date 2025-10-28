@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 let
   vscode = pkgs.vscode.overrideAttrs (oldAttrs: {
     buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ pkgs.makeWrapper ];
@@ -9,12 +14,18 @@ let
         --add-flags "--disable-gpu"
     '';
   });
+
+  pkgsWithOverlay = import pkgs.path {
+    system = pkgs.system;
+    overlays = [ inputs.nix-vscode-extensions.overlays.default ];
+    config = pkgs.config;
+  };
 in
 {
   programs.vscode = {
     enable = true;
     package = vscode;
-    mutableExtensionsDir = true;
+    #mutableExtensionsDir = true;
 
     profiles.default = {
       userSettings = {
@@ -156,46 +167,46 @@ in
           key = "alt+t";
           command = "workbench.action.terminal.toggleTerminal";
         }
-
-        # ===== ДОПОЛНИТЕЛЬНЫЕ ПОЛЕЗНЫЕ БИНДИНГИ =====
-
-        # Debug панель
         {
           key = "ctrl+5";
           command = "workbench.view.debug";
         }
-        # Search панель
         {
           key = "ctrl+6";
           command = "workbench.view.search";
         }
-
-        # Скрыть/показать боковую панель
         {
           key = "ctrl+b";
           command = "workbench.action.toggleSidebarVisibility";
         }
-
-        # Скрыть/показать панель (где терминал)
         {
           key = "ctrl+j";
           command = "workbench.action.togglePanel";
         }
       ];
+
+      extensions = with pkgsWithOverlay.vscode-marketplace-release; [
+        ms-python.autopep8
+        jnoortheen.nix-ide
+        usernamehw.errorlens
+        beardedbear.beardedicons
+        tintedtheming.base16-tinted-themes
+        ms-python.python
+      ];
     };
   };
 
-  home.activation.makeVSCodeConfigWritable =
-    let
-      configPath = "${config.xdg.configHome}/Code/User/settings.json";
-    in
-    {
-      after = [ "writeBoundary" ];
-      before = [ ];
-      data = ''
-        if [ -L ${configPath} ]; then
-          install -m 0640 "$(readlink ${configPath})" ${configPath}
-        fi
-      '';
-    };
+  #home.activation.makeVSCodeConfigWritable =
+  #  let
+  #    configPath = "${config.xdg.configHome}/Code/User/settings.json";
+  #  in
+  #  {
+  #    after = [ "writeBoundary" ];
+  #    before = [ ];
+  #    data = ''
+  #      if [ -L ${configPath} ]; then
+  #        install -m 0640 "$(readlink ${configPath})" ${configPath}
+  #      fi
+  #    '';
+  #  };
 }
