@@ -14,7 +14,7 @@ in
     systemd.user.services.brightness = {
       description = "Set screen brightness";
       wantedBy = [ "graphical-session.target" ];
-      after = [ "graphical-session.target" ];
+      #after = [ "graphical-session.target" ];
 
       serviceConfig = {
         Type = "oneshot";
