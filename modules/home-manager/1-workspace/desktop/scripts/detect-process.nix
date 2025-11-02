@@ -119,20 +119,6 @@
         done
         echo ""
 
-        # Дополнительная информация
-        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        echo "💡 Рекомендации:"
-        echo ""
-        echo "1. Скопируйте блок process_path_regex выше"
-        echo "2. Вставьте его в начало секции route.rules"
-        echo "3. Перезапустите sing-box:"
-        echo "   sudo nixos-rebuild switch"
-        echo "   sudo systemctl restart singbox-wrapper"
-        echo ""
-        echo "4. Проверьте логи:"
-        echo "   journalctl -u singbox-wrapper -f | grep -i $PROCESS_NAME"
-        echo ""
-
         # Создаём полный пример конфига
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         echo "📄 Полный пример для NixOS конфига:"

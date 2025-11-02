@@ -41,21 +41,30 @@ let
     dns = {
       servers = [
         {
-          type = "udp";
+          type = "https";
           tag = "dns-proxy";
           server = "1.1.1.1";
+          server_port = 443;
+          path = "/dns-query";
           detour = "proxy";
         }
         {
-          type = "udp";
+          type = "https";
           tag = "dns-direct";
           server = "8.8.8.8";
+          server_port = 443;
+          path = "/dns-query";
         }
         {
           type = "local";
           tag = "dns-local";
+          detour = "direct";
         }
       ];
+      disable_cache = false;
+      disable_expire = false;
+      independent_cache = true;
+      strategy = "ipv4_only";
       final = "dns-direct";
       reverse_mapping = true;
       rules = [
@@ -107,11 +116,9 @@ let
         address = [ "172.19.0.1/28" ];
         mtu = 1500;
         auto_route = true;
-        strict_route = false;
+        strict_route = true;
         sniff = true;
-        sniff_override_destination = true;
-        stack = "gvisor";
-        # endpoint_independent_nat = true;
+        stack = "mixed";
       }
       {
         type = "socks";
@@ -119,7 +126,6 @@ let
         listen = "127.0.0.1";
         listen_port = 9050;
         sniff = true;
-        sniff_override_destination = true;
       }
     ];
     outbounds = [
@@ -163,9 +169,6 @@ let
         {
           process_path_regex = [
             "/nix/store/[^/]*/share/mullvad-browser/mullvadbrowser"
-
-            #"/nix/store/[^/]*/bin/python3.13"
-            #"/nix/store/[^/]*/bin/bwrap"
           ];
           outbound = "proxy";
         }
@@ -227,6 +230,8 @@ let
             "^(.+\\.)?googleapis\\.com$"
             "^(.+\\.)?googleusercontent\\.com$"
             "^(.+\\.)?gstatic\\.com$"
+            "^(.+\\.)?gnusenpai\\.net$"
+            "^(.+\\.)?typingstudy\\.com$"
           ];
           outbound = "proxy";
         }

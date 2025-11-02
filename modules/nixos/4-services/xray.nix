@@ -18,8 +18,8 @@ in
         inbounds = [
           {
             tag = "vless-in";
-            listen = "127.0.0.1";
-            port = 8443;
+            listen = "0.0.0.0";
+            port = 443;
             protocol = "vless";
             settings = {
               clients = [
@@ -42,13 +42,27 @@ in
                 dest = "github.com:443";
                 xver = 0;
                 serverNames = [
-                  "github.com"
                   "www.github.com"
+                  "github.com"
                 ];
                 privateKey = "SBE7KNctHSGVO4Yk5p0mP1IwS5qEd3xd_-4SjPh_iEQ";
                 shortIds = [
                   "1d0702eb71b9b044"
                 ];
+              };
+              tcpSettings = {
+                acceptProxyProtocol = false;
+                header = {
+                  type = "none";
+                };
+              };
+              sockopt = {
+                tcpKeepAliveInterval = 30;
+                tcpKeepAliveIdle = 300;
+                tcpCongestion = "bbr";
+                tcpNoDelay = true;
+                tcpFastOpen = true;
+                mark = 255;
               };
             };
             sniffing = {
@@ -58,6 +72,7 @@ in
                 "tls"
                 "quic"
               ];
+              routeOnly = true;
             };
           }
         ];

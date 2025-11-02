@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-REPO_URL="https://github.com/umokee/nixos.git"
+REPO_URL="https://github.com/umokee/nix-dots.git"
 CONFIG_DIR="/tmp/nixos-config"
 SELECTED_HOST=""
 
@@ -48,9 +48,15 @@ if [[ ! -f "flake.nix" ]]; then
   exit 1
 fi
 
-mapfile -t HOSTS < <(grep -A 20 'hostsMetadata = {' flake.nix | \
-  grep 'hostname = "' | \
-  sed 's/.*hostname = "\(.*\)".*/\1/')
+mapfile -t HOSTS < <(grep -A 3 'hostsWithHm = \[' flake.nix | \
+  grep -oP '"\\K[^"]+' | head -2; \
+  grep -A 1 'hosts = hostsWithHm' flake.nix | \
+  grep -oP '"\\K[^"]+' | tail -1)
+
+if [[ ${#HOSTS[@]} -eq 0 ]]; then
+  echo "Extracting hosts from hosts/ directory..."
+  mapfile -t HOSTS < <(find hosts -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | sort)
+fi
 
 if [[ ${#HOSTS[@]} -eq 0 ]]; then
   echo "❌ No hosts found in configuration"
@@ -61,9 +67,10 @@ echo "Available hosts:"
 for i in "${!HOSTS[@]}"; do
   HOST="${HOSTS[$i]}"
   
-  MACHINE_TYPE=$(grep -A 5 "\"$HOST\"" flake.nix | \
-    grep 'machineType' | \
-    sed 's/.*machineType = "\(.*\)".*/\1/' || echo "unknown")
+  MACHINE_TYPE="unknown"
+  if grep -q "\"$HOST\"" shared/config.nix 2>/dev/null; then
+    MACHINE_TYPE="$HOST"
+  fi
   
   echo "  [$((i+1))] $HOST ($MACHINE_TYPE)"
   
@@ -75,6 +82,10 @@ for i in "${!HOSTS[@]}"; do
   
   if [[ -f "hosts/$HOST/configuration.nix" ]]; then
     echo "      ✓ NixOS configuration"
+  fi
+  
+  if [[ -f "hosts/$HOST/home.nix" ]]; then
+    echo "      ✓ home-manager configuration"
   fi
 done
 echo
@@ -149,7 +160,7 @@ echo
 echo "✓ NixOS installation completed!"
 echo
 
-USERNAME=$(grep 'username = ' shared/config.nix | head -1 | sed 's/.*username = "\(.*\)".*/\1/' || echo "user")
+USERNAME=$(grep 'username = ' shared/config.nix | head -1 | sed 's/.*username = "\\(.*\\)".*/\\1/' || echo "user")
 
 echo "================================"
 echo "   Installation Summary"

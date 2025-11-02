@@ -23,6 +23,7 @@
         buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ sqlite ];
       }))
       eclipses.eclipse-cpp
+      vial
     ]
     ++ lib.optionals (helpers.hasIn "hardware" "sound") [
       pavucontrol

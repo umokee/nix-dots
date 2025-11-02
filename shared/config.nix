@@ -137,7 +137,6 @@ let
       enable = [
         "openssh"
         "xray"
-        "traefik"
         "fail2ban"
       ];
     };

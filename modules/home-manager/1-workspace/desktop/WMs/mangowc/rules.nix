@@ -95,7 +95,7 @@ in
       windowrule=isfloating:1,offsetx:45,offsety:45,width:400,height:300,isoverlay:1,title:Picture(-| )in(-| )[Pp]icture
 
       # Steam rules
-      windowrule=isfloating:1,no_force_center:0,title:Friends List,appid:steam
+      windowrule=isfloating:1,no_force_center:0,title:(Friends List|Steam Settings),appid:steam
       windowrule=appid:steam_app_[0-9]+
 
       # ATLauncher

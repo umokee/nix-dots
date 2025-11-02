@@ -16,6 +16,11 @@
     ffmpegthumbnailer
     gftp
 
+    glib
+    gsettings-desktop-schemas
+    gtk3
+    dconf
+
     arj
     lha
     lrzip
