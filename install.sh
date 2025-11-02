@@ -168,25 +168,26 @@ echo "================================"
 echo "Host: $SELECTED_HOST"
 echo "Username: $USERNAME"
 echo
-echo "Next steps:"
-echo "  1. Set password for $USERNAME:"
-echo "     sudo nixos-enter --root /mnt -c 'passwd $USERNAME'"
+echo "Setting password for $USERNAME..."
+if ! sudo nixos-enter --root /mnt -c "passwd $USERNAME"; then
+  echo "❌ Failed to set password for $USERNAME"
+  echo "You can set it manually after reboot with: passwd"
+fi
 echo
-echo "  2. Reboot into new system:"
-echo "     sudo reboot"
+
+echo "Setting password for root..."
+if ! sudo nixos-enter --root /mnt -c "passwd root"; then
+  echo "❌ Failed to set password for root"
+  echo "You can set it manually after reboot"
+fi
 echo
+
+echo "================================"
 echo "After first boot:"
 echo "  - Your dotfiles are at: ~/nixos"
 echo "  - Rebuild system: sudo nixos-rebuild switch --flake ~/nixos#$SELECTED_HOST"
 echo "  - Update home-manager: home-manager switch --flake ~/nixos#$SELECTED_HOST"
 echo "================================"
-echo
-
-read -p "Set password for $USERNAME now? (y/N): " SET_PASS
-if [[ "$SET_PASS" =~ ^[Yy]$ ]]; then
-  echo "Enter password for $USERNAME:"
-  sudo nixos-enter --root /mnt -c "passwd $USERNAME"
-fi
 echo
 
 read -p "Reboot now? (y/N): " REBOOT_NOW
