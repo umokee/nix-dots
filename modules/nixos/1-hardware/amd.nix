@@ -9,13 +9,6 @@ let
 in
 {
   config = lib.mkIf enable {
-    boot.blacklistedKernelModules = [ ];
-
-    environment.variables = {
-      # Отключи Intel иначе Mango найдёт его вместо AMD
-      LIBGL_DRIVERS_PATH = "/run/opengl-driver/lib:/run/opengl-driver-32/lib";
-    };
-
     boot.kernelParams = [
       "amd_pstate=active"
       "amdgpu.dcdebugmask=0x10"
@@ -48,6 +41,8 @@ in
       LIBVA_DRIVER_NAME = "radeonsi";
       VDPAU_DRIVER = "radeonsi";
       MESA_DRIVER_OVERRIDE = "radeonsi";
+      MESA_LOADER_DRIVER_OVERRIDE = "radeonsi";
+      GL_DRIVER_PATH = "${pkgs.mesa}/lib/dri";
     };
 
     environment.systemPackages =
