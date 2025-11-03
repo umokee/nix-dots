@@ -12,26 +12,41 @@ in
   config = lib.mkMerge [
     (lib.mkIf enable {
       time.hardwareClockInLocalTime = true;
+      /*
+        hardware.graphics = {
+          enable = true;
+          enable32Bit = true;
+          extraPackages = with pkgs; [
+            intel-gpu-tools
+            intel-media-driver
+            vaapiIntel
+            vaapiVdpau
+            libvdpau-va-gl
+            libva
+            vulkan-loader
+            vulkan-validation-layers
+          ];
+          extraPackages32 = with pkgs; [
+            intel-gpu-tools
+            intel-media-driver
+            vaapiIntel
+            vaapiVdpau
+            libvdpau-va-gl
+            libva
+          ];
+        };
+      */
 
       hardware.graphics = {
         enable = true;
         enable32Bit = true;
         extraPackages = with pkgs; [
-          intel-gpu-tools
-          intel-media-driver
-          vaapiIntel
-          vaapiVdpau
-          libvdpau-va-gl
-          libva
           vulkan-loader
           vulkan-validation-layers
+          libva
         ];
         extraPackages32 = with pkgs; [
-          intel-gpu-tools
-          intel-media-driver
-          vaapiIntel
-          vaapiVdpau
-          libvdpau-va-gl
+          vulkan-loader
           libva
         ];
       };
