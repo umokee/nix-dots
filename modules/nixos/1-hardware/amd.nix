@@ -17,6 +17,8 @@ in
       "processor.max_cstate=5"
     ];
 
+    services.xserver.videoDrivers = [ "amdgpu" ];
+
     hardware = {
       cpu.amd.updateMicrocode = true;
       enableRedistributableFirmware = true;
@@ -38,11 +40,9 @@ in
     };
 
     environment.sessionVariables = {
+      MESA_LOADER_DRIVER_OVERRIDE = "radeonsi";
       LIBVA_DRIVER_NAME = "radeonsi";
       VDPAU_DRIVER = "radeonsi";
-      MESA_DRIVER_OVERRIDE = "radeonsi";
-      MESA_LOADER_DRIVER_OVERRIDE = "radeonsi";
-      GL_DRIVER_PATH = "${pkgs.mesa}/lib/dri";
     };
 
     environment.systemPackages =

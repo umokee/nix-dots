@@ -37,9 +37,9 @@
         LIBVA_DRIVER_NAME = "iHD";
       })
 
-      (lib.mkIf (!helpers.hasNvidia && helpers.hasAMD) {
-        LIBVA_DRIVER_NAME = "radeonsi";
-      })
+      #(lib.mkIf (!helpers.hasNvidia && helpers.hasAMD) {
+      #  LIBVA_DRIVER_NAME = "radeonsi";
+      #})
     ];
   };
 }
