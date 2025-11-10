@@ -12,5 +12,6 @@
     ./fail2ban.nix
     ./xray.nix
     ./traefik.nix
+    ./mongodb.nix
   ];
 }

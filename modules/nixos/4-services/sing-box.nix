@@ -94,6 +94,8 @@ let
             "^(.+\\.)?googleapis\\.com$"
             "^(.+\\.)?googleusercontent\\.com$"
             "^(.+\\.)?gstatic\\.com$"
+            "^(.+\\.)?vercel\\.com$"
+            "^(.+\\.)?v0\\.app$"
           ];
           action = "route";
           server = "dns-proxy";
@@ -232,6 +234,8 @@ let
             "^(.+\\.)?gstatic\\.com$"
             "^(.+\\.)?gnusenpai\\.net$"
             "^(.+\\.)?typingstudy\\.com$"
+            "^(.+\\.)?typingclub\\.com$"
+            "^(.+\\.)?typing\\.com$"
           ];
           outbound = "proxy";
         }

@@ -62,6 +62,7 @@ let
       enable = [
         "sing-box"
         "openssh"
+        "postgresql"
         "gammastep"
         "virtual-machine"
         "print"

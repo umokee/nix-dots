@@ -87,7 +87,7 @@ in
         repeat_rate=50
         repeat_delay=300
         numlockon=0
-        xkb_rules_layout=us,ru
+        xkb_rules_layout=us,ru-custom
         xkb_rules_options=grp:ctrl_shift_toggle
 
         # Trackpad

@@ -22,8 +22,11 @@
       (termius.overrideAttrs (oldAttrs: {
         buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ sqlite ];
       }))
-      eclipses.eclipse-cpp
       vial
+      neovim
+      drawio
+      discord
+      claude-code
     ]
     ++ lib.optionals (helpers.hasIn "hardware" "sound") [
       pavucontrol
@@ -41,7 +44,6 @@
         ])
         [
           dbgate
-          antares
         ]
     ++ lib.optionals (helpers.hasIn "services" "virtual-machine") [
       virt-manager
