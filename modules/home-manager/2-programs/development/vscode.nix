@@ -192,6 +192,7 @@ in
         beardedbear.beardedicons
         tintedtheming.base16-tinted-themes
         ms-python.python
+        vue.volar
       ];
     };
   };

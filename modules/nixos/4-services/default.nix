@@ -13,5 +13,6 @@
     ./xray.nix
     ./traefik.nix
     ./mongodb.nix
+    ./ollama.nix
   ];
 }

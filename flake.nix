@@ -7,6 +7,7 @@
     nix-colors.url = "github:misterio77/nix-colors";
     mango.url = "github:DreamMaoMao/mango";
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
+    
 
     home-manager = {
       url = "github:nix-community/home-manager";

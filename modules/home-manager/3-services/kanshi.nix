@@ -17,19 +17,19 @@
               criteria = "DP-3";
               mode = "2560x1440@165Hz";
               position = "0,0";
-              scale = 1.0;
+              scale = 1.25;
             }
             {
               criteria = "DP-4";
               mode = "1920x1080@100Hz";
               transform = "270";
-              position = "2560,0";
+              position = "2048,0";
               scale = 1.0;
             }
             {
               criteria = "HDMI-A-5";
               mode = "1920x1080@60Hz";
-              position = "1024,1440";
+              position = "512,1152";
               scale = 1.25;
             }
           ];
