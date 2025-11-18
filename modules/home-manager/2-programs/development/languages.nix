@@ -24,6 +24,9 @@ in
       nodejs_20
       yarn
       pnpm
+      nodePackages.prettier
+      nodePackages.eslint
+      nodePackages.vscode-langservers-extracted
     ]
     ++ lib.optionals (helpers.hasIn "programs" "dotnet") [
       dotnet-sdk_9

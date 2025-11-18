@@ -64,7 +64,7 @@ let
       disable_cache = false;
       disable_expire = false;
       independent_cache = true;
-      strategy = "ipv4_only";
+      #strategy = "ipv4_only";
       final = "dns-direct";
       reverse_mapping = true;
       rules = [
@@ -120,7 +120,7 @@ let
         auto_route = true;
         strict_route = true;
         sniff = true;
-        stack = "mixed";
+        stack = "system";
       }
       {
         type = "socks";
@@ -236,6 +236,12 @@ let
             "^(.+\\.)?typingstudy\\.com$"
             "^(.+\\.)?typingclub\\.com$"
             "^(.+\\.)?typing\\.com$"
+            "^(.+\\.)?penpot\\.app$"
+            "^(.+\\.)?diagrams\\.net$"
+            "^(.+\\.)?draw\\.io$"
+            "^(.+\\.)?creately\\.com$"
+            "^(.+\\.)?yworks\\.com$"
+            "^(.+\\.)?whimsical\\.com$"
           ];
           outbound = "proxy";
         }
@@ -326,7 +332,33 @@ in
     networking.firewall.trustedInterfaces = [ "nekoray-tun" ];
 
     environment.etc."sing-box-config.json".text = builtins.toJSON singboxSettings;
-
+    
+    systemd.services.singbox-wrapper = {
+      description = "Singbox Wrapper Service";
+      wantedBy = [ ];
+      after = [ "network.target" ];
+      
+      restartIfChanged = false;
+      stopIfChanged = true;
+      
+      serviceConfig = {
+        ExecStart = "${pkgs.sing-box}/bin/sing-box run -c /etc/sing-box-config.json";
+        Restart = "on-failure";
+        RestartSec = 5;
+        StandardOutput = "journal";
+        StandardError = "journal";
+        
+        KillSignal = "SIGTERM";
+        TimeoutStopSec = "10s";
+        KillMode = "mixed";
+        
+        AmbientCapabilities = "CAP_NET_ADMIN CAP_NET_BIND_SERVICE";
+        CapabilityBoundingSet = "CAP_NET_ADMIN CAP_NET_BIND_SERVICE";
+        
+        ExecStopPost = "${pkgs.iproute2}/bin/ip link delete nekoray-tun || true";
+      };
+    };
+    /*
     systemd.services.singbox-wrapper = {
       description = "Singbox Wrapper Service";
       wantedBy = [ ]; # "multi-user.target"
@@ -340,6 +372,6 @@ in
         KillSignal = "SIGTERM";
         TimeoutStopSec = "20s";
       };
-    };
+    };*/
   };
 }

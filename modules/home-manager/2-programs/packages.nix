@@ -2,6 +2,7 @@
   pkgs,
   lib,
   helpers,
+  inputs,
   ...
 }:
 {
@@ -27,6 +28,9 @@
       drawio
       discord
       claude-code
+      brave
+      wev
+      inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs
     ]
     ++ lib.optionals (helpers.hasIn "hardware" "sound") [
       pavucontrol

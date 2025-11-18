@@ -11,35 +11,35 @@ in
 {
   config = lib.mkIf enable {
     home.file.".config/mango/binds.conf".text = ''
-      bind=${mainBtn}+SHIFT,R,reload_config
-      bind=${mainBtn},m,quit
+      bind=${mainBtn}+SHIFT,code:27,reload_config
+      bind=${mainBtn},code:58,quit
 
-      bind=${mainBtn},a,spawn,${pkgs.tofi}/bin/tofi-drun --drun-launch=true
+      bind=${mainBtn},code:38,spawn,${pkgs.tofi}/bin/tofi-drun --drun-launch=true
       bind=${mainBtn},Return,spawn,foot
-      bind=${mainBtn},w,spawn,zen
-      bind=${mainBtn},e,spawn,nemo
-      bind=,Print,spawn,screenshot-tool area
-      bind=${mainBtn},b,spawn_shell,pkill waybar || waybar &
+      bind=${mainBtn},code:25,spawn,zen
+      bind=${mainBtn},code:26,spawn,nemo
+      bind=${mainBtn},code:39,spawn,screenshot-tool area
+      bind=${mainBtn},code:56,spawn_shell,pkill waybar || waybar &
 
       bind=${mainBtn},Tab,focusstack,next
 
-      bind=${mainBtn}+SHIFT,K,exchange_client,up
-      bind=${mainBtn}+SHIFT,J,exchange_client,down
-      bind=${mainBtn}+SHIFT,H,exchange_client,left
-      bind=${mainBtn}+SHIFT,L,exchange_client,right
+      bind=${mainBtn}+SHIFT,code:43,exchange_client,up
+      bind=${mainBtn}+SHIFT,code:44,exchange_client,down
+      bind=${mainBtn}+SHIFT,code:45,exchange_client,left
+      bind=${mainBtn}+SHIFT,code:46,exchange_client,right
 
-      bind=${mainBtn},g,toggleglobal,
+      bind=${mainBtn},code:42,toggleglobal,
       bind=${mainBtn}+SHIFT,Tab,toggleoverview,
       bind=${mainBtn},f,togglemaxmizescreen, # togglefakefullscreen
-      bind=${mainBtn},v,togglefloating,
+      bind=${mainBtn},code:55,togglefloating,
       bind=${mainBtn},i,minimized,R
       bind=${mainBtn}+SHIFT,I,restore_minimized
-      bind=${mainBtn},q,killclient,
+      bind=${mainBtn},code:24,killclient,
 
-      bind=${mainBtn},h,viewtoleft_have_client,0
-      bind=${mainBtn},l,viewtoright_have_client,0
-      bind=${mainBtn},j,tagtoleft,0
-      bind=${mainBtn},k,tagtoright,0
+      bind=${mainBtn},code:43,viewtoleft_have_client,0
+      bind=${mainBtn},code:44,viewtoright_have_client,0
+      bind=${mainBtn},code:45,tagtoleft,0
+      bind=${mainBtn},code:46,tagtoright,0
 
       bind=${mainBtn},1,view,1,0
       bind=${mainBtn},2,view,2,0

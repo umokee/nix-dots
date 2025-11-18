@@ -36,7 +36,7 @@ in
         "workbench.iconTheme" = "bearded-icons";
         "workbench.colorTheme" = "base16-ayu-dark";
 
-        "editor.formatOnSave" = false;
+        "editor.formatOnSave" = true;
         "editor.formatOnPaste" = false;
         "editor.codeActionsOnSave" = {
           "source.fixAll.eslint" = "explicit";
@@ -149,6 +149,20 @@ in
             };
           };
         };
+
+        "editor.defaultFormatter" = "esbenp.prettier-vscode";
+        "[vue]" = {
+          "editor.defaultFormatter" = "esbenp.prettier-vscode";
+        };
+        "[javascript]" = {
+          "editor.defaultFormatter" = "esbenp.prettier-vscode";
+        };
+        "[css]" = {
+          "editor.defaultFormatter" = "esbenp.prettier-vscode";
+        };
+        "vetur.format.defaultFormatter.html" = "prettier";
+        "vetur.format.defaultFormatter.js" = "prettier-eslint";
+        "vetur.validation.template" = true;
       };
       keybindings = [
         {
@@ -192,6 +206,11 @@ in
         beardedbear.beardedicons
         tintedtheming.base16-tinted-themes
         ms-python.python
+        vue.volar
+        continue.continue
+        esbenp.prettier-vscode
+        dbaeumer.vscode-eslint
+        octref.vetur
         vue.volar
       ];
     };

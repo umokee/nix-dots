@@ -21,7 +21,8 @@
         ".vscode/"
         ".idea/"
         "__pycache__/"
-        ".syncrclone"
+        ".syncrclone/"
+        "node_modules/"
       ];
     };
   };

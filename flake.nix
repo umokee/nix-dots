@@ -8,6 +8,10 @@
     mango.url = "github:DreamMaoMao/mango";
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     
+    claude-desktop = {
+      url = "github:k3d3/claude-desktop-linux-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -86,13 +90,17 @@
         home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
-          backupFileExtension = "backupHM-" + builtins.substring 0 8 (builtins.hashString "sha256" hostname);
+          backupFileExtension = "HM";
           extraSpecialArgs = commonArgs;
 
           users.${commonArgs.conf.username} = {
             imports = (getModules "home") ++ [
               ./hosts/${hostname}/home.nix
             ];
+
+            home.activation.cleanupBackups = home-manager.lib.hm.dag.entryBefore ["checkLinkTargets"] ''
+              run find $HOME/.config -maxdepth 2 -name "*.HM" -type f -delete 2>/dev/null || true
+            '';
           };
         };
       };
