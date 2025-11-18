@@ -34,7 +34,6 @@ in
     ++ lib.optionals (helpers.hasIn "programs" "nix-lang") [
       nixd
       nixfmt
-      nixd
     ]
     ++ lib.optionals (helpers.hasIn "programs" "python-lang") [
       pythonWithPackages

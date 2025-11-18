@@ -36,19 +36,17 @@
         GBM_BACKEND = "nvidia-drm";
         __GLX_VENDOR_LIBRARY_NAME = "nvidia";
         LIBVA_DRIVER_NAME = "nvidia";
-        __GL_GSYNC_ALLOWED = "0";
-        __GL_VRR_ALLOWED = "0";
-        WLR_NO_HARDWARE_CURSORS = "1";
+        # Enable VRR/G-Sync to prevent flickering on supported monitors
+        __GL_GSYNC_ALLOWED = "1";
+        __GL_VRR_ALLOWED = "1";
+        # Disable hardware cursors only if experiencing cursor issues
+        # WLR_NO_HARDWARE_CURSORS = "1";
         ELECTRON_OZONE_PLATFORM_HINT = "auto";
       })
 
       (lib.mkIf (!helpers.hasNvidia && helpers.hasIntel) {
         LIBVA_DRIVER_NAME = "iHD";
       })
-
-      #(lib.mkIf (!helpers.hasNvidia && helpers.hasAMD) {
-      #  LIBVA_DRIVER_NAME = "radeonsi";
-      #})
     ];
   };
 }

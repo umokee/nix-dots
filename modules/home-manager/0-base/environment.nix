@@ -10,7 +10,7 @@
     ];
 
     home.sessionVariables = {
-      DOTS = "$HOME/nixos";
+      DOTS = "$HOME/nix-dots";
       TERMINAL = conf.default.terminal;
       EDITOR = conf.default.editor;
       VISUAL = conf.default.visual;

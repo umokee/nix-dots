@@ -5,7 +5,7 @@
   ...
 }:
 let
-  enable = helpers.hasIn "hardware" "power-management";
+  enable = helpers.hasIn "hardware" "power";
 
   laptopTlpSettings = {
     CPU_SCALING_GOVERNOR_ON_AC = "schedutil";

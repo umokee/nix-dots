@@ -108,7 +108,6 @@ let
       enable = [
         "sing-box"
         "openssh"
-        "sing-box"
         "brightnessctl"
       ];
     };
