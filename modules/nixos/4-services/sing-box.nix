@@ -80,6 +80,15 @@ let
           action = "reject";
         }
         {
+          # КРИТИЧНО: NixOS cache должен резолвиться напрямую!
+          domain_suffix = [
+            ".nixos.org"
+            ".cachix.org"
+          ];
+          action = "route";
+          server = "dns-direct";
+        }
+        {
           domain_regex = [
             "^(.+\\.)?twitch\\.tv$"
             "^(.+\\.)?ttvnw\\.net$"
@@ -173,6 +182,17 @@ let
             "/nix/store/[^/]*/share/mullvad-browser/mullvadbrowser"
           ];
           outbound = "proxy";
+        }
+        {
+          # КРИТИЧНО: NixOS cache ВСЕГДА напрямую (не через proxy)
+          # Предотвращает зависание при nixos-rebuild
+          domain_suffix = [
+            ".nixos.org"
+            ".cachix.org"
+            "cache.nixos.org"
+            "nix-community.cachix.org"
+          ];
+          outbound = "direct";
         }
         {
           ip_is_private = true;
