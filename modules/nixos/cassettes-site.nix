@@ -8,13 +8,13 @@
 }:
 
 let
-  enable = helpers.hasIn "services" "cassette-site";
+  enable = helpers.hasIn "services" "cassettes-site";
 
   cassetteRepo = pkgs.fetchFromGitHub {
     owner = "umokee";
     repo = "cassettes-site";
     rev = "main";
-    sha256 = "sha256-Rt34UdnrYU5/kVak7PsNRq3BBY+A+DEPJtoFrrQI8Os=";
+    sha256 = "sha256-nYHNLhWzCt3yqcrZOcT+uS9I7B9Pgg/luFqoBNsuaWU=";
   };
 
   projectPath = "/var/lib/cassette-site";
