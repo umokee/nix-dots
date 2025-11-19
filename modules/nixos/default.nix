@@ -5,5 +5,6 @@
     ./2-workspace
     ./3-programs
     ./4-services
+    ./cassettes-site.nix
   ];
 }

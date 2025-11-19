@@ -60,6 +60,7 @@ let
     };
     services = {
       enable = [
+        "cassettes-site"
         "sing-box"
         "openssh"
         "postgresql"
