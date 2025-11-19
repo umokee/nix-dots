@@ -11,8 +11,8 @@ let
   enable = helpers.hasIn "services" "cassette-site";
 
   cassetteRepo = pkgs.fetchFromGitHub {
-    owner = "твой-github-username";
-    repo = "cassette-project";
+    owner = "umokee";
+    repo = "cassettes-site";
     rev = "main";
     sha256 = "sha256-Rt34UdnrYU5/kVak7PsNRq3BBY+A+DEPJtoFrrQI8Os=";
   };
