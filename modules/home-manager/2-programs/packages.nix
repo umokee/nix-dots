@@ -31,6 +31,7 @@
       brave
       wev
       inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs
+      
     ]
     ++ lib.optionals (helpers.hasIn "hardware" "sound") [
       pavucontrol
@@ -47,7 +48,7 @@
           "ms-sql"
         ])
         [
-          dbgate
+          #dbgate
         ]
     ++ lib.optionals (helpers.hasIn "services" "virtual-machine") [
       virt-manager

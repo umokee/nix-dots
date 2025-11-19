@@ -60,7 +60,6 @@ let
     };
     services = {
       enable = [
-        "cassettes-site"
         "sing-box"
         "openssh"
         "postgresql"
@@ -137,6 +136,7 @@ let
     };
     services = {
       enable = [
+        "cassettes-site"
         "openssh"
         "xray"
         "fail2ban"

@@ -71,7 +71,6 @@
             echo "================== BEGIN FILE ==================" >> "$OUTPUT_FILE"
             echo "File: $file" >> "$OUTPUT_FILE"
             echo "Extension: .$ext" >> "$OUTPUT_FILE"
-            echo "Date: $(date '+%Y-%m-%d %H:%M:%S')" >> "$OUTPUT_FILE"
             echo "================================================" >> "$OUTPUT_FILE"
             echo "" >> "$OUTPUT_FILE"
             

@@ -80,6 +80,14 @@ let
           action = "reject";
         }
         {
+          domain_suffix = [
+            ".nixos.org"
+            ".cachix.org"
+          ];
+          action = "route";
+          server = "dns-direct";
+        }
+        {
           domain_regex = [
             "^(.+\\.)?twitch\\.tv$"
             "^(.+\\.)?ttvnw\\.net$"
@@ -173,6 +181,15 @@ let
             "/nix/store/[^/]*/share/mullvad-browser/mullvadbrowser"
           ];
           outbound = "proxy";
+        }
+        {
+          domain_suffix = [
+            ".nixos.org"
+            ".cachix.org"
+            "cache.nixos.org"
+            "nix-community.cachix.org"
+          ];
+          outbound = "direct";
         }
         {
           ip_is_private = true;
