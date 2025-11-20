@@ -1,36 +1,74 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 let
-  mongoNetwork = "mongo-net";
+  projectPath = "/var/lib/mongo-gui";
+  composeFile = "${projectPath}/docker-compose.yml";
+  composeContent = ''
+    version: "3.9"
+    services:
+      mongodb:
+        image: mongo:latest
+        container_name: mongodb
+        ports:
+          - "27017:27017"
+        volumes:
+          - mongo_data:/data/db
+        restart: unless-stopped
+
+      mongo-express:
+        image: mongo-express:latest
+        container_name: mongo-express
+        ports:
+          - "8081:8081"
+        environment:
+          ME_CONFIG_MONGODB_SERVER: mongodb
+          ME_CONFIG_MONGODB_PORT: 27017
+        depends_on:
+          - mongodb
+        restart: unless-stopped
+
+    volumes:
+      mongo_data:
+  '';
 in
 {
-  services.docker = {
-    enable = true;
-  };
+  environment.systemPackages = with pkgs; [
+    gtk3
+    libx11
+  ];
 
-  systemd.services.mongo-docker = {
-    description = "MongoDB + Mongo GUI Docker";
-    wants = [ "docker.service" ];
-    after = [ "network.target" "docker.service" ];
-    serviceConfig = {
-      ExecStartPre = ''
-        docker network inspect ${mongoNetwork} >/dev/null 2>&1 || docker network create ${mongoNetwork}
-      '';
+  virtualisation.docker.enable = true;
 
-      ExecStart = ''
-        docker run -d --rm --name mongodb --network ${mongoNetwork} -p 27017:27017 mongo:latest
-        docker run -d --rm --name mongo-gui --network ${mongoNetwork} -p 8080:8080 -e MONGO_URL=mongodb://mongodb:27017 openkbs/mongo-gui-docker:latest
-      '';
+  systemd.tmpfiles.rules = [
+    "d ${projectPath} 0755 root root -"
+  ];
 
-      ExecStop = ''
-        docker stop mongo-gui mongodb
-      '';
+  system.activationScripts.mongoGuiComposeConfig = ''
+    mkdir -p ${projectPath}
+    echo '${composeContent}' > ${composeFile}
+    chown root:root ${composeFile}
+    chmod 644 ${composeFile}
+  '';
 
-      Restart = "always";
-      RestartSec = "10";
-      TimeoutStopSec = "60";
-      KillMode = "process";
-    };
+  systemd.services.mongo-gui-app = {
+    description = "MongoDB + Mongo GUI Compose";
+    after = [ "docker.service" ];
     wantedBy = [ "multi-user.target" ];
+    path = [
+      pkgs.docker
+      pkgs.docker-compose
+    ];
+    serviceConfig = {
+      Type = "simple";
+      WorkingDirectory = projectPath;
+      ExecStart = "${pkgs.docker-compose}/bin/docker-compose up";
+      ExecStop = "${pkgs.docker-compose}/bin/docker-compose down";
+      Restart = "always";
+      RestartSec = "10s";
+    };
+    preStart = ''
+      cd ${projectPath}
+      ${pkgs.docker-compose}/bin/docker-compose down 2>/dev/null || true
+    '';
   };
 }

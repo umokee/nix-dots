@@ -31,7 +31,7 @@
       brave
       wev
       inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs
-      
+      insomnia
     ]
     ++ lib.optionals (helpers.hasIn "hardware" "sound") [
       pavucontrol
