@@ -27,7 +27,6 @@ in
   programs.vscode = {
     enable = true;
     package = vscode;
-    #mutableExtensionsDir = true;
 
     profiles.default = {
       userSettings = {
@@ -91,8 +90,6 @@ in
 
         "editor.bracketPairColorization.enabled" = true;
         "editor.guides.bracketPairs" = true;
-        #"editor.guides.bracketPairsHorizontal" = true;
-        #"editor.guides.highlightActiveIndentation" = true;
 
         "editor.lightbulb.enabled" = "off";
         "editor.showFoldingControls" = "never";
@@ -117,7 +114,6 @@ in
         "editor.wordWrap" = "on";
         "update.mode" = "none";
 
-        #"extensions.ignoreRecommendations" = true;
         "[python]" = {
           "editor.defaultFormatter" = "ms-python.autopep8";
           "editor.formatOnSave" = true;
@@ -217,18 +213,4 @@ in
       ];
     };
   };
-
-  #home.activation.makeVSCodeConfigWritable =
-  #  let
-  #    configPath = "${config.xdg.configHome}/Code/User/settings.json";
-  #  in
-  #  {
-  #    after = [ "writeBoundary" ];
-  #    before = [ ];
-  #    data = ''
-  #      if [ -L ${configPath} ]; then
-  #        install -m 0640 "$(readlink ${configPath})" ${configPath}
-  #      fi
-  #    '';
-  #  };
 }

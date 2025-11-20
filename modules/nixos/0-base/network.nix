@@ -14,7 +14,7 @@ in
       networkmanager.enable = true;
 
       firewall = {
-        enable = helpers.isServer;
+        enable = true;
 
         allowedTCPPorts = [
           22

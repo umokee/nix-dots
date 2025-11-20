@@ -3,8 +3,6 @@ let
   waylandCompositors = [
     "hyprland"
     "niri"
-    "dwl"
-    "mangowc"
   ];
   x11WMs = [
     "bspwm"
@@ -12,8 +10,6 @@ let
   ];
   wlrCompositors = [
     "sway"
-    "dwl"
-    "mangowc"
   ];
 
   hasIn =
@@ -37,8 +33,6 @@ in
   isHyprland = hasIn "workspace" "hyprland";
   isWlr = hasIn "workspace" wlrCompositors;
   isNiri = hasIn "workspace" "niri";
-  isDwl = hasIn "workspace" "dwl";
-  isMango = hasIn "workspace" "mangowc";
 
   needsHyprlandPortal = hasIn "workspace" "hyprland";
   needsWlrPortal = hasIn "workspace" wlrCompositors;

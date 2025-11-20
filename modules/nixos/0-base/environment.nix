@@ -17,16 +17,6 @@
         CLUTTER_BACKEND = "wayland";
       })
 
-      (lib.mkIf helpers.isDwl {
-        XDG_CURRENT_DESKTOP = "dwl";
-        XDG_SESSION_DESKTOP = "dwl";
-      })
-
-      (lib.mkIf helpers.isMango {
-        XDG_CURRENT_DESKTOP = "wlroots";
-        XDG_SESSION_DESKTOP = "wlroots";
-      })
-
       (lib.mkIf helpers.isHyprland {
         XDG_CURRENT_DESKTOP = "Hyprland";
         XDG_SESSION_DESKTOP = "Hyprland";

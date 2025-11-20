@@ -10,8 +10,8 @@ in
   config = lib.mkIf enable {
     security.sudo = {
       enable = true;
-      execWheelOnly = !helpers.isServer;
-      wheelNeedsPassword = !helpers.isServer;
+      execWheelOnly = true;
+      wheelNeedsPassword = true;
       extraConfig = ''
         Defaults timestamp_timeout=5
         Defaults lecture="never"

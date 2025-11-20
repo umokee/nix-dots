@@ -5,7 +5,7 @@
   ...
 }:
 {
-  programs.waybar = lib.mkIf (!helpers.isDwl) {
+  programs.waybar = {
     enable = true;
     systemd = {
       enable = true;
@@ -26,12 +26,6 @@
             "hyprland/workspaces"
             "custom/sep"
             "hyprland/window"
-            "custom/sep"
-          ]
-          ++ lib.optionals helpers.isMango [
-            "ext/workspaces"
-            "custom/sep"
-            "dwl/window"
             "custom/sep"
           ];
 
