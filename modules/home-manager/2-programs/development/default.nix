@@ -1,7 +1,7 @@
 {
   imports = [
     ./git.nix
-    ./vscode.nix
+    ./vscode
     ./languages.nix
     ./intellij-ide.nix
   ];

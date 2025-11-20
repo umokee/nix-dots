@@ -7,50 +7,40 @@
 }:
 let
   enable = helpers.hasIn "base" "boot";
+  kernelConfig = import ./kernel.nix { inherit lib super; };
 in
 {
   config = lib.mkIf enable {
-    nixpkgs.overlays = [
-      (self: super: {
-        linuxPackages = super.linuxPackages // {
-          kernel = super.linuxPackages.kernel.override {
-            structuredExtraConfig = with lib.kernel; {
-              HZ_1000 = yes;
-              HZ = 1000;
-              PREEMPT_FULL = yes;
-              IOSCHED_BFQ = yes;
-              DEFAULT_BFQ = yes;
-              DEFAULT_IOSCHED = "bfq";
-              V4L2_LOOPBACK = module;
-              HID = yes;
-            };
-          };
-        };
-      })
-    ];
+    nixpkgs.overlays = kernelConfig.overlays;
 
-    services.udev.extraRules = ''
-      ACTION=="add|change", SUBSYSTEM=="block", ATTR{queue/scheduler}="bfq"
-    '';
+    services.udev.extraRules = kernelConfig.udevRules;
 
     boot.loader.grub = {
       enable = true;
       device = if helpers.isServer then "/dev/sda" else "nodev";
-      #useOSProber = true; # For dual boot
       efiSupport = !helpers.isServer;
       efiInstallAsRemovable = !helpers.isServer;
     };
     boot.loader.timeout = 3;
 
     boot = {
-      #kernelPackages = if helpers.isDesktop then pkgs.linuxPackages_6_16 else pkgs.linuxPackages;
       tmp.cleanOnBoot = true;
       supportedFilesystems.zfs = lib.mkForce false;
+
       kernelParams =
-        if builtins.elem "kvm-amd" config.boot.kernelModules then [ "amd_pstate=active" "nosplit_lock_mitigate" "clearcpuid=514" ] else [ "nosplit_lock_mitigate" ]++ [
-        "quiet"
-        "splash"
-      ];
+        if builtins.elem "kvm-amd" config.boot.kernelModules then
+          [
+            "amd_pstate=active"
+            "nosplit_lock_mitigate"
+            "clearcpuid=514"
+          ]
+        else
+          [ "nosplit_lock_mitigate" ]
+        ++ [
+          "quiet"
+          "splash"
+        ];
+
       kernel.sysctl = {
         "kernel.split_lock_mitigate" = 0;
         "vm.swappiness" = 10;

@@ -2,7 +2,7 @@
   imports = [
     ./openssh.nix
     ./virtualization.nix
-    ./sing-box.nix
+    ./sing-box
     ./file-management.nix
     ./kanata.nix
     ./fstrim.nix

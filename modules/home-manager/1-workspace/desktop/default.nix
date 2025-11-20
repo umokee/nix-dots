@@ -2,7 +2,7 @@
   imports = [
     ./WMs
     ./scripts
-    ./waybar.nix
+    ./waybar
     ./wallpapers.nix
     ./dunst.nix
     ./tofi.nix
