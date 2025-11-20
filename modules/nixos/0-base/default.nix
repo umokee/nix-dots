@@ -1,6 +1,6 @@
 {
   imports = [
-    ./boot
+    ./boot.nix
     ./system.nix
     ./users.nix
     ./locale.nix
@@ -8,6 +8,6 @@
     ./network.nix
     ./packages.nix
     ./fonts.nix
-    ./environment
+    ./environment.nix
   ];
 }
