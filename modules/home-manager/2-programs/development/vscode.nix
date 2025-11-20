@@ -11,7 +11,9 @@ let
     postFixup = (oldAttrs.postFixup or "") + ''
       wrapProgram $out/bin/code \
         --add-flags "--ozone-platform=wayland" \
-        --add-flags "--disable-gpu"
+        --add-flags "--enable-features=UseOzonePlatform,WaylandWindowDecorations,WebRTCPipeWireCapturer" \
+        --add-flags "--enable-gpu-rasterization" \
+        --add-flags "--enable-zero-copy"
     '';
   });
 
@@ -140,11 +142,11 @@ in
             "options" = {
               "nixos" = {
                 "expr" =
-                  "(builtins.getFlake \"/home/${config.home.username}/nixos\").nixosConfigurations.desktop.options";
+                  "(builtins.getFlake \"/home/${config.home.username}/nix-dots\").nixosConfigurations.desktop.options";
               };
               "home-manager" = {
                 "expr" =
-                  "(builtins.getFlake \"/home/${config.home.username}/nixos\").homeConfigurations.desktop.options";
+                  "(builtins.getFlake \"/home/${config.home.username}/nix-dots\").homeConfigurations.desktop.options";
               };
             };
           };
