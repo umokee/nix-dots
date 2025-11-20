@@ -13,27 +13,38 @@ in
     # Critical kernel parameters for NVIDIA + Wayland
     boot.kernelParams = [
       "nvidia-drm.modeset=1"
-      "nvidia-drm.fbdev=1"  # Enable framebuffer, fixes artifacts
-      "nvidia.NVreg_PreserveVideoMemoryAllocations=1"  # Fix suspend/resume artifacts
+      "nvidia-drm.fbdev=1"
+      "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
+      # НОВОЕ: Отключить GSP firmware (может вызывать артефакты)
+      "nvidia.NVreg_EnableGpuFirmware=0"
+      # НОВОЕ: Force full composition pipeline
+      "nvidia.NVreg_RegistryDwords=PowerMizerEnable=0x1;PerfLevelSrc=0x2222"
     ];
 
     services.xserver.videoDrivers = [ "nvidia" ];
 
+    # ВАЖНО: Добавить дополнительные опции для Xorg (влияет на Wayland тоже)
+    services.xserver.screenSection = ''
+      Option         "Coolbits" "28"
+      Option         "TripleBuffer" "on"
+      Option         "metamodes" "nvidia-auto-select +0+0 {ForceCompositionPipeline=On, ForceFullCompositionPipeline=On}"
+    '';
+
     hardware.nvidia = {
-      # ВАЖНО: Попробуйте проприетарные драйвера вместо open
-      # Open source драйвера могут иметь проблемы с артефактами
       package = config.boot.kernelPackages.nvidiaPackages.latest;
-      open = false;  # Изменено: false = проприетарные драйвера
+      # ПОПРОБУЕМ ВЕРНУТЬ OPEN (может быть в вашем случае лучше)
+      open = lib.mkDefault false;
 
       nvidiaSettings = true;
       modesetting.enable = true;
 
-      # Enable power management to reduce flickering issues
       powerManagement.enable = true;
       powerManagement.finegrained = false;
 
-      # Preserve video memory on suspend/resume (критично для артефактов!)
       nvidiaPersistenced = true;
+
+      # НОВОЕ: Force full composition pipeline через driver
+      forceFullCompositionPipeline = true;
 
       dynamicBoost.enable = false;
     };
@@ -44,11 +55,10 @@ in
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
         Type = "forking";
-        ExecStart = "${pkgs.linuxPackages.nvidia_x11}/bin/nvidia-persistenced --user nvidia-persistenced --persistence-mode";
+        ExecStart = "${config.hardware.nvidia.package}/bin/nvidia-persistenced --user nvidia-persistenced --persistence-mode";
       };
     };
 
-    # Создать пользователя для nvidia-persistenced
     users.users.nvidia-persistenced = {
       isSystemUser = true;
       group = "nvidia-persistenced";

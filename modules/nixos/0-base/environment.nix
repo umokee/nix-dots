@@ -38,25 +38,34 @@
         __GLX_VENDOR_LIBRARY_NAME = "nvidia";
         LIBVA_DRIVER_NAME = "nvidia";
 
-        # Enable VRR/G-Sync to prevent flickering on supported monitors
-        __GL_GSYNC_ALLOWED = "1";
-        __GL_VRR_ALLOWED = "1";
+        # VRR/G-Sync - ОТКЛЮЧАЕМ для тестирования
+        __GL_GSYNC_ALLOWED = "0";
+        __GL_VRR_ALLOWED = "0";
 
-        # КРИТИЧНО: Отключить hardware cursors для wlroots/mangowc
-        # Это ОСНОВНАЯ причина черных артефактов на NVIDIA + Wayland!
+        # КРИТИЧНО: Отключить hardware cursors
         WLR_NO_HARDWARE_CURSORS = "1";
 
-        # NVIDIA + Wayland оптимизации (против артефактов)
-        __GL_THREADED_OPTIMIZATION = "0";  # Отключить, может вызывать артефакты
-        __GL_SHADER_DISK_CACHE_SKIP_CLEANUP = "1";  # Не чистить shader cache
-        NVIDIA_PRESERVE_VIDEO_MEMORY_ALLOCATIONS = "1";  # Сохранять VRAM
+        # NVIDIA + Wayland оптимизации (МАКСИМАЛЬНО АГРЕССИВНЫЕ)
+        __GL_THREADED_OPTIMIZATION = "0";
+        __GL_SHADER_DISK_CACHE = "0";  # Полностью отключить shader cache
+        __GL_SYNC_TO_VBLANK = "0";  # Отключить vsync на уровне драйвера
+        __GL_YIELD = "USLEEP";  # Лучше для wlroots
 
-        # Для wlroots композиторов (mangowc)
-        WLR_RENDERER = "vulkan";  # Использовать Vulkan вместо OpenGL
-        WLR_DRM_NO_ATOMIC = "1";  # Отключить atomic modesetting (может помочь)
+        # VRAM preservation
+        NVIDIA_PRESERVE_VIDEO_MEMORY_ALLOCATIONS = "1";
+        __GL_MaxFramesAllowed = "1";  # Отключить triple buffering
+
+        # Для wlroots: ПОПРОБУЕМ PIXMAN вместо Vulkan
+        WLR_RENDERER = "pixman";  # Software renderer - МОЖЕТ ПОМОЧЬ!
+        WLR_DRM_NO_ATOMIC = "1";
+        WLR_NO_HARDWARE_CURSORS = "1";  # Дублируем для уверенности
 
         # Electron/Chromium приложения
         ELECTRON_OZONE_PLATFORM_HINT = "auto";
+
+        # НОВОЕ: Дополнительные NVIDIA специфичные переменные
+        __GL_ALLOW_UNOFFICIAL_PROTOCOL = "1";
+        __EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/10_nvidia.json";
       })
 
       (lib.mkIf (!helpers.hasNvidia && helpers.hasIntel) {
