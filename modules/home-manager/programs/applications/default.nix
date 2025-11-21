@@ -1,6 +1,5 @@
 {
   imports = [
-    ./foot.nix
     ./firefox.nix
     ./rclone.nix
     ./obs.nix

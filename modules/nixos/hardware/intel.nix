@@ -35,5 +35,10 @@ in
         libva
       ];
     };
+
+    # Intel environment variables (only when NVIDIA is not present)
+    environment.sessionVariables = lib.mkIf (!helpers.hasNvidia) {
+      LIBVA_DRIVER_NAME = "iHD";
+    };
   };
 }

@@ -33,5 +33,8 @@ in
     environment.systemPackages = with pkgs; [
       sqlcmd
     ];
+
+    # Open MS-SQL port in firewall
+    networking.firewall.allowedTCPPorts = [ 1433 ];
   };
 }

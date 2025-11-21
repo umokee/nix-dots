@@ -116,5 +116,8 @@ in
       pgadmin4-desktopmode
       podman
     ];
+
+    # Open PostgreSQL port in firewall
+    networking.firewall.allowedTCPPorts = [ 5432 ];
   };
 }

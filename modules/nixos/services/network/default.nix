@@ -1,6 +1,6 @@
 {
   imports = [
-    ./network.nix
     ./sing-box
+    ./xray.nix
   ];
 }

@@ -6,5 +6,8 @@
     ./locale.nix
     ./fonts.nix
     ./packages.nix
+    ./network.nix
+    ./security.nix
+    ./fail2ban.nix
   ];
 }

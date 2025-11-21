@@ -17,15 +17,9 @@ in
         enable = true;
 
         allowedTCPPorts = [
-          22
-          80
-          443
-        ]
-        ++ lib.optionals (helpers.hasIn "services" "postgresql") [
-          5432
-        ]
-        ++ lib.optionals (helpers.hasIn "services" "ms-sql") [
-          1433
+          22   # SSH
+          80   # HTTP
+          443  # HTTPS
         ];
 
         allowedUDPPorts = [ 443 ];
