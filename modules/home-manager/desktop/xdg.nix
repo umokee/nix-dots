@@ -114,17 +114,6 @@
             "org.freedesktop.impl.portal.FileChooser" = "gtk";
             "org.freedesktop.impl.portal.Inhibit" = "gtk";
           };
-          mangowc = {
-            default = [
-              "wlr"
-              "gtk"
-            ];
-            "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
-            "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
-            "org.freedesktop.impl.portal.Settings" = "gtk";
-            "org.freedesktop.impl.portal.FileChooser" = "gtk";
-            "org.freedesktop.impl.portal.Inhibit" = "gtk";
-          };
           common = {
             default = [ "gtk" ];
           };

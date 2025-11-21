@@ -23,7 +23,6 @@
       };
     };
 
-    # TODO ПЕРЕМЕСТИТЬ ПЕРЕМЕННЫЕ
     home.sessionVariables = {
       QT_QPA_PLATFORMTHEME = "qt6ct";
       QT_STYLE_OVERRIDE = "Adwaita-dark";

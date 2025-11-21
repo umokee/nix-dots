@@ -60,9 +60,6 @@
 
         layer = "overlay";
         force_xwayland = false;
-
-        browser = "/usr/bin/xdg-open";
-        dmenu = "rofi -dmenu";
       };
 
       urgency_low = {
