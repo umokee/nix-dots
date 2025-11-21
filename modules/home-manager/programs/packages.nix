@@ -41,15 +41,6 @@
       simple-scan
       sane-frontends
     ]
-    ++
-      lib.optionals
-        (helpers.hasIn "services" [
-          "postgresql"
-          "ms-sql"
-        ])
-        [
-          #dbgate
-        ]
     ++ lib.optionals (helpers.hasIn "services" "virtual-machine") [
       virt-manager
     ];

@@ -1,0 +1,132 @@
+{ config, pkgs, ... }:
+{
+  "editor.fontFamily" = "'JetBrainsMono Nerd Font', monospace";
+  "editor.fontSize" = 18;
+  "window.zoomLevel" = 1;
+
+  "workbench.iconTheme" = "bearded-icons";
+  "workbench.colorTheme" = "base16-ayu-dark";
+
+  "editor.formatOnSave" = true;
+  "editor.formatOnPaste" = false;
+  "editor.codeActionsOnSave" = {
+    "source.fixAll.eslint" = "explicit";
+    "source.organizeImports" = "explicit";
+  };
+
+  "errorLens.enabled" = true;
+  "errorLens.enabledDiagnosticLevels" = [
+    "error"
+    "warning"
+    "info"
+    "hint"
+  ];
+  "errorLens.fontSize" = "14";
+  "errorLens.fontWeight" = "bold";
+  "errorLens.fontStyleItalic" = true;
+  "errorLens.gutterIconsEnabled" = true;
+  "errorLens.messageTemplate" = "$message";
+  "errorLens.delay" = 0;
+
+  "problems.showCurrentInStatus" = true;
+  "problems.sortOrder" = "severity";
+
+  "editor.tabSize" = 2;
+  "editor.detectIndentation" = false;
+  "editor.lineNumbers" = "relative";
+  "workbench.tree.indent" = 14;
+  "files.insertFinalNewline" = true;
+
+  "workbench.sideBar.location" = "left";
+  "workbench.statusBar.visible" = false;
+  "workbench.activityBar.location" = "hidden";
+  "workbench.editor.showTabs" = "single";
+  "workbench.startupEditor" = "none";
+  "chat.commandCenter.enabled" = false;
+  "workbench.layoutControl.enabled" = false;
+  "window.customTitleBarVisibility" = "never";
+  "window.titleBarStyle" = "native";
+  "window.menuBarVisibility" = "toggle";
+
+  "editor.scrollbar.vertical" = "hidden";
+  "editor.scrollbar.horizontal" = "hidden";
+  "editor.minimap.enabled" = true;
+  "editor.minimap.renderCharacters" = false;
+
+  "editor.multiCursorModifier" = "ctrlCmd";
+  "editor.cursorBlinking" = "solid";
+  "editor.matchBrackets" = "never";
+  "editor.occurrencesHighlight" = "off";
+
+  "editor.bracketPairColorization.enabled" = true;
+  "editor.guides.bracketPairs" = true;
+
+  "editor.lightbulb.enabled" = "off";
+  "editor.showFoldingControls" = "never";
+  "breadcrumbs.enabled" = false;
+  "workbench.tips.enabled" = false;
+
+  "editor.overviewRulerBorder" = false;
+  "editor.hideCursorInOverviewRuler" = true;
+
+  "editor.stickyScroll.enabled" = false;
+  "workbench.tree.enableStickyScroll" = false;
+
+  "explorer.confirmDragAndDrop" = true;
+  "explorer.confirmDelete" = true;
+  "explorer.decorations.badges" = false;
+  "workbench.tree.renderIndentGuides" = "none";
+
+  "git.decorations.enabled" = false;
+  "scm.diffDecorations" = "none";
+
+  "files.autoSave" = "afterDelay";
+  "editor.wordWrap" = "on";
+  "update.mode" = "none";
+
+  "[python]" = {
+    "editor.defaultFormatter" = "ms-python.autopep8";
+    "editor.formatOnSave" = true;
+    "editor.tabSize" = 4;
+  };
+
+  "nix.enableLanguageServer" = true;
+  "nix.serverPath" = "${pkgs.nixd}/bin/nixd";
+  "nix.formatterPath" = "${pkgs.nixfmt-rfc-style}/bin/nixfmt";
+
+  "[nix]" = {
+    "editor.defaultFormatter" = "jnoortheen.nix-ide";
+    "editor.formatOnSave" = true;
+    "editor.tabSize" = 2;
+  };
+
+  "nix.serverSettings" = {
+    "nixd" = {
+      "formatting" = {
+        "command" = [ "${pkgs.nixfmt-rfc-style}/bin/nixfmt" ];
+      };
+      "options" = {
+        "nixos" = {
+          "expr" = "(builtins.getFlake \"/home/${config.home.username}/nix-dots\").nixosConfigurations.desktop.options";
+        };
+        "home-manager" = {
+          "expr" = "(builtins.getFlake \"/home/${config.home.username}/nix-dots\").homeConfigurations.desktop.options";
+        };
+      };
+    };
+  };
+
+  "editor.defaultFormatter" = "esbenp.prettier-vscode";
+  "[vue]" = {
+    "editor.defaultFormatter" = "esbenp.prettier-vscode";
+  };
+  "[javascript]" = {
+    "editor.defaultFormatter" = "esbenp.prettier-vscode";
+  };
+  "[css]" = {
+    "editor.defaultFormatter" = "esbenp.prettier-vscode";
+  };
+  "vetur.format.defaultFormatter.html" = "prettier";
+  "vetur.format.defaultFormatter.js" = "prettier-eslint";
+  "vetur.validation.template" = true;
+}
