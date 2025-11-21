@@ -2,7 +2,6 @@
   config,
   lib,
   helpers,
-  pkgs,
   ...
 }:
 let
@@ -42,14 +41,23 @@ in
     boot.loader.timeout = 3;
 
     boot = {
-      #kernelPackages = if helpers.isDesktop then pkgs.linuxPackages_6_16 else pkgs.linuxPackages;
       tmp.cleanOnBoot = true;
       supportedFilesystems.zfs = lib.mkForce false;
+
       kernelParams =
-        if builtins.elem "kvm-amd" config.boot.kernelModules then [ "amd_pstate=active" "nosplit_lock_mitigate" "clearcpuid=514" ] else [ "nosplit_lock_mitigate" ]++ [
-        "quiet"
-        "splash"
-      ];
+        if builtins.elem "kvm-amd" config.boot.kernelModules then
+          [
+            "amd_pstate=active"
+            "nosplit_lock_mitigate"
+            "clearcpuid=514"
+          ]
+        else
+          [ "nosplit_lock_mitigate" ]
+          ++ [
+            "quiet"
+            "splash"
+          ];
+
       kernel.sysctl = {
         "kernel.split_lock_mitigate" = 0;
         "vm.swappiness" = 10;
@@ -66,12 +74,7 @@ in
       };
 
       initrd.verbose = false;
-    };
-
-    hardware.graphics = {
-      enable = true;
-      package = pkgs.mesa;
-      package32 = pkgs.pkgsi686Linux.mesa;
+      consoleLogLevel = 3;
     };
   };
 }

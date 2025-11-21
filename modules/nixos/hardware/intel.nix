@@ -35,5 +35,9 @@ in
         libva
       ];
     };
+
+    environment.sessionVariables = lib.mkIf (!helpers.hasNvidia) {
+      LIBVA_DRIVER_NAME = "iHD";
+    };
   };
 }

@@ -29,10 +29,6 @@ in
 
         extraPackages = with pkgs; [
           mesa
-
-          #libva-mesa-driver
-          libva-utils
-
           vulkan-loader
           vulkan-validation-layers
         ];

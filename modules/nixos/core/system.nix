@@ -2,7 +2,6 @@
   conf,
   lib,
   helpers,
-  pkgs,
   ...
 }:
 let
@@ -12,28 +11,10 @@ in
   config = lib.mkMerge [
     (lib.mkIf enable {
       time.hardwareClockInLocalTime = true;
-      
+
       hardware.graphics = {
         enable = true;
         enable32Bit = true;
-        extraPackages = with pkgs; [
-          intel-gpu-tools
-          intel-media-driver
-          vaapiIntel
-          vaapiVdpau
-          libvdpau-va-gl
-          libva
-          vulkan-loader
-          vulkan-validation-layers
-        ];
-        extraPackages32 = with pkgs; [
-          intel-gpu-tools
-          intel-media-driver
-          vaapiIntel
-          vaapiVdpau
-          libvdpau-va-gl
-          libva
-        ];
       };
 
       zramSwap = {
@@ -63,18 +44,18 @@ in
             "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
             "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
           ];
- 
+
           http-connections = 128;
           download-attempts = 5;
           connect-timeout = 10;
- 
+
           fallback = true;
- 
+
           max-jobs = "auto";
           cores = 0;
- 
+
           show-trace = true;
- 
+
           keep-outputs = false;
           keep-derivations = false;
         };
@@ -91,19 +72,6 @@ in
         };
       };
 
-      #system.autoUpgrade = {
-      #  enable = true;
-      #  flake = "/home/user/nix-dots#server";
-      #  flags = [
-      #    "--update-input"
-      #    "nixpkgs"
-      #    "--commit-lock-file"
-      #  ];
-      #  dates = "04:00";
-      #  randomizedDelaySec = "45min";
-      #  allowReboot = false;
-      #};
-
       documentation = {
         enable = false;
         nixos.enable = false;
@@ -115,11 +83,6 @@ in
     })
 
     (lib.mkIf helpers.isServer {
-      #boot.kernelParams = [
-      #  "console=tty0"
-      #  "console=ttyS0,115200n8"
-      #];
-
       services.xserver.enable = lib.mkForce false;
 
       services.journald.extraConfig = ''
