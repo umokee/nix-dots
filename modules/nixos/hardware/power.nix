@@ -22,7 +22,6 @@ let
     CPU_MIN_PERF_ON_BAT = 0;
     CPU_MAX_PERF_ON_BAT = 40;
 
-    #START_CHARGE_THRESH_BAT0 = 70;
     STOP_CHARGE_THRESH_BAT0 = 0;
 
     WIFI_PWR_ON_AC = "off";
@@ -34,19 +33,6 @@ let
     USB_AUTOSUSPEND = 1;
     USB_BLACKLIST_BTUSB = 0;
     USB_BLACKLIST_PHONE = 0;
-
-    #SATA_LINKPWR_ON_AC = "med_power_with_dipm";
-    #SATA_LINKPWR_ON_BAT = "min_power";
-
-    #PCIE_ASPM_ON_AC = "default";
-    #PCIE_ASPM_ON_BAT = "powersupersave";
-
-    #RUNTIME_PM_ON_AC = "auto";
-    #RUNTIME_PM_ON_BAT = "auto";
-
-    #RESTORE_DEVICE_STATE_ON_STARTUP = 0;
-    #DEVICES_TO_DISABLE_ON_STARTUP = "bluetooth wifi";
-    #DEVICES_TO_ENABLE_ON_STARTUP = "";
   };
 
   desktopTlpSettings = {
@@ -71,15 +57,6 @@ let
     SOUND_POWER_SAVE_ON_BAT = 0;
 
     USB_AUTOSUSPEND = 0;
-
-    #SATA_LINKPWR_ON_AC = "max_performance";
-    #SATA_LINKPWR_ON_BAT = "max_performance";
-
-    #PCIE_ASPM_ON_AC = "performance";
-    #PCIE_ASPM_ON_BAT = "performance";
-
-    #RUNTIME_PM_ON_AC = "on";
-    #RUNTIME_PM_ON_BAT = "on";
   };
 
   tlpSettings = if helpers.isLaptop then laptopTlpSettings else desktopTlpSettings;
@@ -101,7 +78,7 @@ in
         ];
       }
 
-      (lib.mkIf helpers.isLaptop {
+      {
         services.tlp = {
           enable = true;
           settings = tlpSettings;
@@ -109,17 +86,7 @@ in
 
         services.auto-cpufreq.enable = false;
         services.power-profiles-daemon.enable = false;
-      })
-
-      (lib.mkIf helpers.isDesktop {
-        services.tlp = {
-          enable = true;
-          settings = tlpSettings;
-        };
-
-        services.auto-cpufreq.enable = false;
-        services.power-profiles-daemon.enable = false;
-      })
+      }
     ]
   );
 }

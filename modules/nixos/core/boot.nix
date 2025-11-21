@@ -77,11 +77,5 @@ in
       initrd.verbose = false;
       consoleLogLevel = 3;
     };
-
-    hardware.graphics = {
-      enable = true;
-      package = pkgs.mesa;
-      package32 = pkgs.pkgsi686Linux.mesa;
-    };
   };
 }

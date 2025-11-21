@@ -79,19 +79,6 @@ in
         };
       };
 
-      #system.autoUpgrade = {
-      #  enable = true;
-      #  flake = "/home/user/nix-dots#server";
-      #  flags = [
-      #    "--update-input"
-      #    "nixpkgs"
-      #    "--commit-lock-file"
-      #  ];
-      #  dates = "04:00";
-      #  randomizedDelaySec = "45min";
-      #  allowReboot = false;
-      #};
-
       documentation = {
         enable = false;
         nixos.enable = false;
@@ -103,11 +90,6 @@ in
     })
 
     (lib.mkIf helpers.isServer {
-      #boot.kernelParams = [
-      #  "console=tty0"
-      #  "console=ttyS0,115200n8"
-      #];
-
       services.xserver.enable = lib.mkForce false;
 
       services.journald.extraConfig = ''

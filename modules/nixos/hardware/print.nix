@@ -23,19 +23,7 @@ in
         enable = true;
         startWhenNeeded = true;
         drivers = with pkgs; [
-          #brgenml1cupswrapper
-          #brgenml1lpr
-          #brlaser
-          #cnijfilter2
-          #epkowa
-          #gutenprintBin unic
-          #hplip
-          #epson-escpr2
-          #epson-escpr
           epson-201401w
-
-          #samsung-unified-linux-driver
-          #splix
         ];
       };
 

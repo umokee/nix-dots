@@ -40,47 +40,6 @@ in
             maxretry = 3;
           };
         };
-
-        apache-auth = {
-          settings = {
-            enabled = false;
-            filter = "apache-auth";
-            logpath = "/var/log/httpd/*error.log";
-            maxretry = 3;
-            bantime = "7d";
-          };
-        };
-
-        nginx-http-auth = {
-          settings = {
-            enabled = false;
-            filter = "nginx-http-auth";
-            logpath = "/var/log/nginx/error.log";
-            maxretry = 3;
-            bantime = "7d";
-          };
-        };
-
-        nginx-4xx = {
-          settings = {
-            enabled = false;
-            filter = "nginx-4xx";
-            logpath = "/var/log/nginx/access.log";
-            maxretry = 10;
-            bantime = "1h";
-            findtime = "300";
-          };
-        };
-
-        nginx-botsearch = {
-          settings = {
-            enabled = false;
-            filter = "nginx-botsearch";
-            logpath = "/var/log/nginx/access.log";
-            maxretry = 5;
-            bantime = "24h";
-          };
-        };
       };
     };
   };

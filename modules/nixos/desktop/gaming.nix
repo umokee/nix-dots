@@ -26,7 +26,6 @@ in
       dxvk
       joystickwake
       mangohud
-      #mesa
       oversteer
       umu-launcher
       wineWowPackages.staging
