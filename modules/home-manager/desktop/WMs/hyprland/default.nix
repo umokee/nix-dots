@@ -22,6 +22,8 @@ in
         exec-once = [
           "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
           "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+          "echo 'Xft.dpi: 125' | xrdb -merge"
+          "gsettings set org.gnome.desktop.interface text-scaling-factor 1.25"
         ];
 
         monitor = [
@@ -30,22 +32,25 @@ in
           "HDMI-A-5,1920x1080@60,510x1440,1.5"
         ];
 
-        xwayland.force_zero_scaling = true;
+        xwayland = {
+          force_zero_scaling = false;
+        };
 
         workspace = [
-          "1, monitor:HDMI-A-5, default:true"
-          "2, monitor:HDMI-A-5"
-          "3, monitor:HDMI-A-5"
-          "4, monitor:HDMI-A-5"
-          "5, monitor:DP-3, default:true"
-          "6, monitor:DP-3"
-          "7, monitor:DP-3"
-          "8, monitor:DP-3"
-          "9, monitor:DP-4, default:true"
+          "1, monitor:DP-3, default:true"
+          "2, monitor:DP-3"
+          "3, monitor:DP-3"
+          "4, monitor:DP-3"
+          "5, monitor:DP-3"
+          "6, monitor:HDMI-A-5, default:true"
+          "7, monitor:HDMI-A-5"
+          "8, monitor:HDMI-A-5"
+          "9, monitor:HDMI-A-5"
+          "10, monitor:DP-4, default:true"
         ];
 
         input = {
-          kb_layout = "us, ru";
+          kb_layout = "us,ru-custom";
           kb_options = "grp:ctrl_shift_toggle";
           repeat_rate = 50;
           repeat_delay = 300;

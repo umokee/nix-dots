@@ -36,7 +36,6 @@ in
     boot.loader.grub = {
       enable = true;
       device = if helpers.isServer then "/dev/sda" else "nodev";
-      #useOSProber = true; # For dual boot
       efiSupport = !helpers.isServer;
       efiInstallAsRemovable = !helpers.isServer;
     };
@@ -67,7 +66,6 @@ in
       };
 
       initrd.verbose = false;
-      consoleLogLevel = 3;
     };
 
     hardware.graphics = {

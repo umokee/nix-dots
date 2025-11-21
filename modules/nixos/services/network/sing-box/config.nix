@@ -299,96 +299,9 @@ let
       ];
     };
   };
-
-  singboxWrapper = pkgs.stdenv.mkDerivation {
-    name = "singbox-wrapper";
-    version = "1.0";
-
-    src = pkgs.writeText "wrapper.c" ''
-      #include <unistd.h>
-      #include <signal.h>
-      #include <sys/wait.h>
-      #include <stdlib.h>
-
-      int main() {
-          pid_t pid = fork();
-          if (pid == 0) {
-              char *args[] = {"${pkgs.sing-box}/bin/sing-box", "run", "-c", "/etc/sing-box-config.json", NULL};
-              execv(args[0], args);
-              return 1;
-          } else if (pid > 0) {
-              int status;
-              waitpid(pid, &status, 0);
-              return WIFEXITED(status) ? WEXITSTATUS(status) : 1;
-          } else {
-              return 1;
-          }
-      }
-    '';
-
-    nativeBuildInputs = [
-      pkgs.gcc
-      pkgs.patchelf
-    ];
-
-    unpackPhase = "true";
-
-    buildPhase = ''
-      gcc $src -o singbox-wrapper
-    '';
-
-    installPhase = ''
-      mkdir -p $out/bin
-      install -m755 singbox-wrapper $out/bin/
-    '';
-  };
 in
 {
   config = lib.mkIf enable {
-    environment.systemPackages = [ pkgs.sing-box ];
-    networking.firewall.trustedInterfaces = [ "nekoray-tun" ];
-
     environment.etc."sing-box-config.json".text = builtins.toJSON singboxSettings;
-    
-    systemd.services.singbox-wrapper = {
-      description = "Singbox Wrapper Service";
-      wantedBy = [ ];
-      after = [ "network.target" ];
-      
-      restartIfChanged = false;
-      stopIfChanged = true;
-      
-      serviceConfig = {
-        ExecStart = "${pkgs.sing-box}/bin/sing-box run -c /etc/sing-box-config.json";
-        Restart = "on-failure";
-        RestartSec = 5;
-        StandardOutput = "journal";
-        StandardError = "journal";
-        
-        KillSignal = "SIGTERM";
-        TimeoutStopSec = "10s";
-        KillMode = "mixed";
-        
-        AmbientCapabilities = "CAP_NET_ADMIN CAP_NET_BIND_SERVICE";
-        CapabilityBoundingSet = "CAP_NET_ADMIN CAP_NET_BIND_SERVICE";
-        
-        ExecStopPost = "${pkgs.iproute2}/bin/ip link delete nekoray-tun || true";
-      };
-    };
-    /*
-    systemd.services.singbox-wrapper = {
-      description = "Singbox Wrapper Service";
-      wantedBy = [ ]; # "multi-user.target"
-      after = [ "network.target" ];
-      serviceConfig = {
-        ExecStart = "${singboxWrapper}/bin/singbox-wrapper";
-        Restart = "on-failure";
-        RestartSec = 5;
-        StandardOutput = "journal";
-        StandardError = "journal";
-        KillSignal = "SIGTERM";
-        TimeoutStopSec = "20s";
-      };
-    };*/
   };
 }

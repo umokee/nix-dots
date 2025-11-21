@@ -8,6 +8,5 @@
     ./network.nix
     ./packages.nix
     ./fonts.nix
-    ./environment.nix
   ];
 }

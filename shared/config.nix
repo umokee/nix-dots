@@ -43,7 +43,7 @@ let
     };
     workspace = {
       enable = [
-        "mangowc"
+        "hyprland"
         "wallpapers"
         "themes"
       ];

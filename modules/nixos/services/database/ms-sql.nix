@@ -33,5 +33,7 @@ in
     environment.systemPackages = with pkgs; [
       sqlcmd
     ];
+
+    networking.firewall.allowedTCPPorts = [ 1433 ];
   };
 }

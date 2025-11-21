@@ -32,6 +32,8 @@ in
       wineWowPackages.staging
       winetricks
       openrgb-with-all-plugins
+
+      xorg.xrdb
     ];
 
     environment.sessionVariables = {

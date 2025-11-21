@@ -14,7 +14,10 @@
 
     settings = {
       mainBar = {
-        output = [ "DP-3" "HDMI-A-5" ];
+        output = [
+          "DP-3"
+          "HDMI-A-5"
+        ];
         layer = "top";
         position = "top";
         height = 30;
@@ -60,11 +63,43 @@
 
         "hyprland/workspaces" = {
           disable-scroll = true;
-          all-outputs = true;
+          all-outputs = false;
           warp-on-scroll = false;
           format = "{name}";
-          persistent-workspaces = {
-            "*" = 9;
+          "persistent-workspaces" = {
+            "eDP-1" = [
+              1
+              2
+              3
+              4
+              5
+              6
+              7
+              8
+              9
+              10
+            ];
+            "DP-3" = [
+              1
+              2
+              3
+              4
+              5
+            ];
+            "DP-4" = [
+              11
+              12
+              13
+              14
+              15
+            ];
+            "HDMI-A-5" = [
+              6
+              7
+              8
+              9
+              10
+            ];
           };
         };
 

@@ -116,5 +116,7 @@ in
       pgadmin4-desktopmode
       podman
     ];
+
+    networking.firewall.allowedTCPPorts = [ 5432 ];
   };
 }
