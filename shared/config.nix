@@ -91,7 +91,7 @@ let
     };
     workspace = {
       enable = [
-        "mangowc"
+        "hyprland"
         "wallpapers"
         "themes"
       ];
@@ -108,7 +108,6 @@ let
       enable = [
         "sing-box"
         "openssh"
-        "sing-box"
         "brightnessctl"
       ];
     };

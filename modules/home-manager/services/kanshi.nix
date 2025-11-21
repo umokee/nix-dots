@@ -17,20 +17,20 @@
               criteria = "DP-3";
               mode = "2560x1440@165Hz";
               position = "0,0";
-              scale = 1.25;
+              scale = 1.0;
             }
             {
               criteria = "DP-4";
               mode = "1920x1080@100Hz";
               transform = "270";
-              position = "2048,0";
+              position = "2560,0";
               scale = 1.0;
             }
             {
               criteria = "HDMI-A-5";
               mode = "1920x1080@60Hz";
-              position = "512,1152";
-              scale = 1.25;
+              position = "640,1440";
+              scale = 1.0;
             }
           ];
         }
@@ -39,8 +39,9 @@
           profile.outputs = [
             {
               criteria = "eDP-1";
+              mode = "2560x1440@48Hz";
               position = "0,0";
-              scale = 1.25;
+              scale = 1.0;
             }
           ];
         }

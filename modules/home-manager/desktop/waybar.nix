@@ -17,6 +17,7 @@
         output = [
           "DP-3"
           "HDMI-A-5"
+          "eDP-1"
         ];
         layer = "top";
         position = "top";

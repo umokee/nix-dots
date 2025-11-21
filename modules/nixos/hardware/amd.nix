@@ -10,11 +10,14 @@ in
 {
   config = lib.mkIf enable {
     boot.kernelParams = [
-      "amd_pstate=active"
+      "amd_pstate=active"  # или "guided" для более агрессивной экономии
       "amdgpu.dcdebugmask=0x10"
+      "amd_pstate.shared_mem=1"  # Улучшает отклик при переходах частот
     ]
     ++ lib.optionals helpers.isLaptop [
       "processor.max_cstate=5"
+      "pcie_aspm=force"  # Включает ASPM для PCI-e устройств
+      "amd_s2idle=deep"  # Критично для снижения потребления в suspend
     ];
 
     services.xserver.videoDrivers = [ "amdgpu" ];

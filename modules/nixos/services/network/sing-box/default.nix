@@ -8,6 +8,10 @@ let
   enable = helpers.hasIn "services" "sing-box";
 in
 {
+  imports = [
+    ./config.nix
+  ];
+
   config = lib.mkIf enable {
     environment.systemPackages = [ pkgs.sing-box ];
     networking.firewall.trustedInterfaces = [ "nekoray-tun" ];
