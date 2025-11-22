@@ -16,7 +16,7 @@ return {
     opts = {},
   },
 
-  -- Основная LSP конфигурация (БЕЗ Mason!)
+  -- LSP конфигурация БЕЗ Mason (используем LSP из Nix)
   {
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -33,7 +33,6 @@ return {
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
 
-          -- Кеймапы
           map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
           map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
           map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -44,7 +43,6 @@ return {
           map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
           map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
 
-          -- Подсветка символа под курсором
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
@@ -69,7 +67,6 @@ return {
             })
           end
 
-          -- Inlay hints
           if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
             map('<leader>th', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
@@ -78,79 +75,26 @@ return {
         end,
       })
 
-      -- Capabilities для completion
       local capabilities = require('blink.cmp').get_lsp_capabilities()
-
-      -- Конфигурация LSP серверов (установленных через Nix)
       local lspconfig = require('lspconfig')
 
-      -- Nix LSP
-      lspconfig.nil_ls.setup({
-        capabilities = capabilities,
-        settings = {
-          ['nil'] = {
-            formatting = {
-              command = { 'nixfmt' },
-            },
-          },
-        },
-      })
-
-      -- Lua LSP
+      -- LSP серверы установлены через Nix, просто настраиваем их
+      lspconfig.nil_ls.setup({ capabilities = capabilities })
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
         settings = {
           Lua = {
-            completion = {
-              callSnippet = 'Replace',
-            },
-            diagnostics = {
-              globals = { 'vim' },
-            },
-            workspace = {
-              library = {
-                vim.env.VIMRUNTIME,
-              },
-            },
+            completion = { callSnippet = 'Replace' },
+            diagnostics = { globals = { 'vim' } },
           },
         },
       })
-
-      -- TypeScript/JavaScript LSP
-      lspconfig.ts_ls.setup({
-        capabilities = capabilities,
-      })
-
-      -- Python LSP
-      lspconfig.pyright.setup({
-        capabilities = capabilities,
-        settings = {
-          python = {
-            analysis = {
-              typeCheckingMode = 'basic',
-            },
-          },
-        },
-      })
-
-      -- HTML/CSS/JSON LSP
+      lspconfig.ts_ls.setup({ capabilities = capabilities })
+      lspconfig.pyright.setup({ capabilities = capabilities })
       lspconfig.html.setup({ capabilities = capabilities })
       lspconfig.cssls.setup({ capabilities = capabilities })
       lspconfig.jsonls.setup({ capabilities = capabilities })
-
-      -- Bash LSP
       lspconfig.bashls.setup({ capabilities = capabilities })
-
-      -- Добавьте другие LSP серверы по необходимости:
-      
-      -- Go
-      -- lspconfig.gopls.setup({ capabilities = capabilities })
-      
-      -- Rust
-      -- lspconfig.rust_analyzer.setup({ capabilities = capabilities })
-      
-      -- C/C++
-      -- lspconfig.clangd.setup({ capabilities = capabilities })
     end,
   },
 }

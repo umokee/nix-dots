@@ -4,9 +4,17 @@ return {
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs',
     opts = {
-      ensure_installed = {},
-      auto_install = false,
+      -- lazy.nvim установит парсеры автоматически
+      ensure_installed = {
+        'bash', 'c', 'diff', 'html', 'lua', 'luadoc',
+        'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc',
+        'nix', 'javascript', 'typescript', 'python'
+      },
+      auto_install = true,
+      
+      -- Writable директория для парсеров
       parser_install_dir = vim.fn.stdpath('cache') .. '/treesitters',
+      
       highlight = {
         enable = true,
         additional_vim_regex_highlighting = { 'ruby' },

@@ -10,6 +10,16 @@ local parser_install_dir = vim.fn.stdpath('cache') .. '/treesitters'
 vim.fn.mkdir(parser_install_dir, 'p')
 vim.opt.runtimepath:prepend(parser_install_dir)
 
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
+  local out = vim.fn.system({ 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.error('Error cloning lazy.nvim:\n' .. out)
+  end
+end
+vim.opt.rtp:prepend(lazypath)
+
 -- Загрузка плагинов
 require('lazy').setup('plugins', {
   performance = {
@@ -17,16 +27,6 @@ require('lazy').setup('plugins', {
     rtp = {
       reset = false,
     },
-  },
-  install = {
-    missing = false,
-  },
-  checker = {
-    enabled = false,
-  },
-  change_detection = {
-    enabled = true,
-    notify = false,
   },
   ui = {
     icons = vim.g.have_nerd_font and {} or {
