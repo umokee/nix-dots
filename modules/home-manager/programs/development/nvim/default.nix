@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   programs.neovim = {
     enable = true;
@@ -8,33 +8,85 @@
 
     extraPackages = with pkgs; [
       gcc
-      tree-sitter
+      gnumake
+      unzip
+      git
+
+      # Инструменты поиска для Telescope
       ripgrep
       fd
 
-      nil
-      nodePackages.vscode-langservers-extracted
-      
+      # Tree-sitter CLI
+      tree-sitter
+
+      # LSP серверы
+      nil # Nix
+      lua-language-server # Lua
+      nodePackages.vscode-langservers-extracted # JavaScript
+      nodePackages.typescript-language-server # TypeScript
 
       # Форматтеры
-      stylua
-      black
-      prettier
+      stylua # Lua
+      nixfmt-rfc-style # Nix
+      black # Python
+      nodePackages.prettier # JavaScript
     ];
 
     plugins = with pkgs.vimPlugins; [
-      nvim-lspconfig
-      nvim-cmp
-      cmp-nvim-lsp
-      cmp-buffer
-      cmp-path
-      luasnip
-      cmp_luasnip
-      telescope-nvim
+      lazy-nvim
+
+      # Базовые плагины
       plenary-nvim
+      nvim-web-devicons
+
+      # Telescope
+      telescope-nvim
+      telescope-fzf-native-nvim
+      telescope-ui-select-nvim
+
+      # LSP
+      nvim-lspconfig
+      fidget-nvim
+
+      # Treesitter
+      (nvim-treesitter.withPlugins (p: [
+        p.bash
+        p.c
+        p.diff
+        p.html
+        p.lua
+        p.luadoc
+        p.markdown
+        p.markdown_inline
+        p.query
+        p.vim
+        p.vimdoc
+        p.nix
+        p.javascript
+        p.typescript
+      ]))
+      nvim-treesitter-textobjects
+
+      # UI и удобства
+      which-key-nvim
+      gitsigns-nvim
+      todo-comments-nvim
+      mini-nvim
+      
+      # Тема
+      tokyonight-nvim
+      
+      # Автоматическое определение отступов
+      guess-indent-nvim
+      
+      # Форматирование
+      conform-nvim
     ];
   };
 
-  xdg.configFile."nvim/init.lua".source = ./init.lua;
-  xdg.configFile."nvim/lua".source = ./lua;
+  xdg.configFile."nvim" = {
+    source = config.lib.file.mkOutOfStoreSymlink 
+      "${config.home.homeDirectory}/nixos/modules/home-manager/programs/development/nvim/config";
+    recursive = true;
+  };
 }

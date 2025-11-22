@@ -23,6 +23,12 @@
         "__pycache__/"
         ".syncrclone/"
         "node_modules/"
+
+        "tags"
+        "test.sh"
+        ".luarc.json"
+        "spell/"
+        "lazy-lock.json"
       ];
     };
   };

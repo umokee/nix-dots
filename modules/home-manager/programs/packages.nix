@@ -24,7 +24,6 @@
         buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ sqlite ];
       }))
       vial
-      neovim
       drawio
       discord
       claude-code
