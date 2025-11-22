@@ -1,5 +1,4 @@
 return {
-  -- Lazydev для Lua LSP
   {
     'folke/lazydev.nvim',
     ft = 'lua',
@@ -10,18 +9,17 @@ return {
     },
   },
 
-  -- Fidget для прогресса LSP
   {
     'j-hui/fidget.nvim',
     opts = {},
   },
 
-  -- LSP конфигурация БЕЗ Mason (используем LSP из Nix)
   {
     'neovim/nvim-lspconfig',
     dependencies = {
       'saghen/blink.cmp',
       'folke/lazydev.nvim',
+      'j-hui/fidget.nvim',
     },
     config = function()
       -- Автокоманда при подключении LSP
@@ -51,19 +49,10 @@ return {
               group = highlight_augroup,
               callback = vim.lsp.buf.document_highlight,
             })
-
             vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
               buffer = event.buf,
               group = highlight_augroup,
               callback = vim.lsp.buf.clear_references,
-            })
-
-            vim.api.nvim_create_autocmd('LspDetach', {
-              group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
-              callback = function(event2)
-                vim.lsp.buf.clear_references()
-                vim.api.nvim_clear_autocmds({ group = 'kickstart-lsp-highlight', buffer = event2.buf })
-              end,
             })
           end
 
@@ -75,26 +64,42 @@ return {
         end,
       })
 
+      -- Capabilities для completion
       local capabilities = require('blink.cmp').get_lsp_capabilities()
-      local lspconfig = require('lspconfig')
 
-      -- LSP серверы установлены через Nix, просто настраиваем их
-      lspconfig.nil_ls.setup({ capabilities = capabilities })
-      lspconfig.lua_ls.setup({
-        capabilities = capabilities,
-        settings = {
-          Lua = {
-            completion = { callSnippet = 'Replace' },
-            diagnostics = { globals = { 'vim' } },
+      -- Безопасное получение lspconfig с обработкой ошибок
+      local lspconfig_ok, lspconfig = pcall(require, 'lspconfig')
+      if not lspconfig_ok then
+        vim.notify('nvim-lspconfig not found', vim.log.levels.ERROR)
+        return
+      end
+
+      -- Настройка LSP серверов (установлены через Nix)
+      local servers = {
+        nil_ls = {},
+        lua_ls = {
+          settings = {
+            Lua = {
+              completion = { callSnippet = 'Replace' },
+              diagnostics = { globals = { 'vim' } },
+            },
           },
         },
-      })
-      lspconfig.ts_ls.setup({ capabilities = capabilities })
-      lspconfig.pyright.setup({ capabilities = capabilities })
-      lspconfig.html.setup({ capabilities = capabilities })
-      lspconfig.cssls.setup({ capabilities = capabilities })
-      lspconfig.jsonls.setup({ capabilities = capabilities })
-      lspconfig.bashls.setup({ capabilities = capabilities })
+        ts_ls = {},
+        pyright = {},
+        html = {},
+        cssls = {},
+        jsonls = {},
+        bashls = {},
+      }
+
+      -- Настраиваем каждый сервер
+      for server_name, config in pairs(servers) do
+        if lspconfig[server_name] then
+          config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
+          lspconfig[server_name].setup(config)
+        end
+      end
     end,
   },
 }
