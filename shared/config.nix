@@ -13,7 +13,7 @@ let
 
     default = {
       terminal = "foot";
-      editor = "code";
+      editor = "nvim";
       visual = "code";
       browser = "zen";
     };

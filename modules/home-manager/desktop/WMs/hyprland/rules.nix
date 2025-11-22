@@ -1,4 +1,3 @@
-{ ... }:
 {
   windowrule = [
     "opacity 0.95 override, fullscreen:0"

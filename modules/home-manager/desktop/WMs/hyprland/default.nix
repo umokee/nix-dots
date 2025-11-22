@@ -96,14 +96,6 @@ in
 
         animations = {
           enabled = false;
-          bezier = "specialWorkSwitch,0.05,0.7,0.1,1";
-          animation = [
-            "layersIn,1,5,emphasizedDecel,slide"
-            "layersOut,1,4,emphasizedAccel,slide"
-            "windowsIn,1,5,emphasizedDecel"
-            "windowsOut,1,3,emphasizedAccel"
-            "workspaces,1,5,standard"
-          ];
         };
 
         dwindle = {
@@ -124,22 +116,10 @@ in
           middle_click_paste = false;
           focus_on_activate = true;
           session_lock_xray = true;
-
-          mouse_move_enables_dpms = lib.mkIf helpers.isLaptop true;
-          keypress_enables_dpms = lib.mkIf helpers.isLaptop true;
-
-          gestures = lib.mkIf helpers.isLaptop {
-            workspace_swipe = false;
-            workspace_swipe_fingers = 0;
-            workspace_swipe_distance = 0;
-            workspace_swipe_cancel_ratio = 0;
-            workspace_swipe_min_speed_to_force = 0;
-            workspace_swipe_create_new = false;
-          };
         };
-      };
-
-      inherit keybinds rules;
+      }
+      // keybinds
+      // rules;
     };
   };
 }
