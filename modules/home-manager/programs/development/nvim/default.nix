@@ -6,36 +6,36 @@
     viAlias = true;
     vimAlias = true;
 
+    # Системные зависимости через Nix
     extraPackages = with pkgs; [
       gcc
       gnumake
       unzip
       git
-
-      # Инструменты поиска для Telescope
       ripgrep
       fd
-
-      # Tree-sitter CLI
       tree-sitter
 
       # LSP серверы
-      nil # Nix
-      lua-language-server # Lua
-      nodePackages.vscode-langservers-extracted # JavaScript
-      nodePackages.typescript-language-server # TypeScript
+      nil
+      lua-language-server
+      nodePackages.vscode-langservers-extracted
+      nodePackages.typescript-language-server
+      pyright
 
       # Форматтеры
-      stylua # Lua
-      nixfmt-rfc-style # Nix
-      black # Python
-      nodePackages.prettier # JavaScript
+      stylua
+      nixfmt-rfc-style
+      black
+      nodePackages.prettier
+
+      # Линтеры
+      markdownlint-cli
     ];
 
+    # Все плагины через Nix
     plugins = with pkgs.vimPlugins; [
       lazy-nvim
-
-      # Базовые плагины
       plenary-nvim
       nvim-web-devicons
 
@@ -47,6 +47,11 @@
       # LSP
       nvim-lspconfig
       fidget-nvim
+
+      # Completion
+      blink-cmp
+      luasnip
+      lazydev-nvim
 
       # Treesitter
       (nvim-treesitter.withPlugins (p: [
@@ -64,29 +69,39 @@
         p.nix
         p.javascript
         p.typescript
+        p.python
       ]))
       nvim-treesitter-textobjects
 
-      # UI и удобства
+      # UI
       which-key-nvim
       gitsigns-nvim
       todo-comments-nvim
       mini-nvim
-      
-      # Тема
       tokyonight-nvim
-      
-      # Автоматическое определение отступов
       guess-indent-nvim
-      
-      # Форматирование
+
+      # Formatting & Linting
       conform-nvim
+      nvim-lint
+
+      # Опциональные
+      indent-blankline-nvim
+      nvim-autopairs
+      neo-tree-nvim
+      nui-nvim
+
+      # Debug (опционально)
+      nvim-dap
+      nvim-dap-ui
+      nvim-nio
+      nvim-dap-go
     ];
   };
 
+  # Symlink на всю папку config
   xdg.configFile."nvim" = {
-    source = config.lib.file.mkOutOfStoreSymlink 
-      "${config.home.homeDirectory}/nixos/modules/home-manager/programs/development/nvim/config";
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nixos/modules/home-manager/programs/development/nvim/config";
     recursive = true;
   };
 }
