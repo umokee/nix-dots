@@ -2,7 +2,7 @@
   imports = [
     ./git.nix
     ./vscode
-    ./nvim
+    #./nvim
     ./languages.nix
   ];
 }
