@@ -31,6 +31,8 @@
       wev
       inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs
       insomnia
+      kooha
+      jetbrains.rider
     ]
     ++ lib.optionals (helpers.hasIn "hardware" "sound") [
       pavucontrol
