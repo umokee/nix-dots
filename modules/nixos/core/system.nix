@@ -45,11 +45,6 @@ in
             "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
           ];
 
-          http-connections = 25;
-          download-attempts = 5;
-          connect-timeout = 5;
-          stalled-download-timeout = 300;
-
           fallback = true;
 
           max-jobs = "auto";
