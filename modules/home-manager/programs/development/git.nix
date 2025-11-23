@@ -9,14 +9,11 @@
       enable = true;
       package = pkgs.git;
 
-      settings.user = {
-        name = "umokee";
-        email = "hituaev@gmail.com";
-      };
-
-      diff-so-fancy.enable = true;
-
-      extraConfig = {
+      settings = {
+        user = {
+          name = "umokee";
+          email = "hituaev@gmail.com";
+        };
         init.defaultBranch = "main";
       };
 
@@ -26,13 +23,17 @@
         "__pycache__/"
         ".syncrclone/"
         "node_modules/"
-
         "tags"
         "test.sh"
         ".luarc.json"
         "spell/"
         "lazy-lock.json"
       ];
+    };
+    
+    programs.diff-so-fancy = {
+      enable = true;
+      enableGitIntegration = true;
     };
   };
 }
