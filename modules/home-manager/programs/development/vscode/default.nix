@@ -2,12 +2,11 @@
   config,
   pkgs,
   inputs,
-  stdenv,
   ...
 }:
 let
   pkgsWithOverlay = import pkgs.path {
-    system = stdenv.hostPlatform.system;
+    system = pkgs.system;
     overlays = [ inputs.nix-vscode-extensions.overlays.default ];
     config = pkgs.config;
   };
