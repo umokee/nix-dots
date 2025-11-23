@@ -11,12 +11,12 @@ in
   config = lib.mkIf enable {
     fonts = {
       packages = with pkgs; [
-        vistafonts
+        vista-fonts
         corefonts
         dejavu_fonts
         liberation_ttf
         noto-fonts
-        noto-fonts-emoji
+        noto-fonts-color-emoji
         nerd-fonts.jetbrains-mono
       ];
 

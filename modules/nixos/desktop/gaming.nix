@@ -17,7 +17,7 @@ in
         ];
       })
 
-      glxinfo
+      mesa-demos
       heroic
       (bottles.override {
         removeWarningPopup = true;

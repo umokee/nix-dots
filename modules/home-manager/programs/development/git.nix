@@ -9,9 +9,12 @@
       enable = true;
       package = pkgs.git;
 
+      settings.user = {
+        name = "umokee";
+        email = "hituaev@gmail.com";
+      };
+
       diff-so-fancy.enable = true;
-      userName = "umokee";
-      userEmail = "hituaev@gmail.com";
 
       extraConfig = {
         init.defaultBranch = "main";

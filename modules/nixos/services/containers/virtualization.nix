@@ -34,11 +34,6 @@ in
         runAsRoot = true;
         swtpm.enable = true;
 
-        ovmf = {
-          enable = true;
-          packages = [ pkgs.OVMFFull.fd ];
-        };
-
         verbatimConfig = ''
           namespaces = []
         '';
@@ -61,7 +56,7 @@ in
       spice
       spice-gtk
       spice-protocol
-      win-virtio
+      virtio-win
       win-spice
     ];
   };

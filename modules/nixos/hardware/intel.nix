@@ -18,8 +18,8 @@ in
       extraPackages = with pkgs; [
         intel-gpu-tools
         intel-media-driver
-        vaapiIntel
-        vaapiVdpau
+        intel-vaapi-driver
+        libva-vdpau-driver
         libvdpau-va-gl
         libva
         vulkan-loader
@@ -29,8 +29,8 @@ in
       extraPackages32 = with pkgs; [
         intel-gpu-tools
         intel-media-driver
-        vaapiIntel
-        vaapiVdpau
+        intel-vaapi-driver
+        libva-vdpau-driver
         libvdpau-va-gl
         libva
       ];
