@@ -179,6 +179,9 @@ let
         {
           process_path_regex = [
             "/nix/store/[^/]*/share/mullvad-browser/mullvadbrowser"
+            "/nix/store/[^/]*/rider/bin/.rider-wrapped"
+            "/nix/store/[^/]*/rider/bin/fsnotifier"
+            "/nix/store/[^/]*/rider/lib/ReSharperHost/linux-x64/Rider.Backend"
           ];
           outbound = "proxy";
         }

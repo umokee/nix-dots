@@ -14,21 +14,21 @@
           profile.name = "desktop";
           profile.outputs = [
             {
-              criteria = "DP-3";
-              mode = "2560x1440@165Hz";
+              criteria = "Shenzhen KTC Technology Group VG2710PQU 0x00000001";
+              mode = "2560x1440@165.00";
               position = "0,0";
               scale = 1.0;
             }
             {
-              criteria = "DP-4";
-              mode = "1920x1080@100Hz";
+              criteria = "CMT GA241 CMI231603659";
+              mode = "1920x1080@60.00";
               transform = "270";
               position = "2560,0";
               scale = 1.0;
             }
             {
-              criteria = "HDMI-A-5";
-              mode = "1920x1080@60Hz";
+              criteria = "GWD ARZOPA 0000000713942";
+              mode = "1920x1080@60.00";
               position = "640,1440";
               scale = 1.0;
             }
@@ -39,7 +39,7 @@
           profile.outputs = [
             {
               criteria = "eDP-1";
-              mode = "2560x1440@48Hz";
+              mode = "2560x1440@48.00";
               position = "0,0";
               scale = 1.0;
             }

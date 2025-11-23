@@ -38,7 +38,6 @@ let
         "intel"
         "nvidia"
         "power"
-        "print"
       ];
     };
     workspace = {
@@ -134,7 +133,7 @@ let
     };
     services = {
       enable = [
-        "cassettes-site"
+        #"cassettes-site"
         "openssh"
         "xray"
         "fail2ban"
