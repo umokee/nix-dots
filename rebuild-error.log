@@ -1,0 +1,3 @@
+warning: Git tree '/home/user/nixos' is dirty
+error (ignored): error: SQLite database '/root/.cache/nix/eval-cache-v5/5e98693b1cbd29ee5f70a367e6c2ae4614e977c664446400d140637f01ed8fa1.sqlite' is busy
+copying path '/nix/store/k31xbp4dli6ibphay5dkms5cldry2j8a-source' from 'https://nix-community.cachix.org'...

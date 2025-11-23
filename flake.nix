@@ -3,9 +3,8 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    #chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     nix-colors.url = "github:misterio77/nix-colors";
-    mango.url = "github:DreamMaoMao/mango";
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     
     claude-desktop = {
@@ -70,14 +69,12 @@
           moduleMap = {
             nixos = [
               inputs.disko.nixosModules.disko
-              inputs.chaotic.nixosModules.default
-              inputs.mango.nixosModules.mango
+              #inputs.chaotic.nixosModules.default
               { nixpkgs.config.allowUnfree = true; }
               ./modules/nixos
             ];
 
             home = [
-              inputs.mango.hmModules.mango
               inputs.nix-colors.homeManagerModules.default
               { colorScheme = inputs.nix-colors.colorSchemes.ayu-dark; }
               ./modules/home-manager

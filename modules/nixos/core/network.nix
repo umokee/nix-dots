@@ -12,6 +12,7 @@ in
     networking = {
       hostName = conf.hostname;
       networkmanager.enable = true;
+      nameservers = [ "8.8.8.8" "8.8.4.4" "1.1.1.1" ];
 
       firewall = {
         enable = helpers.isServer;
@@ -33,15 +34,6 @@ in
           };
         };
       };
-    };
-
-    services.resolved = {
-      enable = true;
-      dnssec = "false";
-      extraConfig = ''
-        DNS=8.8.8.8 1.1.1.1
-        FallbackDNS=8.8.4.4 1.0.0.1
-      '';
     };
 
     boot.kernel.sysctl = {

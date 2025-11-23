@@ -38,20 +38,19 @@ in
 
           substituters = [
             "https://cache.nixos.org"
-            "https://cache.nix-community.org"
-            "https://arnoldcache.cachix.org"
           ];
           trusted-public-keys = [
             "cache.nixos.org-1:..."
-            "cache.nix-community.org-1:..."
-            "arnoldcache.cachix.org-1:..."
           ];
           fallback = true;
           max-jobs = "auto";
           cores = 0;
 
-          show-trace = true;
+          connect-timeout = 60;
+          stalled-download-timeout = 300;
+          download-attempts = 3;
 
+          show-trace = true;
           keep-outputs = false;
           keep-derivations = false;
         };
